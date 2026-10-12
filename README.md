@@ -8,11 +8,11 @@ data to the LaTeX file. Run one Stata do file, then compile `main.tex`.
 ## Quick start
 
 1. Get the IPUMS extract (see [Getting the data](#getting-the-data)) and save it as
-   `2_Raw_Data/ipums/usa_00014.dta`.
+   `Raw_Data/ipums/usa_00014.dta`.
 2. Open Stata 18 (the app, not the command line, see [Figure fonts](#figure-fonts)),
    `cd` into this folder, and run:
    ```stata
-   do "3_Syntax/0_master.do"
+   do "Syntax/0_master.do"
    ```
 3. Upload this whole folder to Overleaf, set the compiler to **LuaLaTeX**
    (Menu > Compiler) and the main document to `main.tex`. Or compile locally
@@ -27,21 +27,22 @@ under 30 seconds, including reading the 2.2 GB IPUMS file.
 ```
 replication_package/
 ├── main.tex, UVAthesis.cls, articles.bib   the thesis, pulling in tables and figures below
+├── main.pdf                                 the compiled thesis
 ├── static_figures/                          maps and diagrams that aren't made from data
-├── 2_Raw_Data/
+├── Raw_Data/
 │   ├── public/          DEP data I coded, DEP budgets (included)
 │   ├── fdi_extracts/    aggregated FDI data built from fDi Markets (included)
 │   ├── fdi_private/     licensed fDi Markets + CRSP files (NOT included)
 │   └── ipums/           IPUMS ACS extract (NOT included, download it)
-├── 3_Syntax/
+├── Syntax/
 │   ├── 0_master.do      runs everything in order
 │   ├── 1_build/         slow step that only needs to run once
 │   ├── 2_clean/         cleaning and merging
 │   ├── 3_tables/        one file per group of tables
 │   └── 4_figures/       one file per group of figures
-├── 4_Generated_Datasets/   intermediate data (not in the repo, rebuilt by the code)
-├── 5_Log_Files/            one text log per do file
-└── 6_Tables_and_Figures/
+├── Generated_Datasets/   intermediate data (not in the repo, rebuilt by the code)
+├── Log_Files/            one text log per do file
+└── Tables_and_Figures/
     ├── tables/          .tex tables, \input by main.tex
     └── figures/         .png figures, used by main.tex
 ```
@@ -117,7 +118,7 @@ IPUMS doesn't allow redistributing its data, so you need a free account at
 - **Cases**: all persons, no case selection.
 - **Format**: Stata (.dta).
 
-Save the file as `2_Raw_Data/ipums/usa_00014.dta`, or change the filename in
+Save the file as `Raw_Data/ipums/usa_00014.dta`, or change the filename in
 `1_build/1_1_acs_clean.do`.
 
 Language codes the thesis uses (`LANGUAGED`): Malayalam 4004 (Kerala),
@@ -130,7 +131,7 @@ Bengali 3112 (West Bengal), plus Nepali 4011 for the birthplace check.
 FDI projects come from **fDi Markets** (Financial Times), a subscription
 database, usually available through a university library. Its license doesn't
 allow posting project-level records, so this package ships four aggregated
-extracts in `2_Raw_Data/fdi_extracts/` and everything runs from those:
+extracts in `Raw_Data/fdi_extracts/` and everything runs from those:
 
 | Extract | Contents |
 |---|---|
@@ -155,18 +156,18 @@ activity, capital investment, jobs created, parent company, and contacts. I then
   `instate` last-name model (Dhingra et al. 2023, arXiv:2303.06823), checked
   by hand in Excel.
 
-Put the resulting four files (names in `2_Raw_Data/fdi_private/README.md`) in
-`2_Raw_Data/fdi_private/` and `2_2_fdi_clean.do` will regenerate the extracts.
+Put the resulting four files (names in `Raw_Data/fdi_private/README.md`) in
+`Raw_Data/fdi_private/` and `2_2_fdi_clean.do` will regenerate the extracts.
 
 ### 3. Data I collected (included)
 
-- `2_Raw_Data/public/deps_state_year.csv`: 44 diaspora engagement policies
+- `Raw_Data/public/deps_state_year.csv`: 44 diaspora engagement policies
   (DEPs) for 8 Indian states, 2000-2025, hand-coded from state government
   documents, one row per state-year, 1 = the state has the policy that year.
   The columns go in taxonomy order: each `total_` column is followed by the
   policies in that category, which the code relies on. Andhra Pradesh stops in
   2013 because the state split in 2014.
-- `2_Raw_Data/public/dep_budgets_state_year.csv`: each state's budget for its
+- `Raw_Data/public/dep_budgets_state_year.csv`: each state's budget for its
   diaspora (NRI) department, 2005-2017, in 2023 rupees, per capita, and as a
   share of the state budget, from state budget documents. Blank means the
   documents weren't available (Gujarat, Karnataka 2016-17, Kerala 2015).
@@ -182,50 +183,3 @@ can only set graph fonts from the Stata app, not from batch or console mode
 (`stata-mp -b`), where figures fall back to Helvetica. Everything else comes
 out identical either way. To match the thesis, install CMU Serif and run the
 master from the Stata app.
-
-## Differences from the earlier draft
-
-The tables and figures here are what the final code and data produce. Where the
-draft PDF differs, it's because the draft had an older output pasted in:
-
-- **Table 5.2** in the draft came from an older (April 2) sample build. The
-  counts here (4919 / 4919 / 5058 / 4584) match the raw sample N in Chapter 7.
-- **Table 7.28** in the draft repeated Table 7.25. It's now the tech-hub
-  Table 4 that the text describes.
-- **Table B.1** in the draft used an older DEP coding (e.g. tax regulatory
-  guidance in 3 states / 27 state-years, now 2 / 14). It's regenerated here.
-- **Figures 5.11-5.14 and 8.2** in the draft came from older DEP codings. They
-  now follow the final taxonomy, where diaspora conferences count as symbolic,
-  as in the PPML models.
-- **Figures 5.4 and 5.5** listed an "All states" line in the legend that was
-  never drawn. It's left off.
-
-### A caution on the thin sector columns
-
-A few columns in Tables 7.7, 7.8, 7.11, and 7.27 (Professional Services, Life
-Sciences, Industrial, Transport Equipment, Creative Industries, Financial
-Services, and the small-company tech-hub column) have so few projects that
-PPML can't really estimate them: you see coefficients like 3680.938 or
--1888.128, or standard errors of 0.000. In those cells the numbers depend on the
-order of rows in the data, so they can differ from the draft (where the row
-order came from unstable sorts that can't be recreated). This package sorts on
-a unique key, so its numbers are the same on every run. Every other table
-matches the draft exactly.
-
-One thing is kept on purpose to match the thesis: the PPML tables leave out
-one policy (origin ID for non-citizens) that the original code dropped by
-accident. Set `include_origin_id` to 1 in `0_master.do` to put it back. It
-moves the State Bureaucracy and DEP-count rows slightly and adds a row to the
-single-policy tables.
-
-## Code conventions
-
-So the code reads the same everywhere:
-
-- Every do file opens with the same header block: title, purpose, inputs,
-  outputs, contents.
-- Big sections get a banner (`********` / `*  1. Section name`), smaller steps
-  get a `**Step name` line, and explanations use `//`, either on their own line
-  above the code or at the end of a line. `*` is only used for headers.
-- One tab of indent per level. Long commands continue with `///`.
-- Every do file writes a plain-text log to `5_Log_Files/` with the same name.

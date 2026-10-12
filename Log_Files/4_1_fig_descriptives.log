@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_1_fig_descr
-> iptives.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_1_fig_descrip
+> tives.log
   log type:  text
- opened on:  12 Oct 2026, 04:22:44
+ opened on:  12 Oct 2026, 05:10:18
 
 . 
 .         // Matches the thesis font. Falls back to Stata's default if not inst
@@ -125,27 +125,27 @@
 >                         title("FDI project value over time (top 50 metros onl
 > y)") ytitle("Real capital investment") ///
 >                         file(4_1_fig5_4_fdi_value_by_state.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_4_fdi_value_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_4_fdi_value_by_state.png written in PNG format
 
 .                 plot_by_state, var(jobs_all) style(statesonly) ///
 >                         title("All FDI jobs created over time (top 50 metros 
 > only)") ytitle("All FDI jobs created") ///
 >                         file(4_1_fig5_5_fdi_jobs_by_state.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_5_fdi_jobs_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_5_fdi_jobs_by_state.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_consgoods) style(allstates) /
 > //
 >                         title("Consumer goods FDI projects over time (top 50 
 > metros only)") ytitle("Consumer goods FDI projects") ///
 >                         file(4_1_fig5_7_fdi_consumer_goods_by_state.png)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 (variable fdi_projects_consgoods was byte, now double to accommodate using
        data's values)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_7_fdi_consumer_goods_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_7_fdi_consumer_goods_by_state.png written in PNG format
 
 . 
 .         **Figures 5.2 (= 6.1), 5.3, 5.6 (Andhra Pradesh line stops in 2013)
@@ -164,41 +164,41 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 > ytitle("FDI projects") ///
 >                         file(4_1_fig5_2_fdi_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 (10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
     as .dta format
 (variable fdi_projects_all was byte, now double to accommodate using data's
        values)
 (variable indian_state was str14, now str37 to accommodate using data's
        values)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_2_fdi_projects_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_2_fdi_projects_by_state.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_all) style(statesonly) ///
 >                         title("FDI projects over time (top 50 metros only)") 
 > ytitle("FDI projects") ///
 >                         file(4_1_fig5_3_fdi_projects_by_state_no_total.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_3_fdi_projects_by_state_no_total.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_3_fdi_projects_by_state_no_total.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_ict) style(allindia) ///
 >                         title("ICT FDI projects over time (top 50 metros only
 > )") ytitle("ICT FDI projects") ///
 >                         file(4_1_fig5_6_fdi_ict_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 (10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
     as .dta format
 (variable fdi_projects_ict was byte, now double to accommodate using data's
        values)
 (variable indian_state was str14, now str37 to accommodate using data's
        values)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_6_fdi_ict_projects_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_6_fdi_ict_projects_by_state.png written in PNG format
 
 . 
 . ********
@@ -231,7 +231,7 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 .                         tempfile top10
 
 .                         save `top10'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 
 .                 restore
@@ -278,8 +278,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
 
 .                 graph export "${figures}/4_1_fig5_8_gujarati_top10_metros.png
 > ", replace
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_8_gujarati_top10_metros.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_8_gujarati_top10_metros.png written in PNG format
 
 . 
 . ********
@@ -365,8 +365,8 @@ variable indian_state was str11 now str14
 >                         title("First-gen all people (18+) over time (top 50 m
 > etros only)") ytitle("Estimated population") ///
 >                         file(4_1_fig5_9_firstgen_diaspora_by_state.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_9_firstgen_diaspora_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_9_firstgen_diaspora_by_state.png written in PNG format
 
 . 
 .         **Figure 5.10: all generations, all 8 languages
@@ -405,8 +405,8 @@ variable indian_state was str11 now str14
 >                         title("Migrant stock over time (top 50 metros only)")
 >  ytitle("Estimated migrant stock") ///
 >                         file(4_1_fig5_10_allgen_diaspora_by_state.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_10_allgen_diaspora_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_10_allgen_diaspora_by_state.png written in PNG format
 
 . 
 . ********
@@ -433,8 +433,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 >                                 title("Total DEPs over time by state") ytitle
 > ("Total DEPs") ///
 >                                 file(4_1_fig5_11_total_deps_by_state.png)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_11_total_deps_by_state.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_11_total_deps_by_state.png written in PNG format
 
 .                 restore
 
@@ -470,8 +470,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 
 .                         graph export "${figures}/4_1_fig5_12_econ_vs_nonecon_
 > deps.png", replace
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_12_econ_vs_nonecon_deps.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_12_econ_vs_nonecon_deps.png written in PNG format
 
 .                 restore
 
@@ -525,8 +525,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 
 .                         graph export "${figures}/4_1_fig8_2_econ_dep_types.pn
 > g", replace
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig8_2_econ_dep_types.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g8_2_econ_dep_types.png written in PNG format
 
 .                 restore
 
@@ -566,10 +566,10 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
  12.                         graph export "${figures}/`file'", replace
  13.                         drop sort_total
  14.                 }
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_13_nonecon_deps_by_state_2017.png written in PNG format
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
-> fig5_14_econ_deps_by_state_2017.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_13_nonecon_deps_by_state_2017.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
+> g5_14_econ_deps_by_state_2017.png written in PNG format
 
 . 
 . ********
@@ -580,8 +580,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_1_fig_descr
-> iptives.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_1_fig_descrip
+> tives.log
   log type:  text
- closed on:  12 Oct 2026, 04:22:51
+ closed on:  12 Oct 2026, 05:10:26
 -------------------------------------------------------------------------------

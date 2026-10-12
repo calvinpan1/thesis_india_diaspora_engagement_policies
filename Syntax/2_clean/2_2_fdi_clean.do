@@ -45,8 +45,8 @@
 
 	capture confirm file "${fdiraw}/0428.fdi.csv"
 	if _rc {
-		di as text "No licensed fDi Markets files in 2_Raw_Data/fdi_private/."
-		di as text "Skipping, later files use the extracts in 2_Raw_Data/fdi_extracts/."
+		di as text "No licensed fDi Markets files in Raw_Data/fdi_private/."
+		di as text "Skipping, later files use the extracts in Raw_Data/fdi_extracts/."
 		log close stage
 		exit
 	}

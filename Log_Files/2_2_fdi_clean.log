@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_2_fdi_clean
-> .log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/2_2_fdi_clean.l
+> og
   log type:  text
- opened on:  12 Oct 2026, 04:16:29
+ opened on:  12 Oct 2026, 05:04:12
 
 . 
 .         global fdiraw "${rawdata}/fdi_private"
@@ -20,10 +20,10 @@
 .         capture confirm file "${fdiraw}/0428.fdi.csv"
 
 .         if _rc {
-.                 di as text "No licensed fDi Markets files in 2_Raw_Data/fdi_p
-> rivate/."
-.                 di as text "Skipping, later files use the extracts in 2_Raw_D
-> ata/fdi_extracts/."
+.                 di as text "No licensed fDi Markets files in Raw_Data/fdi_pri
+> vate/."
+.                 di as text "Skipping, later files use the extracts in Raw_Dat
+> a/fdi_extracts/."
 .                 log close stage
 .                 exit
 .         }
@@ -74,7 +74,7 @@ Duplicates in terms of id
 .                 tempfile public_flags
 
 .                 save `public_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 
 . 
@@ -116,7 +116,7 @@ Duplicates in terms of id
 .                 tempfile activity_flags
 
 .                 save `activity_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 
 . 
@@ -352,7 +352,7 @@ jobscreated: all characters numeric; replaced as int
 .                 tempfile projects
 
 .                 save `projects'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
     as .dta format
 
 . 
@@ -374,8 +374,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
 
 .         export delimited using "${fdiout}/2_2_fdi_counts_metro_language_year.
 > csv", replace
-file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_c
-> ounts_metro_language_year.csv saved
+file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_cou
+> nts_metro_language_year.csv saved
 
 . 
 . ********
@@ -462,8 +462,8 @@ variable indian_state was str11 now str14
 
 .         export delimited using "${fdiout}/2_2_fdi_state_year_top50.csv", data
 > fmt replace
-file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_s
-> tate_year_top50.csv saved
+file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_sta
+> te_year_top50.csv saved
 
 . 
 . ********
@@ -490,8 +490,8 @@ id: all characters numeric; replaced as int
 
 .         export delimited using "${fdiout}/2_2_fdi_projects_by_cluster.csv", r
 > eplace
-file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_p
-> rojects_by_cluster.csv saved
+file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_pro
+> jects_by_cluster.csv saved
 
 . 
 . ********
@@ -570,7 +570,7 @@ capital: all characters numeric; replaced as double
 .                         tempfile project_shares
 
 .                         save `project_shares'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000005 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000005 saved
     as .dta format
 
 .                 restore
@@ -639,8 +639,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000005 saved
 
 .         export delimited using "${fdiout}/2_2_investor_name_shares.csv", data
 > fmt replace
-file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_inves
-> tor_name_shares.csv saved
+file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_investo
+> r_name_shares.csv saved
 
 .         list
 
@@ -660,8 +660,8 @@ file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_inves
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_2_fdi_clean
-> .log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/2_2_fdi_clean.l
+> og
   log type:  text
- closed on:  12 Oct 2026, 04:16:30
+ closed on:  12 Oct 2026, 05:04:19
 -------------------------------------------------------------------------------

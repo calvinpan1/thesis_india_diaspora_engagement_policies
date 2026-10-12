@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_3_deps_clea
-> n.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/2_3_deps_clean.
+> log
   log type:  text
- opened on:  12 Oct 2026, 04:16:30
+ opened on:  12 Oct 2026, 05:04:19
 
 . 
 . ********
@@ -82,8 +82,8 @@
 
 .         save "${gendata}/2_3_deps_state_year.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_deps_st
-    > ate_year.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/2_3_deps_stat
+    > e_year.dta saved
 
 . 
 . ********
@@ -145,116 +145,116 @@ cultural_c~d  diaspora_a~t  total_econ    aftercare_~s  sectoral_r~s
  22.                         restore
  23.                 }
 (196 missing values generated)
-(file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 not
+(file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 not
     found)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (196 missing values generated)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 
 .                 use `long', clear
@@ -307,8 +307,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
 
 .                 save "${gendata}/2_3_dep_turnons_long.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_dep_tur
-    > nons_long.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/2_3_dep_turno
+    > ns_long.dta saved
 
 . 
 . ********
@@ -330,8 +330,8 @@ file
 
 .         save "${gendata}/2_3_dep_budgets_state_year.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_dep_bud
-    > gets_state_year.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/2_3_dep_budge
+    > ts_state_year.dta saved
 
 . 
 . ********
@@ -342,8 +342,8 @@ file
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_3_deps_clea
-> n.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/2_3_deps_clean.
+> log
   log type:  text
- closed on:  12 Oct 2026, 04:16:30
+ closed on:  12 Oct 2026, 05:04:20
 -------------------------------------------------------------------------------

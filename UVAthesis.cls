@@ -251,6 +251,8 @@ frame=single,
 \boolfalse{@ded}
 \def\abstract#1{\booltrue{@abs} \gdef\@abstract{#1}}
 \def\acknowledge#1{\booltrue{@ack} \gdef\@acknowledge{#1}}
+\newbool{@copyright}\booltrue{@copyright}
+\def\nocopyright{\boolfalse{@copyright}}
 \def\dedication#1{\booltrue{@ded} \gdef\@dedication{#1}}
 
 % Set up the header and footer
@@ -351,14 +353,17 @@ frame=single,
 %UVA GSAS says copyright page should be numbered
 %\pagestyle{empty} % Suppresses page numbers for copyright page.
 
+% Copyright page, skipped if the document says \nocopyright
+\ifbool{@copyright}{%
 %Count the title page in the numbering, even though it is not numbered
 \addtocounter{page}{1}
 \vspace*{\fill}
 %\includegraphics[height=2cm]{example-image}
 
-Copyright \textcopyright\ \the\year{}, \@author\ 
+Copyright \textcopyright\ \the\year{}, \@author\
 
 \clearpage
+}{}
   \newpage % This applies to the numbering of the front matter.
   %\addtocounter{page}{1} 
 }

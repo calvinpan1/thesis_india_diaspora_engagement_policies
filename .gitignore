@@ -1,12 +1,12 @@
 # Licensed or restricted data never goes in the repo. See README for how to get it.
-2_Raw_Data/fdi_private/*
-!2_Raw_Data/fdi_private/README.md
-2_Raw_Data/ipums/*
-!2_Raw_Data/ipums/README.md
+Raw_Data/fdi_private/*
+!Raw_Data/fdi_private/README.md
+Raw_Data/ipums/*
+!Raw_Data/ipums/README.md
 
-# Generated datasets are rebuilt by 3_Syntax/0_master.do
-4_Generated_Datasets/*
-!4_Generated_Datasets/.gitkeep
+# Generated datasets are rebuilt by Syntax/0_master.do
+Generated_Datasets/*
+!Generated_Datasets/.gitkeep
 
 # Batch-mode Stata logs land in the folder you run from
 /*.log
@@ -25,7 +25,6 @@
 *.run.xml
 *.synctex.gz
 *.toc
-main.pdf
 
 # Local scratch
 .raw_orig/

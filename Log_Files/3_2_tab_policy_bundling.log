@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_2_tab_polic
-> y_bundling.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/3_2_tab_policy_
+> bundling.log
   log type:  text
- opened on:  12 Oct 2026, 04:16:30
+ opened on:  12 Oct 2026, 05:04:21
 
 . 
 . ********
@@ -26,7 +26,7 @@
 .         tempfile turnons
 
 .         save `turnons'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 
 . 
@@ -62,8 +62,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
 
 .         save "${gendata}/3_2_policy_pair_jaccard.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_2_policy_
-    > pair_jaccard.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/3_2_policy_pa
+    > ir_jaccard.dta saved
 
 . 
 . ********
@@ -279,8 +279,8 @@ xij variables:
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_2_tab_polic
-> y_bundling.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/3_2_tab_policy_
+> bundling.log
   log type:  text
- closed on:  12 Oct 2026, 04:16:30
+ closed on:  12 Oct 2026, 05:04:21
 -------------------------------------------------------------------------------

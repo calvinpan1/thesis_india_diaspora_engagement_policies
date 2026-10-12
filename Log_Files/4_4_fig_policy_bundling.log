@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_4_fig_polic
-> y_bundling.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_4_fig_policy_
+> bundling.log
   log type:  text
- opened on:  12 Oct 2026, 04:22:52
+ opened on:  12 Oct 2026, 05:10:27
 
 . 
 . ********
@@ -42,8 +42,8 @@
 
 .         graph export "${figures}/4_4_fig5_15_jaccard_distribution.png", repla
 > ce width(3200) height(2000)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
-> fig5_15_jaccard_distribution.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
+> g5_15_jaccard_distribution.png written in PNG format
 
 . 
 . ********
@@ -144,7 +144,7 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
 .                 tempfile first_years
 
 .                 save `first_years'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 
 . 
@@ -162,7 +162,7 @@ Duplicates in terms of all variables
 .                 tempfile states
 
 .                 save `states'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     as .dta format
 
 . 
@@ -209,8 +209,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
 
 .         graph export "${figures}/4_4_fig5_16_admin_unit_timing.png", replace 
 > width(4200) height(2550)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
-> fig5_16_admin_unit_timing.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
+> g5_16_admin_unit_timing.png written in PNG format
 
 . 
 . ********
@@ -358,8 +358,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
 
 .         graph export "${figures}/4_4_fig8_x_info_policy_timing.png", replace 
 > width(4200) height(2550)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
-> fig8_x_info_policy_timing.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
+> g8_x_info_policy_timing.png written in PNG format
 
 .         graph drop _all
 
@@ -372,8 +372,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_4_fig_polic
-> y_bundling.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_4_fig_policy_
+> bundling.log
   log type:  text
- closed on:  12 Oct 2026, 04:22:56
+ closed on:  12 Oct 2026, 05:10:35
 -------------------------------------------------------------------------------

@@ -5,9 +5,9 @@
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_1012
 *	UPDATED:	2026_1012
-*	CALLS UPON:	Every do file in 3_Syntax/
-*	PRODUCES:	Everything in 4_Generated_Datasets/, 5_Log_Files/, and
-*				6_Tables_and_Figures/
+*	CALLS UPON:	Every do file in Syntax/
+*	PRODUCES:	Everything in Generated_Datasets/, Log_Files/, and
+*				Tables_and_Figures/
 *	CONTENTS:	0: Set paths and options
 *				1: Install packages
 *				2: Stage 1, build the ACS microdata (slow, only runs once)
@@ -16,7 +16,7 @@
 *				5: Stage 4, figures
 *
 *	HOW TO RUN:	Open Stata, cd into the replication_package folder, then
-*				do "3_Syntax/0_master.do"
+*				do "Syntax/0_master.do"
 */
 *********************************************************************************
 
@@ -36,21 +36,21 @@
 		// folder. If not, paste the full path in here instead.
 		global root "`c(pwd)'"
 
-		capture confirm file "${root}/3_Syntax/0_master.do"
+		capture confirm file "${root}/Syntax/0_master.do"
 		if _rc {
-			di as error "Can't find 3_Syntax/0_master.do from `c(pwd)'."
+			di as error "Can't find Syntax/0_master.do from `c(pwd)'."
 			di as error "cd into the replication_package folder and try again."
 			exit 601
 		}
 
 	**Folder globals (every other do file uses these)
 
-		global rawdata		"${root}/2_Raw_Data"
-		global syntax		"${root}/3_Syntax"
-		global gendata		"${root}/4_Generated_Datasets"
-		global logs			"${root}/5_Log_Files"
-		global tables		"${root}/6_Tables_and_Figures/tables"
-		global figures		"${root}/6_Tables_and_Figures/figures"
+		global rawdata		"${root}/Raw_Data"
+		global syntax		"${root}/Syntax"
+		global gendata		"${root}/Generated_Datasets"
+		global logs			"${root}/Log_Files"
+		global tables		"${root}/Tables_and_Figures/tables"
+		global figures		"${root}/Tables_and_Figures/figures"
 
 	**Switches
 
@@ -129,4 +129,4 @@
 	do "${syntax}/4_figures/4_5_fig_sectoral.do"
 	do "${syntax}/4_figures/4_6_fig_investor_names.do"
 
-	di as result "All done. Tables are in 6_Tables_and_Figures/tables, figures in 6_Tables_and_Figures/figures."
+	di as result "All done. Tables are in Tables_and_Figures/tables, figures in Tables_and_Figures/figures."

@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_2_fig_lang_
-> verification.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_2_fig_lang_ve
+> rification.log
   log type:  text
- opened on:  12 Oct 2026, 04:22:51
+ opened on:  12 Oct 2026, 05:10:26
 
 . 
 .         capture graph set window fontface "CMU Serif"
@@ -25,7 +25,7 @@
 .         tempfile speakers
 
 .         save `speakers'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 
 . 
@@ -85,26 +85,26 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
 (13 real changes made)
 (13 real changes made)
 (365 real changes made)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
-> fig4_4_punjabi_birthplace.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
+> g4_4_punjabi_birthplace.png written in PNG format
 (5,550 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (391 real changes made)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
-> fig4_5_tamil_birthplace.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
+> g4_5_tamil_birthplace.png written in PNG format
 (5,477 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (392 real changes made)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
-> fig4_6_bengali_birthplace.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
+> g4_6_bengali_birthplace.png written in PNG format
 (5,894 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (191 real changes made)
-file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
-> fig4_7_nepali_birthplace.png written in PNG format
+file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
+> g4_7_nepali_birthplace.png written in PNG format
 
 . 
 . ********
@@ -115,8 +115,8 @@ file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_2_fig_lang_
-> verification.log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/4_2_fig_lang_ve
+> rification.log
   log type:  text
- closed on:  12 Oct 2026, 04:22:51
+ closed on:  12 Oct 2026, 05:10:27
 -------------------------------------------------------------------------------

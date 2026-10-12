@@ -1,7 +1,7 @@
 % !TEX program = lualatex
 % Replication shell for "Do Subnational Diaspora Engagement Policies Attract FDI?
 % Evidence from India" (Calvin Pan). Tables and figures are pulled in from
-% 6_Tables_and_Figures/, which 3_Syntax/0_master.do regenerates.
+% Tables_and_Figures/, which Syntax/0_master.do regenerates.
 % Compile with LuaLaTeX (Overleaf: Menu > Compiler > LuaLaTeX).
 %       File: UVA_ETD_template.tex
 %     Created: Wed Oct 20 12:58 PM 2021 EDT
@@ -42,7 +42,7 @@
 
 % Table packages
 \usepackage{adjustbox}
-\graphicspath{{6_Tables_and_Figures/figures/}{static_figures/}}
+\graphicspath{{Tables_and_Figures/figures/}{static_figures/}}
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{threeparttable}
@@ -117,8 +117,8 @@ State
 \secondmember{Sonal Pandya}
 
 % The dedication and acknowledgement pages are optional. Comment them out to remove them.
-\dedication{To my family.}
-\acknowledge{Thank you to Professors David Waldner and Sonal Pandya for your stalwart support, astute guidance, and incredible patience with me!}
+%\dedication{To my family.}
+%\acknowledge{Thank you to Professors David Waldner and Sonal Pandya for your stalwart support, astute guidance, and incredible patience with me!}
 
 	% Using biblatex. This is the standard bibtex file. You need to include the .bib extension in <bib_file_name.bib>.
     \addbibresource{articles.bib}
@@ -136,6 +136,7 @@ State
   {1em}
   {}
 
+\nocopyright
 \begin{document}
 % The following lines set up the front matter of your thesis or dissertation and are required to ensure proper formatting per the UVA ETD standards. 
   \frontmatter
@@ -719,7 +720,7 @@ I also structured my policy buckets to be as mutually exclusive, collectively ex
     \caption{Analysis of policy pairs' Jaccard scores, which refer to how often policies are co-adopted.\citep{jaccard_etude_1901} A score of 1 means that a pair of policies appear together 100\% of the time, while a score of 0.5 means that a pair appears together 50\% of the time. Very few pairs have a Jaccard score higher than 0.1, making co-adoption not a real threat in this sample.}
     \label{fig:jaccard}
 \end{figure}
-\input{6_Tables_and_Figures/tables/3_2_tab5_1_jaccard_top10.tex}
+\input{Tables_and_Figures/tables/3_2_tab5_1_jaccard_top10.tex}
 
 There were cases, however, where policies or policy reform packages fell into two buckets. I would code those cases as a 1 in both buckets. This does introduce some co-adoption risk, but as the Jaccard analysis table shows, the risk is rather minimal. This means that my coding of DEPs is less "how many policies does the state government recognize as separate policies" and more "how many distinct mechanisms does a state government use to engage diasporas." 
 
@@ -736,7 +737,7 @@ There were cases, however, where policies or policy reform packages fell into tw
 
 We have now described how to measure all of our variables, so we can now merge our datasets. After we merge our datasets, we end up with the following number of observations of US metro $m$ $\times$ Indian state $s$ $\times$ year $t$. Each observation has number of subnational diaspora, count of FDI projects from $m\rightarrow s$, and subnational DEPs enacted.
 
-\input{6_Tables_and_Figures/tables/3_1_tab5_2_samples_by_n.tex}
+\input{Tables_and_Figures/tables/3_1_tab5_2_samples_by_n.tex}
 
     \chapter{Research Design} \label{ch:research design}
     The goal of research design is to do two things. First is identification, or what causal or descriptive quantity we are trying to learn, and what assumptions let our observed data remove the bias term and recover it. Second is estimation, which is which model we select to implement those assumptions. In order to talk about our identification issues in a non-abstract way later, let us first begin with estimation.
@@ -851,7 +852,7 @@ This distinction is less problematic for $H_1$ and $H_2$. Those hypotheses are e
 
 Empirically, however, bundling appears limited in this dataset. The Jaccard tables show that only a small number of policy pairs co-adopt to a meaningful degree, and the adoption-timing table does not reveal many large simultaneous reform packages. The largest same-year package contains three DEPs. Thus, bundling may move the interpretation of the more disaggregated estimates for a select few policies, but it is unlikely to drive the main $H_1$ and $H_2$ findings entirely.
 
-\input{6_Tables_and_Figures/tables/3_2_tab6_1_dep_turnon_events.tex}
+\input{Tables_and_Figures/tables/3_2_tab6_1_dep_turnon_events.tex}
 
 Another possible threat is rare policies. If a policy only turns on in one state or one year, PPML can still estimate something, but it is much more like a case-study contrast than a reliable panel estimate. We will exclude rare policies (identified as those either adopted by less than 2 states or for less than 10 state-years) from $H_2$ and $H_3$. In our appendix table of individual policy estimates, we will also list tiers of policies by how rare they are (3+ states and 20 + state-years; 2+ states and 10+ state-years; less).
 
@@ -1035,7 +1036,7 @@ Let us first consider our first hypothesis on location specificity. Note that be
 
 \textbf{$H_0$: As the location-specificity of a diaspora group increases, the positive effect it has on foreign direct investment to that location increases.}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_1_h0_baseline.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_1_h0_baseline.tex}
 
 Across all samples, the subnational diaspora is positively associated with FDI, with $\beta_1$ being larger in magnitude for sample 1 (first-gen, ICT FDI) but more statistically significant in samples 2-5 due to there being a larger amount of observations.  Meanwhile, national diaspora is not significantly associated with FDI in any sample. $H_1$ is thus supported: in the Indian context from 2005-2017, subnational diasporas have a much stronger association with FDI than the national diaspora.
 
@@ -1059,7 +1060,7 @@ For example, a $\beta_3$ of 0.5 would mean that when the DEP is on, the diaspora
 
 \textbf{$H_1$: As localities adopt any DEP, the positive effect diasporas have on FDI to that locality increases.}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_2_any_dep_baseline.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_2_any_dep_baseline.tex}
 
 Table 2 is where the story becomes sharply sector-specific. The extensive-margin DEP result is concentrated in ICT FDI. The first column's coefficient on any DEP adoption is 0.196 and significant at the 1\% level. Because the interaction is with logged diaspora, the most useful substantive interpretation is to ask what happens when the diaspora doubles. A coefficient of 0.196 implies that, after a state adopts any DEP, a doubling of the relevant diaspora is associated with about 15\% more ICT FDI than the same diaspora doubling would be associated with absent that DEP. That is a meaningful moderation effect. By contrast, the all-FDI columns are all close to zero and insignificant. DEPs do not appear to make diasporas generally better at attracting every kind of FDI; they appear to make diasporas better at attracting ICT FDI.
 
@@ -1067,7 +1068,7 @@ There is enough evidence to confirm $H_1$ only for ICT FDI while there is little
 
 \textbf{$H_2$: As localities' number of DEPs increases, the positive effect diasporas have on FDI to that locality increases.}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_3_dep_count_baseline.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_3_dep_count_baseline.tex}
 
 At the intensive margin, the result becomes weaker but does not disappear. The ICT column again has the only positive and marginally significant coefficient. The coefficient of 0.084 means that adding another support-screened DEP is associated with a stronger diaspora-FDI slope for ICT projects, though the estimate is less forceful than the any-DEP result. Substantively, this suggests that the first policy, or the existence of a state diaspora apparatus at all, may matter more than the simple count of policies a state has. That is intuitive: one meaningful investment-facing doorway may matter more than a long policy list, especially if some policies are symbolic or welfare-oriented rather than investment-oriented. No all-FDI column provides evidence for $H_2$.
 
@@ -1075,14 +1076,14 @@ No other estimates were significant at any other level. Thus, there is suggestiv
 
 \textbf{$H_3$: As the economic advantage provided by a DEP increases, its impact on DDI becomes more positive.}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_4_dep_category_baseline.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_4_dep_category_baseline.tex}
 
 In testing $H_3$, I drop less-supported policies as inference becomes more fragile. Unfortunately, this makes the most direct economic-advantage category difficult to test because the two most direct economic advantage DEPs are adopted by too few states for stable category-level estimation. Without those policies, a full test of $H_3$ is hard to accomplish here.
 
 The category table helps explain what kind of DEP is doing the work. The ICT result is driven most clearly by symbolic and informational policies. Symbolic DEPs have a large coefficient of 0.682, while information policies have a coefficient of 0.180, and both are significant at the 1\% level. The symbolic coefficient should be interpreted cautiously, because this is mostly driven by diaspora conferences (see Table 7.5). Those conferences range from efforts like Punjab's NRI Sammelan, held irregularly from 2008-2015 and mainly aimed at giving NRIs a space to voice grievances, to Gujarat's Vibrant Gujarat, an explicitly investment-oriented conference. There is a large amount of heterogeneity in what those policies are. I chose to categorize those as symbolic because more conferences were not focused on investment than were, but they could have easily been categorized as an informational policy. Either way, it appears that holding conferences is an effective move.
 
 The information coefficient is more straightforward. A doubling of the diaspora under an informational DEP corresponds to roughly a 13\% larger ICT FDI association than without that policy category. This is precisely the kind of mechanism we would expect if DEPs reduce search costs, help firms understand local regulatory environments, or make it easier for diaspora-linked investors to determine where a project should go. The all-FDI results go in the opposite direction for the information category. That is surprising at first glance, but it reinforces the broader point that DEPs do not help general FDI but do help ICT FDI.
-\input{6_Tables_and_Figures/tables/3_3_tab7_5_single_policy_baseline.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_5_single_policy_baseline.tex}
 
 This single-policy table clarifies what is inside that information result. For ICT, tax regulatory guidance and investment promotion roadshows are both large, positive, and significant at the 1\% level. The diaspora admin unit coefficient is also positive and significant. This is the pattern we would expect if the relevant policies are not merely saying ``please invest,'' but are instead lowering the concrete frictions that stop diaspora-linked investment from happening: uncertainty about tax treatment, uncertainty about procedures, uncertainty about who to call, and uncertainty about whether the state government can actually help. By contrast, tax guidance and roadshows are negative in the all-FDI samples. I read that less as evidence that these policies harm FDI, and more as evidence that the pooled all-FDI outcome mixes together very different investment processes. These policies seem to help diaspora-linked ICT projects specifically, not every project type in the fDiMarkets universe.
 
@@ -1092,9 +1093,9 @@ We can verify what is happening inside the all-FDI outcome by decomposing it int
 
 \section{FDI by Sector} \label{ss: sector}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_6_any_dep_cluster.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_7_dep_category_cluster.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_8_single_policy_cluster.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_6_any_dep_cluster.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_7_dep_category_cluster.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_8_single_policy_cluster.tex}
 
 The cluster cuts confirm that the main result is not evenly distributed across sectors. In Table 2, ICT is strongly positive and significant. Creative industries are also positive and significant, which is genuinely interesting and deserves future work. ICT, however, is the more convincing sector for deeper analysis because it has many more projects: 791 ICT projects, compared to 158 creative industries projects. That matters because once the model absorbs fixed effects and drops separated observations, small sectors can produce dramatic-looking coefficients identified off a very thin remaining slice of the data.
 
@@ -1105,9 +1106,9 @@ The cluster section therefore points to ICT as the main sectoral story, with sup
 \FloatBarrier
 \section{FDI by Activity} \label{ss:activity}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_9_any_dep_activity.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_10_dep_category_activity.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_11_single_policy_activity.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_9_any_dep_activity.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_10_dep_category_activity.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_11_single_policy_activity.tex}
 
 The activity cuts are weaker than the cluster cuts, which is useful in itself. In Table 2, none of the activity-specific any-DEP coefficients are statistically significant. That means the ICT result is not simply reducible to one broad project activity like sales, design, manufacturing, or business services. Put differently, it is not just that DEPs help sales offices or design projects wherever they appear. The sectoral identity of ICT seems to matter more than these broad activity classifications. Table 4 is messier. Symbolic policies are positive for sales and design activity, and state-bureaucratic policies are positive for design. However, business services has a large negative symbolic coefficient, and the single-policy shows an especially extreme negative estimate for investment promotion roadshows. I do not give that business-services result a clean substantive interpretation. It is better read as a sign of heterogeneity and instability in a smaller effective sample, not as a neat theory of why roadshows would reduce business services FDI. The honest takeaway is that Table 2 gives us no significant activity-level result, while Table 4 has some interesting but not yet clean heterogeneity.
 
@@ -1124,27 +1125,27 @@ A company is classified as a small company if it meets the following conditions:
 \end{enumerate}
 Other measures of small companies were tested, but this definition was the most robust in excluding well-established corporations that were unlikely to rely on subnational DEP services.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_12_h0_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_12_h0_company_size.tex}
 
 Table~\ref{tab:final_company_size_h0} shows that the company-size split makes the descriptive $H_0$ relationship more demanding, but not damaging to the overall argument. Among small-company projects, the subnational diaspora coefficients are positive but not statistically significant for both all FDI and ICT FDI. This is weaker than the large-company all-FDI result, but it is still substantively preferable to the national-diaspora comparison: national Indian diaspora stock is negative for small-company FDI and even marginally significant in the all-FDI small-company sample. Thus, even in the thinner small-company sample, the subnational measure does not produce the negative relationship that appears for national diaspora size. This supports the broader claim that location-specific diaspora measurement is still more appropriate than national diaspora stock, even when the project sample is restricted to smaller firms.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_13_diaspora_only_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_13_diaspora_only_company_size.tex}
 
 Table~\ref{tab:final_company_size_table1_baseline} reinforces the same interpretation. The unconditional diaspora--FDI slope is not consistently positive for small-company FDI once the model includes more demanding fixed effects. However, this should not be overread as evidence that small firms are unrelated to diasporas. These samples contain far fewer projects, especially in the small-company ICT column, and the fixed effects absorb much of the remaining variation. More importantly, the baseline table only asks whether diaspora size alone predicts project counts; the more theoretically relevant question is whether diaspora engagement policies change how diaspora size translates into FDI.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_14_any_dep_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_14_any_dep_company_size.tex}
 
 Table~\ref{tab:final_company_size_table2_h1} is the most important result from the company-size split. The $H_1$ relationship not only survives in the small-company sample, but is especially clear for small-company ICT FDI. The interaction between diaspora size and any DEP adoption is positive and significant for small-company ICT FDI, with a coefficient of 0.212. This is slightly larger than the corresponding large-company ICT coefficient of 0.185, even though the small-company ICT sample contains far fewer projects and retains only 367 observations after fixed-effect and singleton restrictions. This is strong evidence that the DEP result is not simply being driven by large multinationals. Rather, the result is consistent with the idea that DEPs help diaspora networks translate into actual ICT investments even among smaller firms, where informational and regulatory assistance should be more valuable.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_15_dep_count_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_15_dep_count_company_size.tex}
 
 Table~\ref{tab:final_company_size_table3_h2} shows that the company-size split weakens the $H_2$ count-intensity result for smaller firms. The DEP-count interaction is essentially zero for small-company ICT FDI, while it is positive and significant for large-company ICT FDI. This suggests that, for smaller firms, the number of DEP categories adopted may matter less than the presence of the right kind of policy. That interpretation is substantively reasonable: a small diaspora-linked firm is unlikely to benefit simply because a state has accumulated many diaspora-facing programs, especially if some are symbolic, bureaucratic, or welfare-oriented. Instead, small firms should benefit most from policies that directly reduce the information and procedural costs of investing.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_16_dep_category_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_16_dep_category_company_size.tex}
 
 Table~\ref{tab:final_company_size_table4_h3} clarifies why the DEP-count result is weak for smaller firms. The positive small-company ICT result is concentrated in information-facilitation policies, not in the broad accumulation of DEP categories. The coefficient on information policies is positive and significant at the 1\% level for small-company ICT FDI, while symbolic, state-bureaucratic, and abroad-oriented policies are not statistically distinguishable from zero in the same column. This is exactly the pattern we would expect if small firms are not responding to diaspora engagement in general, but to policies that reduce concrete barriers to investment: tax and regulatory guidance, investment promotion roadshows, and similar forms of state-provided information. The company-size split therefore sharpens the main conclusion. For small ICT investors, the relevant policy mechanism appears to be practical information facilitation rather than conferences, symbolic recognition, or generalized diaspora bureaucracy.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_17_single_policy_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_17_single_policy_company_size.tex}
 
 The single-policy results support the same mechanism-level interpretation. The two policies that most directly correspond to information facilitation---tax and regulatory guidance and investment promotion roadshows---are both positive and statistically significant for small-company ICT FDI. Tax and regulatory guidance has a coefficient of 0.174, significant at the 5\% level, while investment promotion roadshows has a coefficient of 0.194, significant at the 1\% level. By contrast, broader administrative or welfare-oriented policies do not show a clear small-company ICT relationship. This reinforces the conclusion that the small-company result is not driven by diaspora engagement as symbolic outreach. It is driven by policies that plausibly help smaller diaspora-linked ICT firms understand where to invest, how to navigate state rules, and whom to contact inside the state investment apparatus.
 
@@ -1153,28 +1154,28 @@ Taken together, the company-size results make the paper's policy conclusion more
 \FloatBarrier
 \section{A Deeper Look at ICT} \label{ss:ict}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_18_any_dep_ict_generation.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_19_dep_category_ict_generation.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_20_single_policy_ict_generation.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_18_any_dep_ict_generation.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_19_dep_category_ict_generation.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_20_single_policy_ict_generation.tex}
 
 The first ICT deeper cut is reassuring because the result does not depend on one narrow diaspora definition. Whether the sample uses first-generation or all-generation diaspora, and whether it uses all diaspora or high-education diaspora, Table 2 stays positive and significant. The coefficients are also tightly grouped, from 0.211 to 0.267, which is what we would expect if the underlying result is real rather than an artifact of one sample definition. Table 4 is similarly consistent. Symbolic, state-bureaucracy, and information policies are positive across all four ICT samples, while abroad policies are positive but not statistically significant. The single-policy table then shows that diaspora admin units, tax regulatory guidance, and investment promotion roadshows are the most consistently positive individual policies (the informational ones). This is probably the cleanest evidence in the Results chapter that the ICT result is robust to reasonable alternative ways of measuring the diaspora.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_21_any_dep_ict_worker.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_22_dep_category_ict_worker.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_23_single_policy_ict_worker.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_21_any_dep_ict_worker.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_22_dep_category_ict_worker.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_23_single_policy_ict_worker.tex}
 
 The ICT-worker cuts complicate the mechanism in a useful way. Table 2 shows that ICT-worker diaspora samples still have large positive any-DEP coefficients, so current ICT workers are not irrelevant. If the question is simply whether DEPs increase the diaspora-FDI relationship for ICT projects, ICT-worker samples still show that broad positive result. But Table 4 changes the story once policy type is introduced. Information policies become negative for ICT-worker samples, even though they are positive for the broader high-education ICT samples. 
 
 One plausible interpretation is that the people who matter for informational facilitation may not be current workers coded as ICT employees. The person who starts a firm, manages a division, raises capital, or chooses where in India a project should go may be highly educated and deeply connected to tech, but not necessarily classified as an ICT worker in the ACS. Managers, founders, investors, and senior professionals can matter more for location decisions than the raw number of current software or ICT employees. Thus, the high-education diaspora measure may be picking up decision-making capacity better than the ICT-worker measure.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_24_any_dep_ict_company_size.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_25_dep_category_ict_company_size.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_26_single_policy_ict_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_24_any_dep_ict_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_25_dep_category_ict_company_size.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_26_single_policy_ict_company_size.tex}
 
 The ICT company-size cuts point in the same direction. Any DEP adoption is positive for all-company ICT and small-company ICT, though the small-company ICT-worker estimate loses precision because that is a very thin slice of the data. The more important comparison is again in Table 4. Information policies are positive for the high-education ICT samples, including small-company ICT, but negative for the ICT-worker versions of both samples. If information policies were mainly working through current ICT employees at large technology firms, the ICT-worker versions should be the strongest. They are not. Instead, the broader high-education diaspora measure performs better for the information-policy mechanism. This points toward a mechanism based on educated entrepreneurs, managers, and investors rather than simply a mechanism based on the number of diaspora members currently employed in tech occupations.
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_27_any_dep_tech_hubs.tex}
-\input{6_Tables_and_Figures/tables/3_3_tab7_28_dep_category_tech_hubs.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_27_any_dep_tech_hubs.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_28_dep_category_tech_hubs.tex}
 
 The tech-hub restriction is a stress test for this interpretation. Here the sample is limited to a series of 25 US metros where major tech companies are headquartered (see Appendix Table C), with the idea that at least a plurality proportion of diaspora tech workers who live there were once employed by or associated with the company. Again, we suspect that ICT workers do not have a positive influence on ICT FDI because they are all working for the company and do not have a hand in investment decision making. This analysis helps us test this by comparing the influence of highly-educated diaspora not coded as ICT workers (i.e. managers, entrepreneurs, etc. possibly associated with the company in the past who may now lead their own companies) versus company-linked ICT workers.
 
@@ -1183,7 +1184,7 @@ The estimates become much less stable because the raw sample falls to 777 observ
 \FloatBarrier
 \section{Do Our Results Hold Across State Lines?} \label{ss:state lines}
 
-\input{6_Tables_and_Figures/tables/3_3_tab7_29_state_specific_policies.tex}
+\input{Tables_and_Figures/tables/3_3_tab7_29_state_specific_policies.tex}
 
 The state-specific estimates show that the policy effects are not identical across Indian states. This matters because a pooled coefficient can hide the fact that the same named policy may work differently in different state contexts. Punjab has positive all-FDI coefficients for diaspora admin units and diaspora conferences, but the ICT column is not informative there. Kerala shows a strong positive ICT coefficient for diaspora conferences, while Gujarat shows a strong positive ICT coefficient for tax regulatory guidance. That is substantively plausible. A diaspora conference in Kerala may not be the same thing as a diaspora conference in Punjab, and tax regulatory guidance in Gujarat may be especially relevant because Gujarat is also the state where the policy language is most explicitly tied to investment attraction. The state cuts should therefore be read as both a caution and a refinement. The main ICT finding is not just one pooled national relationship, but it also should not be read as a uniform effect that automatically travels across every state and every policy. State capacity, sectoral composition, and the actual content of the DEP all matter.
 
@@ -1532,7 +1533,7 @@ Note that all estimates here should be taken with a significant grain of salt, e
 \footnotesize
 \setstretch{1}
 
-\input{6_Tables_and_Figures/tables/3_3_tabB_1_single_policy_by_support.tex}
+\input{Tables_and_Figures/tables/3_3_tabB_1_single_policy_by_support.tex}
 \endgroup
 
 \chapter{List of Tech Hubs}

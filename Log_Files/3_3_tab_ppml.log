@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_3_tab_ppml.
-> log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/3_3_tab_ppml.lo
+> g
   log type:  text
- opened on:  12 Oct 2026, 04:16:30
+ opened on:  12 Oct 2026, 05:04:22
 
 . 
 . ********
@@ -114,8 +114,8 @@ Table 4 categories:  total_symbolic total_state_bureaucracy total_abroad total_
 
 .         save "${gendata}/3_3_policy_support.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_policy_
-    > support.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_policy_su
+    > pport.dta saved
 
 . 
 . ********
@@ -2360,13 +2360,13 @@ Sample 3: s3_firstgen_all, fdi_projects_all
 . 
 .         frame results: save "${gendata}/3_3_ppml_results.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_ppml_re
-    > sults.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_ppml_resu
+    > lts.dta saved
 
 .         frame accounting: save "${gendata}/3_3_ppml_accounting.dta", replace
 file
-    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_ppml_ac
-    > counting.dta saved
+    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_ppml_acco
+    > unting.dta saved
 
 . 
 . ********
@@ -2693,7 +2693,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -2732,7 +2732,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2771,7 +2771,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -2810,7 +2810,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -2859,7 +2859,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -2906,7 +2906,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2948,7 +2948,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3000,7 +3000,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3044,7 +3044,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3083,7 +3083,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3131,7 +3131,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3175,7 +3175,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -3213,7 +3213,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (878 observations deleted)
 (0 real changes made)
@@ -3253,7 +3253,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3291,7 +3291,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -3329,7 +3329,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3377,7 +3377,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3420,7 +3420,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3458,7 +3458,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3506,7 +3506,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3549,7 +3549,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3587,7 +3587,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3634,7 +3634,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3678,7 +3678,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3716,7 +3716,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3765,7 +3765,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3809,7 +3809,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3847,7 +3847,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -4379,8 +4379,8 @@ xij variables:
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_3_tab_ppml.
-> log
+       log:  /Users/calvin/thesis_replication_package/Log_Files/3_3_tab_ppml.lo
+> g
   log type:  text
- closed on:  12 Oct 2026, 04:22:44
+ closed on:  12 Oct 2026, 05:10:18
 -------------------------------------------------------------------------------
