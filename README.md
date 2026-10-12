@@ -1,6 +1,6 @@
 # Replication package: Do Subnational Diaspora Engagement Policies Attract FDI? Evidence from India
 
-Calvin Pan, University of Virginia, Department of Politics (working paper, October 2026)
+Calvin Pan, University of Virginia, Batten School of Public Policy (working paper, October 2026)
 
 This folder rebuilds every data-driven table and figure in the working paper
 (`paper.pdf`) and its online appendix (`online_appendix.pdf`), from raw data to
