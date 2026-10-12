@@ -1,17 +1,17 @@
 *********************************************************************************
 /*	TITLE:		4_3_fig_budgets
-*	PURPOSE:	Figure 1: DEP budgets by state, 2005-2017, in 2023 rupees with
+*	PURPOSE:	Figure 4: DEP budgets by state, 2005-2017, in 2023 rupees with
 *				an approximate US dollar axis on the right.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0405
 *	UPDATED:	2026_1012
 *	CALLS UPON:	"${gendata}/2_3_dep_budgets_state_year.dta"
-*	PRODUCES:	Figures:	"${figures}/4_3_fig1_dep_budgets_by_state.png"
+*	PRODUCES:	Figures:	"${figures}/4_3_fig4_dep_budgets_by_state.png"
 *				Tables:		No
 *				Datasets:	No
 *	CONTENTS:	0: Start log file, graph font
 *				1: Convert units
-*				2: Figure 1
+*				2: Figure 4
 *				3: Close log file
 */
 *********************************************************************************
@@ -46,7 +46,7 @@
 
 ********
 *
-*	2. Figure 1: DEP budgets
+*	2. Figure 4: DEP budgets
 *
 ********
 
@@ -74,7 +74,7 @@
 			rows(1) size(8pt) position(6) ring(1) region(lstyle(none))) ///
 		graphregion(color(white)) ///
 		plotregion(color(white) margin(medium))
-	graph export "${figures}/4_3_fig1_dep_budgets_by_state.png", replace
+	graph export "${figures}/4_3_fig4_dep_budgets_by_state.png", replace
 
 ********
 *

@@ -79,15 +79,15 @@ master has set the folder globals (`$root`, `$rawdata`, ...) in your session.
 | 6 | `3_tables/3_1_tab_descriptives.do` | Samples by number of observations | Table 1 | | <1 s |
 | 7 | `3_tables/3_2_tab_policy_bundling.do` | DEP co-adoption and turn-on timing | | Tables A6-A7 | <1 s |
 | 8 | `3_tables/3_3_tab_ppml.do` | All PPML results | Tables 3-14 | Tables A8-A25 | ~6 min |
-| 9 | `4_figures/4_1_fig_descriptives.do` | FDI, diaspora, and DEP descriptives | Figures 3-4 | Figures A8-A15, A18-A20, A23 | ~7 s |
-| 10 | `4_figures/4_2_fig_lang_verification.do` | Where speakers of each language were born | | Figures A4-A7 | ~1 s |
-| 11 | `4_figures/4_3_fig_budgets.do` | DEP budgets | Figure 1 | | ~1 s |
-| 12 | `4_figures/4_4_fig_policy_bundling.do` | Jaccard distribution, adoption timing | | Figures A21, A22, A24 | ~4 s |
-| 13 | `4_figures/4_5_fig_sectoral.do` | Projects by sector | | Figure A25 | ~1 s |
-| 14 | `4_figures/4_6_fig_investor_names.do` | Indian-name investor shares | Figure 2 | | ~1 s |
+| 9 | `4_figures/4_1_fig_descriptives.do` | FDI, diaspora, and DEP descriptives | Figures 6-7 | Figures A7-A14, A15-A17, A20 | ~7 s |
+| 10 | `4_figures/4_2_fig_lang_verification.do` | Where speakers of each language were born | | Figures A3-A6 | ~1 s |
+| 11 | `4_figures/4_3_fig_budgets.do` | DEP budgets | Figure 4 | | ~1 s |
+| 12 | `4_figures/4_4_fig_policy_bundling.do` | Jaccard distribution, adoption timing | | Figures A18, A19, A21 | ~4 s |
+| 13 | `4_figures/4_5_fig_sectoral.do` | Projects by sector | | Figure A22 | ~1 s |
+| 14 | `4_figures/4_6_fig_investor_names.do` | Indian-name investor shares | Figure 5 | | ~1 s |
 
 Not made from data, so they live in `static_figures/` or are typed into the
-LaTeX: Table 2 in the paper, and Tables A1-A5, A26 and Figures A1-A3, A16-A17
+LaTeX: Table 2 and Figures 1-3 in the paper, and Tables A1-A5, A26 and Figures A1-A2
 in the online appendix.
 
 ### Software

@@ -139,40 +139,34 @@ The second filter, how closely administrative units map to languages, is more pr
     \item State has ACS data
 \end{enumerate}
 A full table of all 28 Indian states and 8 union territories and their ratings on each criterion is included in Section~\ref{sec:oa_states}. In particular, criterion 2 and 3 deserve more detailed discussion.  
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{states_by_language.png}
-    \caption{States and Union Territories of India by dominant language. Note that states are colored by their most-spoken language, which does not reach a majority in some states. Also note that this hides the differences between languages spoken and borders displayed in the earlier graphs, and is just for easier visualization of which states speak which languages. \citep{noauthor_languages_nodate}}
-    \label{fig:statesbylang}
-\end{figure}
     One edge case in criterion 2 was Andhra Pradesh. In 2014, the inland parts of Andhra were split to form Telangana. Both states are still Telugu-language-dominant, and diaspora from both states interact as one single community. This makes identification impossible. As such, Andhra Pradesh will be included in our sample up to the year 2013, and thereafter both Andhra and Telangana will be dropped.
     There were four states that had problems with criterion 3: their language communities crossed state lines. Whether to include those states can be decided based on what percentage of their diasporas in the US is from India vs. the other country. The measures below were constructed using ACS data. 
     
 Punjab, our first case, shares the Punjabi language with the Pakistani state of Punjab. Yet, Indian Punjabis are routinely around 10x more numerous in the US than Pakistani Punjabis. As such, Punjabis can be safely kept in the sample as a population.
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_2_figA4_punjabi_birthplace.png}
+    \includegraphics[width=1\linewidth]{4_2_figA3_punjabi_birthplace.png}
     \caption{Punjabi speakers in the US by birthplace. Created by author using ACS data.}
     \label{fig:punjabisovertime}
 \end{figure}
 Tamil Nadu, our second case, shares the Tamil language with Sri Lanka. Yet, Tamil speakers in the US are almost entirely India-born. As such, Tamils can be safely kept in the sample as a population.
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_2_figA5_tamil_birthplace.png}
+    \includegraphics[width=1\linewidth]{4_2_figA4_tamil_birthplace.png}
     \caption{Tamil speakers in the US by birthplace. Created by author using ACS data.}
     \label{fig:tamil speakers}
 \end{figure}
 West Bengal, our third case, shares the Bengali language with Bangladesh. Contrary to our first couple cases, Bengalis of Indian origin are dwarfed in the US by Bengalis of Bangladeshi origin (who are roughly 3x larger in population). However, they are still a large population (\~90k), and our empirics would increase in confirmatory power if they included an 8th additional state, making the inclusion of West Bengal still worthwhile. If we attempted to include West Bengal by including all Bengali immigrants born in India and also second-generation immigrants marked as born in the US, then most of this second-generation population will likely be those who feel more attachment to Bangladesh rather than West Bengal. Therefore, the only way to include Bengalis is to create a separate sample of all states that only includes first-generation immigrants (i.e. those that are marked as being born in India). We will also exclude West Bengal and Bengali speakers from our larger sample of all-generation all workers.
    \begin{figure}
        \centering
-       \includegraphics[width=1\linewidth]{4_2_figA6_bengali_birthplace.png}
+       \includegraphics[width=1\linewidth]{4_2_figA5_bengali_birthplace.png}
        \caption{Bengali speakers in the US by birthplace. Created by author using ACS data.}
        \label{fig:bengali speakers}
    \end{figure}
 Sikkim, our last case, has a much worse case for inclusion than West Bengal. It shares the Nepali language with Nepal and parts of Bhutan. Yet, there are almost zero Nepali speakers in the US who were born in India. Unlike the Bengal case, the incredibly small population of Indian-born Nepali speakers in the US means that there is no case for their inclusion in either sample.
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_2_figA7_nepali_birthplace.png}
+    \includegraphics[width=1\linewidth]{4_2_figA6_nepali_birthplace.png}
     \caption{Nepali speakers in the US by birthplace. Created by author using ACS data.}
     \label{fig:nepali speakers}
 \end{figure}
@@ -454,7 +448,7 @@ Where $T$ is the locality having a high economic advantage DEP, and $U$ is the l
     Project counts data from the FDI markets data can be seen below. In a confirmation of data fidelity, these data clearly show canonical effect of India's 2005 FDI liberalization in 2006, with a large spike in FDI that year that soon tapers off. 
         \begin{figure}
             \centering
-            \includegraphics[width=1\linewidth]{4_1_figA8_fdi_projects_by_state_no_total.png}
+            \includegraphics[width=1\linewidth]{4_1_figA7_fdi_projects_by_state_no_total.png}
             \caption{FDI projects, 2005-17, including only top 50 US source metro areas for each diaspora, without an all-of-India line. Created by author using fDiMarkets data.}
             \label{fig:fditop50_noindialine}
         \end{figure}
@@ -463,27 +457,27 @@ Where $T$ is the locality having a high economic advantage DEP, and $U$ is the l
         In addition to raw counts of FDI, fDiMarkets also estimates capital investment amount and jobs numbers. However, those are not helpful outcomes for us to measure. As shown in the visualizations below, both tend to spike with very large projects: in the data, most of those spikes can be attributed to single large projects, and not an increase in the number of jobs or capital investment for the average project in the associated year. As such, inferences based on those outcomes would likely be capturing just this large-project variation and not any other variation.
 \begin{figure}
             \centering
-            \includegraphics[width=1\linewidth]{4_1_figA9_fdi_value_by_state.png}
+            \includegraphics[width=1\linewidth]{4_1_figA8_fdi_value_by_state.png}
             \caption{FDI project value, 2005-2017. Created by author using fDiMarkets data. Note that this has tremendous spikes due to single large projects: the 2015 Gujarat spike is due to SunEdison's \$4 billion investment in Gujarat in 2016 to build India's largest photovoltaic plant, \citep{inc_sunedison_nodate} which is 4 times larger than the next largest investment in our dataset.}
             \label{fig:fdivalue}
         \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA10_fdi_jobs_by_state.png}
+    \includegraphics[width=1\linewidth]{4_1_figA9_fdi_jobs_by_state.png}
     \caption{FDI jobs generated, 2005-2017. Created by author using fDiMarkets data. Note this has some reliability issues: SunEdison's announcement of its \$4 billion investment into Gujarat announces that it will create 20,000 jobs (4,500 direct and 15,000 indirect), \citep{inc_sunedison_nodate} but only 3,000 is marked for the project in the data.}
     \label{fig:jobs}
 \end{figure}
 fDiMarkets also captures sectoral variation in projects. This could be very interesting to investigate if DEPs are more effective for certain types of invesment, e.g. tech investment facilitated by tech workers. As demonstrated below, around half of all FDI projects to India come in the Information and Communications Technology (ICT) sector.
                 \begin{figure}
                     \centering
-                    \includegraphics[width=1\linewidth]{4_1_figA11_fdi_ict_projects_by_state.png}
+                    \includegraphics[width=1\linewidth]{4_1_figA10_fdi_ict_projects_by_state.png}
                     \caption{Information and Communications Technology (ICT) projects, 2005-17. Created by author using fDiMarkets data. Note that this is roughly half of all projects in earlier years and 1/3rd in later years.}
                     \label{fig:ictcount}
                 \end{figure}
 One sector that could potentially be interesting to explore would be retail/consumer goods. In 2012, the Indian government moved from heavy restrictions on retail FDI to allowing for 100\% FDI in single-brand retail and 51\% FDI in multi-brand retail, subject to certain conditions. It would be interesting to interact this shock with DEPs, and see how DEPs either moderate or facilitate them. However, as shown below, this is not something we can currently investigate, as there are at most \~5 retail FDI projects per state/year, and for most states, zero. Any such test would be too underpowered to succeed.
         \begin{figure}
             \centering
-            \includegraphics[width=1\linewidth]{4_1_figA12_fdi_consumer_goods_by_state.png}
+            \includegraphics[width=1\linewidth]{4_1_figA11_fdi_consumer_goods_by_state.png}
             \caption{Consumer goods FDI projects, 2005-17. Created by author using fDiMarkets data. Note that there is a marked spike in 2012 and again in 2015 after the liberalization of commercial FDI, but counts in each state are still too low for us to reliably make causal inferences.}
             \label{fig:commercialcount}
         \end{figure}
@@ -542,7 +536,7 @@ Another issue that emerges is with the reliability of Census/IPUMS data. Because
 
     \begin{figure}
         \centering
-        \includegraphics[width=1\linewidth]{4_1_figA13_gujarati_top10_metros.png}
+        \includegraphics[width=1\linewidth]{4_1_figA12_gujarati_top10_metros.png}
         \caption{Gujarati diaspora (all generations) in its ten largest US metro areas. Restriction to top 50 US metros will reduce generalizability, but that is actually a somewhat minor concern given the tendency of Indian subnational diaspora to agglomerate.}
         \label{fig:sample1 gujarati diaspora}
     \end{figure}
@@ -551,13 +545,13 @@ Another issue that emerges is with the reliability of Census/IPUMS data. Because
     \subsubsection{Descriptive statistics of diasporas} \label{ss:diaspora description}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA14_firstgen_diaspora_by_state.png}
+    \includegraphics[width=1\linewidth]{4_1_figA13_firstgen_diaspora_by_state.png}
     \caption{First-generation diaspora (born in India) by Indian state, top 50 metros, over time}
     \label{fig:sample1}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA15_allgen_diaspora_by_state.png}
+    \includegraphics[width=1\linewidth]{4_1_figA14_allgen_diaspora_by_state.png}
     \caption{All-generation diaspora by Indian state, top 50 metros, over time (Bengali speakers of any birthplace included)}
     \label{fig:sample 3}
 \end{figure}
@@ -566,25 +560,13 @@ Another issue that emerges is with the reliability of Census/IPUMS data. Because
 
 \subsection{Taxonomy}
 
-Figure~\ref{fig:deps_list} lists all 44 DEPs and the category each belongs to, and Figure~\ref{fig:variable diagram of pathways} shows how the categories map onto the mechanisms of diaspora direct investment.
+Figure~\pref{fig:deps_list} in the paper lists all 44 DEPs and the category each belongs to, and Figure~\pref{fig:variable diagram of pathways} shows how the categories map onto the mechanisms of diaspora direct investment.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{dep_sources.png}
-    \caption{List of all diaspora engagement policies analyzed in this paper. (G) indicates the DEP was used in \citet{gamlen_emigration_2008}, (R) indicates the DEP was used in \citet{ragazzi_comparative_2014}, two definitive works on DEP classification. (GR) indicates the category was used in both. Unlabeled DEPs are the author's own classification. Note that some DEPs have been moved to different categories than in either work to best accommodate these 8 expanded categories.}
-    \label{fig:deps_list}
-\end{figure}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1\linewidth]{var_diagram.png}
-    \caption{A diagram of mechanisms for DDI with how DEPs fit in. Note that DEPs interact with diasporas, meaning that they are only effective insofar as they attract any diaspora.}
-    \label{fig:variable diagram of pathways}
-\end{figure}
 
-The below list of DEPs and categories is long because it is meant to avoid measurement bias. By being exhaustive of all possible DEPs a state could enact, this paper aims to avoid faulty claims about the efficacy of a category of DEPs that can be disproven with the inclusion or exclusion of a particularly strong or weak DEP.
+The list of DEPs and categories is long because it is meant to avoid measurement bias. By being exhaustive of all possible DEPs a state could enact, this paper aims to avoid faulty claims about the efficacy of a category of DEPs that can be disproven with the inclusion or exclusion of a particularly strong or weak DEP.
        \subsection{Operationalizing diaspora engagement policies} \label{ss:operationalizing DEPs}
-			In contrast to the other two datasets, the DEP dataset for this project is an original dataset. This dataset consists of 104 state-year observations (8 states across 13 years), with the 44 DEPs in Figure~\ref{fig:deps_list} coded as dummies for each observation.
+			In contrast to the other two datasets, the DEP dataset for this project is an original dataset. This dataset consists of 104 state-year observations (8 states across 13 years), with the 44 DEPs in Figure~\pref{fig:deps_list} coded as dummies for each observation.
             Because this is an original dataset, how close $e_i$ in $T_i​=T_i^∗​+e_i$ is to 0 depends largely how we code. Very strict rules were followed in the data generation process to ensure that we would avoid validity issues and have minimal distance between our theoretical construct and empirical indicator. The construct we want to measure is subnational DEPs undertaken by state governments that were actually implemented. To ensure that my measurement matched this construct, I only coded a DEP a 1 if it met the following conditions:
  \begin{enumerate}
      \item \textbf{The policy was implemented by the state government itself. }This excluded many NGOs, civil society organizations, business councils, cultural organizations, etc. that could be considered as fostering diaspora engagement. Even if those organizations received funding from or were partly owned/operated by the government, I did not code those as 1s for the sake of clarity. The only such organizations I included were those fully owned, operated, and advertised as part of the government.\footnote{An investigation of civil society organizations could be helpful in a future paper.} This also excluded policies implemented by local governments like cities, though I could not find many instances of this occurring.
@@ -623,19 +605,19 @@ First, note the total number of DEPs per state increases on average quite substa
 There were some DEPs that did turn off over time. The most notable of those was diaspora conferences, which many states hosted once or twice, but infrequently enough that I could not count it as a recurring DEP.
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA18_econ_vs_nonecon_deps.png}
+    \includegraphics[width=1\linewidth]{4_1_figA15_econ_vs_nonecon_deps.png}
     \caption{Non-econ vs Econ DEPs. Note this is total \# of policies turned on, not total \# of categories of policies turned on. Andhra and Kerala turning on a diaspora admin unit is considered two policies here.}
     \label{fig:Non-Econ vs Econ}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA19_nonecon_deps_by_state_2017.png}
+    \includegraphics[width=1\linewidth]{4_1_figA16_nonecon_deps_by_state_2017.png}
     \caption{Non-economic DEPs by state in 2017}
     \label{fig:non-econ DEPs by state}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA20_econ_deps_by_state_2017.png}
+    \includegraphics[width=1\linewidth]{4_1_figA17_econ_deps_by_state_2017.png}
     \caption{Economic DEPs by state in 2017}
     \label{fig:econ DEPs by state}
 \end{figure}
@@ -643,7 +625,7 @@ There were some DEPs that did turn off over time. The most notable of those was 
 I also structured my policy buckets to be as mutually exclusive, collectively exhaustive as possible, which is why I have 44 policies. This mutually exclusive part is especially important because having policies that are essentially the same thing would introduce collinearity: if I have both diaspora\_admin\_unit and diaspora\_program\_maintenance, then they would be turned on at the same time for every observation, meaning that inferences would be unstable. I have excluded policies with a high degree of co-adoption.
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_4_figA21_jaccard_distribution.png}
+    \includegraphics[width=1\linewidth]{4_4_figA18_jaccard_distribution.png}
     \caption{Analysis of policy pairs' Jaccard scores, which refer to how often policies are co-adopted. \citep{jaccard_etude_1901} A score of 1 means that a pair of policies appear together 100\% of the time, while a score of 0.5 means that a pair appears together 50\% of the time. Very few pairs have a Jaccard score higher than 0.1, making co-adoption not a real threat in this sample.}
     \label{fig:jaccard}
 \end{figure}
@@ -653,7 +635,7 @@ There were cases, however, where policies or policy reform packages fell into tw
 
     \begin{figure}
         \centering
-        \includegraphics[width=1\linewidth]{4_4_figA22_admin_unit_timing.png}
+        \includegraphics[width=1\linewidth]{4_4_figA19_admin_unit_timing.png}
         \caption{Creation date of governmental diaspora administrative units for each Indian state (note this includes anything from cabinet-level agencies to small working groups).}
         \label{fig:admin_unit_creation_date}
     \end{figure}
@@ -664,13 +646,13 @@ Two more figures describe economic DEPs specifically: how economic DEP types gro
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_1_figA23_econ_dep_types.png}
+    \includegraphics[width=1\linewidth]{4_1_figA20_econ_dep_types.png}
     \caption{Economic DEP types over time}
     \label{fig:econ DEP types over time}
 \end{figure}
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_4_figA24_info_policy_timing.png}
+    \includegraphics[width=1\linewidth]{4_4_figA21_info_policy_timing.png}
     \caption{Adoption timing of informational DEPs by state. Filled circles mark adoption in 2005--2017, open circles adoption before 2005 or after 2017, and X marks states that never adopted the policy.}
     \label{fig:info_timing}
     \end{figure}
@@ -924,7 +906,7 @@ I have chosen to specifically break out ICT FDI as it is the largest sector by f
 
 \begin{figure}
     \centering
-    \includegraphics[width=1\linewidth]{4_5_figA25_projects_by_cluster.png}
+    \includegraphics[width=1\linewidth]{4_5_figA22_projects_by_cluster.png}
     \caption{All companies by their sector (cluster)}
     \label{fig:all companies by sector}
 \end{figure}

@@ -1,25 +1,25 @@
 *********************************************************************************
 /*	TITLE:		4_4_fig_policy_bundling
 *	PURPOSE:	Figures on DEP co-adoption and adoption timing.
-*				Online Appendix Figure A21: how many policy pairs fall in each Jaccard range
-*				Online Appendix Figure A22: when each state created a diaspora admin unit
-*				Online Appendix Figure A24: adoption timing for the
+*				Online Appendix Figure A18: how many policy pairs fall in each Jaccard range
+*				Online Appendix Figure A19: when each state created a diaspora admin unit
+*				Online Appendix Figure A21: adoption timing for the
 *				informational DEPs
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0412
 *	UPDATED:	2026_1012
 *	CALLS UPON:	"${gendata}/3_2_policy_pair_jaccard.dta" (made by 3_2_tab_policy_bundling.do)
 *				"${gendata}/2_3_dep_turnons_long.dta"
-*	PRODUCES:	Figures:	"${figures}/4_4_figA21_jaccard_distribution.png"
-*							"${figures}/4_4_figA22_admin_unit_timing.png"
-*							"${figures}/4_4_figA24_info_policy_timing.png"
+*	PRODUCES:	Figures:	"${figures}/4_4_figA18_jaccard_distribution.png"
+*							"${figures}/4_4_figA19_admin_unit_timing.png"
+*							"${figures}/4_4_figA21_info_policy_timing.png"
 *				Tables:		No
 *				Datasets:	No
 *	CONTENTS:	0: Start log file
-*				1: Figure A21, Jaccard distribution
+*				1: Figure A18, Jaccard distribution
 *				2: Program for adoption-timing dot plots
-*				3: Figure A22, diaspora admin unit timing
-*				4: Figure A24, informational DEP timing
+*				3: Figure A19, diaspora admin unit timing
+*				4: Figure A21, informational DEP timing
 *				5: Close log file
 */
 *********************************************************************************
@@ -29,7 +29,7 @@
 
 ********
 *
-*	1. Figure A21: Policy-pair Jaccard distribution
+*	1. Figure A18: Policy-pair Jaccard distribution
 *
 ********
 
@@ -51,7 +51,7 @@
 		xtitle("Jaccard range") ///
 		title("Policy-pair Jaccard distribution") ///
 		graphregion(color(white))
-	graph export "${figures}/4_4_figA21_jaccard_distribution.png", replace width(3200) height(2000)
+	graph export "${figures}/4_4_figA18_jaccard_distribution.png", replace width(3200) height(2000)
 
 ********
 *
@@ -135,7 +135,7 @@
 
 ********
 *
-*	3. Figure A22: Diaspora admin unit adoption timing
+*	3. Figure A19: Diaspora admin unit adoption timing
 *
 ********
 
@@ -148,11 +148,11 @@
 	replace first_year = 1998 if indian_state == "gujarat"
 
 	timing_plot, title("Diaspora Admin Unit Adoption Timing") name(admin_unit) adminunit
-	graph export "${figures}/4_4_figA22_admin_unit_timing.png", replace width(4200) height(2550)
+	graph export "${figures}/4_4_figA19_admin_unit_timing.png", replace width(4200) height(2550)
 
 ********
 *
-*	4. Figure A24: informational DEP timing
+*	4. Figure A21: informational DEP timing
 *
 ********
 
@@ -184,7 +184,7 @@
 		note("Open circles = pre-2005/post-2017 adoption; X = never treated", size(vsmall)) ///
 		graphregion(color(white) margin(small)) ///
 		xsize(14) ysize(8.5)
-	graph export "${figures}/4_4_figA24_info_policy_timing.png", replace width(4200) height(2550)
+	graph export "${figures}/4_4_figA21_info_policy_timing.png", replace width(4200) height(2550)
 	graph drop _all
 
 ********

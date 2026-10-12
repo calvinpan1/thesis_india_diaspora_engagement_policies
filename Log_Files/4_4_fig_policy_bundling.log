@@ -3,12 +3,12 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
 > ling.log
   log type:  text
- opened on:  12 Oct 2026, 05:42:43
+ opened on:  12 Oct 2026, 14:52:44
 
 . 
 . ********
 . *
-. *       1. Figure A21: Policy-pair Jaccard distribution
+. *       1. Figure A18: Policy-pair Jaccard distribution
 . *
 . ********
 . 
@@ -40,9 +40,9 @@
 >                 title("Policy-pair Jaccard distribution") ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_4_figA21_jaccard_distribution.png", replac
+.         graph export "${figures}/4_4_figA18_jaccard_distribution.png", replac
 > e width(3200) height(2000)
-file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA21
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA18
 > _jaccard_distribution.png written in PNG format
 
 . 
@@ -144,7 +144,7 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA21
 .                 tempfile first_years
 
 .                 save `first_years'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000001 saved
     as .dta format
 
 . 
@@ -162,13 +162,13 @@ Duplicates in terms of all variables
 .                 tempfile states
 
 .                 save `states'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
     as .dta format
 
 . 
 . ********
 . *
-. *       3. Figure A22: Diaspora admin unit adoption timing
+. *       3. Figure A19: Diaspora admin unit adoption timing
 . *
 . ********
 . 
@@ -207,15 +207,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
 (1 real change made)
 (1 real change made)
 
-.         graph export "${figures}/4_4_figA22_admin_unit_timing.png", replace w
+.         graph export "${figures}/4_4_figA19_admin_unit_timing.png", replace w
 > idth(4200) height(2550)
-file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA22
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA19
 > _admin_unit_timing.png written in PNG format
 
 . 
 . ********
 . *
-. *       4. Figure A24: informational DEP timing
+. *       4. Figure A21: informational DEP timing
 . *
 . ********
 . 
@@ -356,9 +356,9 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA22
 >                 graphregion(color(white) margin(small)) ///
 >                 xsize(14) ysize(8.5)
 
-.         graph export "${figures}/4_4_figA24_info_policy_timing.png", replace 
+.         graph export "${figures}/4_4_figA21_info_policy_timing.png", replace 
 > width(4200) height(2550)
-file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA24
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA21
 > _info_policy_timing.png written in PNG format
 
 .         graph drop _all
@@ -375,5 +375,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA24
        log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
 > ling.log
   log type:  text
- closed on:  12 Oct 2026, 05:42:47
+ closed on:  12 Oct 2026, 14:52:48
 -------------------------------------------------------------------------------

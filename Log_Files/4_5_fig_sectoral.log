@@ -3,12 +3,12 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_5_fig_sectoral.lo
 > g
   log type:  text
- opened on:  12 Oct 2026, 05:42:47
+ opened on:  12 Oct 2026, 14:52:48
 
 . 
 . ********
 . *
-. *       1. Figure A25: All companies by sector
+. *       1. Figure A22: All companies by sector
 . *
 . ********
 . 
@@ -25,9 +25,9 @@
 >                 blabel(bar, size(vsmall) format(%9.0fc)) ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_5_figA25_projects_by_cluster.png", replace
+.         graph export "${figures}/4_5_figA22_projects_by_cluster.png", replace
 >  width(3600) height(2400)
-file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_5_figA25
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_5_figA22
 > _projects_by_cluster.png written in PNG format
 
 . 
@@ -42,5 +42,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_5_figA25
        log:  /Users/calvin/wp_replication_package/Log_Files/4_5_fig_sectoral.lo
 > g
   log type:  text
- closed on:  12 Oct 2026, 05:42:48
+ closed on:  12 Oct 2026, 14:52:49
 -------------------------------------------------------------------------------

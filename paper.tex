@@ -9,7 +9,7 @@
 \input{crossrefs}
 
 \title{Do Subnational Diaspora Engagement Policies Attract FDI?\\ Evidence from India}
-\author{Calvin Pan\thanks{University of Virginia, Department of Politics. This paper is based on my undergraduate thesis in the Distinguished Majors Program in Foreign Affairs. An online appendix and a replication package accompany the paper.}}
+\author{Calvin Pan\thanks{University of Virginia, Department of Politics. This paper is based on my undergraduate thesis in the Distinguished Majors Program in Foreign Affairs. Online appendix: \url{https://github.com/calvinpan1/thesis_india_diaspora_engagement_policies/blob/main/online_appendix.pdf}. Replication package: \url{https://github.com/calvinpan1/thesis_india_diaspora_engagement_policies}.}}
 \date{October 2026}
 
 \begin{document}
@@ -49,7 +49,7 @@ These results change our understanding of both diaspora engagement and FDI. For 
 
 The policy implication is therefore conditional rather than universal. Subnational DEPs can be worth investing in, but governments that want diaspora FDI must adopt policies that are seriously investment-focused. Welfare, cultural, grievance, or rural-development DEPs may serve important purposes, but they are unlikely to attract investment on their own. The ICT specificity of these results should also be generalized cautiously: India is an unusually high-FDI country with an unusually important ICT sector. The broader lesson is that governments should identify the sectors where their diaspora has real information, trust, and decision-making advantages, then design DEPs around those barriers.
 
-The rest of the paper proceeds as follows. Section~\ref{sec:lit} reviews the literature on diaspora direct investment and DEPs and lays out the hypotheses. Section~\ref{sec:setting} explains why India and the United States make a workable case. Section~\ref{sec:data} describes the data, Section~\ref{sec:strategy} the empirical strategy, and Section~\ref{sec:results} the results. Section~\ref{sec:discussion} discusses what the results mean for policy, and Section~\ref{sec:conclusion} concludes. The online appendix contains the full case-selection roadmap, measurement details, the DEP codebook and descriptives, an extended identification discussion, and every additional table referenced below.
+The rest of the paper proceeds as follows. Section~\ref{sec:lit} reviews the literature on diaspora direct investment and DEPs and lays out the hypotheses. Section~\ref{sec:setting} explains why India and the United States make a workable case. Section~\ref{sec:data} describes the data, Section~\ref{sec:strategy} the empirical strategy, and Section~\ref{sec:results} the results. Section~\ref{sec:discussion} discusses what the results mean for policy, and Section~\ref{sec:conclusion} concludes. The online appendix contains the full case-selection roadmap, measurement details, the DEP codebook and descriptives, and an extended identification discussion. Online Appendix Section~\oaref{sec:oa_results} reports the robustness checks: the main results across alternative diaspora definitions (generation, education, ICT occupation), by company size, in tech-hub metros only, by sector and project activity, and single-policy estimates for every DEP grouped by how many states and years adopt it.
 
 %==============================================================================
 \section{Literature and Theory} \label{sec:lit}
@@ -99,7 +99,24 @@ Scholars theorize that the second mechanism of DDI, homeland preference, is also
 
 Testing this hypothesis is also a check before the rest of our empirical strategy. If diasporas do positively affect FDI, then we are clear to proceed; if not, an analysis of how DEPs moderate that effect cannot be conducted.
 
-Many types of subnational DEPs exist, engaging each one of the DDI mechanisms above. I divide subnational DEPs into eight categories to match those mechanisms. The first four categories are taken from \citet{ragazzi_comparative_2014}: symbolic, cultural \& religious, citizenship, and state bureaucracy DEPs. To this list, I add a category from \citet{gamlen_emigration_2008}: abroad services, such as helping the diaspora match into colleges and job placements and protecting their labor rights once there. Those five categories are less economically oriented, but could still encourage diaspora investment by making diaspora members feel more attached to home. I further subdivide Ragazzi's social and economic category into three: networks, which strengthen diasporas' networks; soft facilitation (``information''), which strengthens diasporas' local knowledge; and hard economic advantages, which simply increase the lucrativeness of the investment by giving the diaspora exclusive advantages. The full list of 44 DEPs, their sources, and a diagram of how they map onto DDI mechanisms are in Online Appendix Section~\oaref{sec:oa_deps}. The list is long on purpose: by being exhaustive of all possible DEPs a state could enact, the paper avoids faulty claims about a category that could be disproven by including or excluding one particularly strong or weak DEP.
+Many types of subnational DEPs exist, engaging each one of the DDI mechanisms above. I divide subnational DEPs into eight categories to match those mechanisms. The first four categories are taken from \citet{ragazzi_comparative_2014}: symbolic, cultural \& religious, citizenship, and state bureaucracy DEPs. To this list, I add a category from \citet{gamlen_emigration_2008}: abroad services, such as helping the diaspora match into colleges and job placements and protecting their labor rights once there. Those five categories are less economically oriented, but could still encourage diaspora investment by making diaspora members feel more attached to home. I further subdivide Ragazzi's social and economic category into three: networks, which strengthen diasporas' networks; soft facilitation (``information''), which strengthens diasporas' local knowledge; and hard economic advantages, which simply increase the lucrativeness of the investment by giving the diaspora exclusive advantages. Figure~\ref{fig:deps_list} lists all 44 DEPs by category, and Figure~\ref{fig:variable diagram of pathways} shows how the categories map onto the mechanisms of diaspora direct investment. The list is long on purpose: by being exhaustive of all possible DEPs a state could enact, the paper avoids faulty claims about a category that could be disproven by including or excluding one particularly strong or weak DEP.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{dep_sources.png}
+    \caption{All 44 diaspora engagement policies, by category}
+    \label{fig:deps_list}
+    \begin{minipage}{\linewidth}\footnotesize \textit{Notes:} (G) indicates the DEP was used in \citet{gamlen_emigration_2008}, (R) indicates the DEP was used in \citet{ragazzi_comparative_2014}, two definitive works on DEP classification, and (GR) indicates the category was used in both. Unlabeled DEPs are the author's own classification. Some DEPs have been moved to different categories than in either work to best accommodate these 8 expanded categories.\end{minipage}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{var_diagram.png}
+    \caption{Mechanisms of diaspora direct investment and where DEPs fit in}
+    \label{fig:variable diagram of pathways}
+    \begin{minipage}{\linewidth}\footnotesize \textit{Notes:} DEPs interact with diasporas, meaning that they are only effective insofar as they attract any diaspora.\end{minipage}
+\end{figure}
+
 
 It is common practice in public sector economics to analyze policy at both the extensive margin (``does a state have a policy?'') and intensive margin (``how deeply implemented is the policy?''). Two hypotheses naturally result from this:
 
@@ -135,9 +152,18 @@ The United States is the natural FDI sending country. Over 2005--2017, the US se
 
 \subsection{Which states?}
 
-India has many languages, with Indo-Aryan languages in the north and Dravidian languages in the south, and diaspora members tend to self-divide and identify along those linguistic lines \citep{sahoo_issues_2006, gautam_indian_2013}. Though some languages map to only one state, there are still many exceptions. I include a state only if it has one single dominant language, that language is not significantly spoken in any other Indian state or in another country, and the language is recorded in ACS data (Online Appendix Section~\oaref{sec:oa_states} rates all 28 states and 8 union territories on each criterion).
+India has many languages, with Indo-Aryan languages in the north and Dravidian languages in the south, and diaspora members tend to self-divide and identify along those linguistic lines \citep{sahoo_issues_2006, gautam_indian_2013}. Though some languages map to only one state, there are still many exceptions. I include a state only if it has one single dominant language, that language is not significantly spoken in any other Indian state or in another country, and the language is recorded in ACS data (Figure~\ref{fig:statesbylang}; Online Appendix Tables~\oaref{tab:language_fdi_sample}--\oaref{tab:language_fdi_a4} rate all 28 states and 8 union territories on each criterion).
 
 One edge case was Andhra Pradesh. In 2014, the inland parts of Andhra were split to form Telangana. Both states are still Telugu-dominant, and diaspora from both states interact as one single community. As such, Andhra Pradesh is included in our sample up to the year 2013, and thereafter dropped. Four states had languages that cross national borders, and whether to include them depends on what share of their US diaspora comes from India. Indian Punjabis are routinely around 10 times more numerous in the US than Pakistani Punjabis, and Tamil speakers in the US are almost entirely India-born, so both stay in the sample. Bengalis of Indian origin are outnumbered roughly three to one in the US by Bengalis of Bangladeshi origin, so West Bengal is only included in samples of first-generation immigrants born in India. Almost no Nepali speakers in the US were born in India, so Sikkim is dropped. This leaves a sample of 8 states: Tamil Nadu, Kerala, Karnataka, Maharashtra, Andhra Pradesh (before 2014), Gujarat, Punjab, and West Bengal (first-generation samples only).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{states_by_language.png}
+    \caption{States and union territories of India by dominant language}
+    \label{fig:statesbylang}
+    \begin{minipage}{0.85\linewidth}\footnotesize \textit{Notes:} States are colored by their most-spoken language, which does not reach a majority in some states. Source: \citet{noauthor_languages_nodate}.\end{minipage}
+\end{figure}
+
 
 \subsection{Do Indian states have real DEPs?}
 
@@ -147,7 +173,7 @@ Policymakers also put their money where their mouths were (Figure~\ref{Budget}).
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\linewidth]{4_3_fig1_dep_budgets_by_state.png}
+    \includegraphics[width=0.85\linewidth]{4_3_fig4_dep_budgets_by_state.png}
     \caption{DEP budgets by state, 2005--2017}
     \label{Budget}
     \begin{minipage}{0.85\linewidth}\footnotesize \textit{Notes:} Created by author using official budgetary sources from Indian states. Some states with DEPs during this period are not shown (e.g. Gujarat) simply because their budgetary documents were not available, not because they did not have DEP line items.\end{minipage}
@@ -171,7 +197,7 @@ The name data can still give us directional answers about whether this construct
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\linewidth]{4_6_fig2_indian_name_shares.png}
+    \includegraphics[width=0.7\linewidth]{4_6_fig5_indian_name_shares.png}
     \caption{Projects, investors, and capital from investors with possibly Indian names}
     \label{fig:indian_names}
     \begin{minipage}{0.7\linewidth}\footnotesize \textit{Notes:} Shares of all US-to-India projects, unique named investors, and capital investment, by whether the project's first listed contact has a possibly Indian name. Source: fDiMarkets.\end{minipage}
@@ -181,7 +207,7 @@ Figure~\ref{fig:fdi_projects} shows project counts by state. In a confirmation o
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\linewidth]{4_1_fig3_fdi_projects_by_state.png}
+    \includegraphics[width=0.85\linewidth]{4_1_fig6_fdi_projects_by_state.png}
     \caption{FDI projects from US metros by Indian state, 2005--2017}
     \label{fig:fdi_projects}
     \begin{minipage}{0.85\linewidth}\footnotesize \textit{Notes:} Projects from each diaspora's top 50 US source metros, with an all-India line split at Andhra Pradesh's 2014 bifurcation. Source: fDiMarkets.\end{minipage}
@@ -209,7 +235,7 @@ Figure~\ref{fig:total_deps} shows that the total number of DEPs per state increa
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.85\linewidth]{4_1_fig4_total_deps_by_state.png}
+    \includegraphics[width=0.85\linewidth]{4_1_fig7_total_deps_by_state.png}
     \caption{Total active DEPs by Indian state, 2005--2017}
     \label{fig:total_deps}
     \begin{minipage}{0.85\linewidth}\footnotesize \textit{Notes:} Number of the 44 coded DEPs active in each state-year. Andhra Pradesh stops in 2013 because of the state's bifurcation. Source: author's DEP dataset.\end{minipage}
@@ -314,9 +340,9 @@ The single-policy estimates in Table~\ref{tab:final_baseline_appendix_singlepoli
 
 \subsection{Heterogeneity}
 
-\paragraph{Sector.} We can verify what is happening inside the all-FDI outcome by decomposing it by sector. Table~\ref{tab:final_cluster_table2_h1} confirms that the main result is not evenly distributed across sectors. ICT is strongly positive and significant. Creative industries are also positive and significant, which is genuinely interesting and deserves future work. ICT, however, is the more convincing sector for deeper analysis because it has many more projects: 791 ICT projects, compared to 158 creative industries projects. That matters because once the model absorbs fixed effects and drops separated observations, small sectors can produce dramatic-looking coefficients identified off a very thin remaining slice of the data. The category-level sector cuts reinforce the idea that all other industries are unstable (Online Appendix Section~\oaref{sec:oa_results}). ICT has the most coherent pattern: symbolic, state bureaucracy, and information policies are all positive and significant. Creative industries also look promising, but for many other sectors of the same size, coefficients are very unstable, and the negative all-FDI information results turn out to be driven by freakishly large coefficients in a few small sectors. The sector cuts therefore point to ICT as the main sectoral story, with support from creative industries for the idea that DEPs work best for high-human-capital, low-startup-cost industries.
+\paragraph{Sector.} We can verify what is happening inside the all-FDI outcome by decomposing it by sector. Table~\ref{tab:final_cluster_table2_h1} confirms that the main result is not evenly distributed across sectors. ICT is strongly positive and significant. Creative industries are also positive and significant, which is genuinely interesting and deserves future work. ICT, however, is the more convincing sector for deeper analysis because it has many more projects: 791 ICT projects, compared to 158 creative industries projects. That matters because once the model absorbs fixed effects and drops separated observations, small sectors can produce dramatic-looking coefficients identified off a very thin remaining slice of the data. The category-level sector cuts reinforce the idea that all other industries are unstable (Online Appendix Tables~\oaref{tab:final_cluster_table4_h3} and \oaref{tab:final_cluster_appendix_singlepolicy}). ICT has the most coherent pattern: symbolic, state bureaucracy, and information policies are all positive and significant. Creative industries also look promising, but for many other sectors of the same size, coefficients are very unstable, and the negative all-FDI information results turn out to be driven by freakishly large coefficients in a few small sectors. The sector cuts therefore point to ICT as the main sectoral story, with support from creative industries for the idea that DEPs work best for high-human-capital, low-startup-cost industries.
 
-The same cuts by project activity (sales, design, manufacturing, business services) are weaker, which is useful in itself. None of the activity-specific any-DEP coefficients are statistically significant. That means the ICT result is not simply reducible to one broad project activity: it is not just that DEPs help sales offices or design projects wherever they appear. The sectoral identity of ICT seems to matter more than these broad activity classifications.
+The same cuts by project activity (sales, design, manufacturing, business services) are weaker, which is useful in itself. None of the activity-specific any-DEP coefficients are statistically significant (Online Appendix Tables~\oaref{tab:final_activity_table2_h1}--\oaref{tab:final_activity_appendix_singlepolicy}). That means the ICT result is not simply reducible to one broad project activity: it is not just that DEPs help sales offices or design projects wherever they appear. The sectoral identity of ICT seems to matter more than these broad activity classifications.
 
 \input{Tables_and_Figures/tables/3_3_tab8_any_dep_cluster.tex}
 
@@ -324,7 +350,7 @@ The same cuts by project activity (sales, design, manufacturing, business servic
 
 \input{Tables_and_Figures/tables/3_3_tab9_any_dep_company_size.tex}
 
-Table~\ref{tab:final_company_size_table4_h3} clarifies which policies small firms respond to. The positive small-company ICT result is concentrated in information policies, which are positive and significant at the 1\% level, while symbolic, state-bureaucratic, and abroad-oriented policies are not statistically distinguishable from zero in the same column. For small ICT investors, the relevant policy mechanism appears to be practical information facilitation rather than conferences, symbolic recognition, or generalized diaspora bureaucracy. The count-intensity result, by contrast, is essentially zero for small-company ICT FDI, which suggests that for smaller firms, the presence of the right kind of policy matters more than the number of policies.
+Table~\ref{tab:final_company_size_table4_h3} clarifies which policies small firms respond to. The positive small-company ICT result is concentrated in information policies, which are positive and significant at the 1\% level, while symbolic, state-bureaucratic, and abroad-oriented policies are not statistically distinguishable from zero in the same column. For small ICT investors, the relevant policy mechanism appears to be practical information facilitation rather than conferences, symbolic recognition, or generalized diaspora bureaucracy. The count-intensity result, by contrast, is essentially zero for small-company ICT FDI (Online Appendix Table~\oaref{tab:final_company_size_table3_h2}), which suggests that for smaller firms, the presence of the right kind of policy matters more than the number of policies.
 
 \input{Tables_and_Figures/tables/3_3_tab10_dep_category_company_size.tex}
 
@@ -332,15 +358,15 @@ The single-policy results in Table~\ref{tab:final_company_size_appendix_singlepo
 
 \input{Tables_and_Figures/tables/3_3_tab11_single_policy_company_size.tex}
 
-\paragraph{A deeper look at ICT.} The ICT result does not depend on one narrow diaspora definition. Whether the sample uses first-generation or all-generation diaspora, and whether it uses all diaspora or high-education diaspora, Table~\ref{tab:final_ict_generations_education_table2_h1} stays positive and significant. The coefficients are also tightly grouped, from 0.211 to 0.267, which is what we would expect if the underlying result is real rather than an artifact of one sample definition. The category and single-policy versions are similarly consistent: symbolic, state-bureaucracy, and information policies are positive across all four ICT samples, and diaspora administrative units, tax and regulatory guidance, and investment promotion roadshows are the most consistently positive individual policies (Online Appendix Section~\oaref{sec:oa_results}). This is probably the cleanest evidence that the ICT result is robust to reasonable alternative ways of measuring the diaspora.
+\paragraph{A deeper look at ICT.} The ICT result does not depend on one narrow diaspora definition. Whether the sample uses first-generation or all-generation diaspora, and whether it uses all diaspora or high-education diaspora, Table~\ref{tab:final_ict_generations_education_table2_h1} stays positive and significant. The coefficients are also tightly grouped, from 0.211 to 0.267, which is what we would expect if the underlying result is real rather than an artifact of one sample definition. The category and single-policy versions are similarly consistent: symbolic, state-bureaucracy, and information policies are positive across all four ICT samples, and diaspora administrative units, tax and regulatory guidance, and investment promotion roadshows are the most consistently positive individual policies (Online Appendix Tables~\oaref{tab:final_ict_generations_education_table4_h3} and \oaref{tab:final_ict_generations_education_appendix_singlepolicy}). This is probably the cleanest evidence that the ICT result is robust to reasonable alternative ways of measuring the diaspora.
 
 \input{Tables_and_Figures/tables/3_3_tab12_any_dep_ict_generation.tex}
 
-The ICT-worker cuts complicate the mechanism in a useful way. Diaspora samples restricted to ICT workers still show large positive any-DEP coefficients, so current ICT workers are not irrelevant. But once policy type is introduced in Table~\ref{tab:final_ict_worker_table4_h3}, information policies become negative for ICT-worker samples, even though they are positive for the broader high-education ICT samples.
+The ICT-worker cuts complicate the mechanism in a useful way. Diaspora samples restricted to ICT workers still show large positive any-DEP coefficients (Online Appendix Table~\oaref{tab:final_ict_worker_table2_h1}), so current ICT workers are not irrelevant. But once policy type is introduced in Table~\ref{tab:final_ict_worker_table4_h3}, information policies become negative for ICT-worker samples, even though they are positive for the broader high-education ICT samples.
 
 \input{Tables_and_Figures/tables/3_3_tab13_dep_category_ict_worker.tex}
 
- One plausible interpretation is that the people who matter for informational facilitation may not be current workers coded as ICT employees. The person who starts a firm, manages a division, raises capital, or chooses where in India a project should go may be highly educated and deeply connected to tech, but not necessarily classified as an ICT worker in the ACS. Restricting to metros where major tech companies are headquartered points the same way: information policies are very large and positive for all workers from tech hubs, while the ICT-worker tech-hub columns are not comparably strong. If current tech-company employment were the whole mechanism, the ICT-worker tech-hub sample should dominate. It does not. The relevant actors are more likely high-skill people in and around tech hubs who have managerial, entrepreneurial, or investor capacity.
+ One plausible interpretation is that the people who matter for informational facilitation may not be current workers coded as ICT employees. The person who starts a firm, manages a division, raises capital, or chooses where in India a project should go may be highly educated and deeply connected to tech, but not necessarily classified as an ICT worker in the ACS. Restricting to metros where major tech companies are headquartered points the same way (Online Appendix Tables~\oaref{tab:final_ict_company_size_techhubs_table2_h1} and \oaref{tab:final_ict_company_size_techhubs_table4_h3}): information policies are very large and positive for all workers from tech hubs, while the ICT-worker tech-hub columns are not comparably strong. If current tech-company employment were the whole mechanism, the ICT-worker tech-hub sample should dominate. It does not. The relevant actors are more likely high-skill people in and around tech hubs who have managerial, entrepreneurial, or investor capacity.
 
 \paragraph{State-specific effects.} Finally, Table~\ref{tab:final_statecuts_appendix_singlepolicy} lets each policy count in only one state at a time. The policy effects are not identical across Indian states, which matters because a pooled coefficient can hide the fact that the same named policy may work differently in different state contexts. Punjab has positive all-FDI coefficients for diaspora administrative units and diaspora conferences, but the ICT column is not informative there. Kerala shows a strong positive ICT coefficient for diaspora conferences, while Gujarat shows a strong positive ICT coefficient for tax and regulatory guidance. That is substantively plausible: a diaspora conference in Kerala may not be the same thing as a diaspora conference in Punjab, and tax guidance in Gujarat may be especially relevant because Gujarat is the state where the policy language is most explicitly tied to investment attraction. The main ICT finding should not be read as a uniform effect that automatically travels across every state and every policy. State capacity, sectoral composition, and the actual content of the DEP all matter.
 
@@ -384,5 +410,23 @@ For policymakers, the lesson is practical. Subnational diaspora engagement can a
 
 \newpage
 \printbibliography
+
+\newpage
+\section*{Online Appendix Contents}
+\addcontentsline{toc}{section}{Online Appendix Contents}
+
+\noindent The online appendix is available at \url{https://github.com/calvinpan1/thesis_india_diaspora_engagement_policies/blob/main/online_appendix.pdf}.
+
+\begin{enumerate}[label=\arabic*., leftmargin=*, itemsep=4pt]
+    \item \textbf{Replication package.} How the code and data reproduce every table and figure.
+    \item \textbf{Case selection.} The five filters for studying subnational DEPs and which countries pass them; why the US is the sending country.
+    \item \textbf{Indian states, languages, and DEP budgets.} State-by-state language checks (Tables \oaref{tab:language_fdi_sample}--\oaref{tab:language_fdi_a4}), birthplace of US speakers of shared languages (Figures \oaref{fig:punjabisovertime}--\oaref{fig:nepali speakers}), and evidence that state DEPs are real.
+    \item \textbf{Measurement.} Validity and reliability of the FDI, diaspora, and DEP measures; FDI value, jobs, ICT, and consumer goods by state; diaspora concentration and population by state.
+    \item \textbf{DEP coding and descriptives.} Coding rules and process, DEP composition by state, co-adoption (Jaccard) analysis, and adoption timing (Tables \oaref{tab:jaccard_top10}--\oaref{tab:dep_turnon_events}).
+    \item \textbf{Estimation and identification.} Why PPML, fixed effects, bundled and rare policies, separation, reverse causation, spillovers, and remaining endogeneity.
+    \item \textbf{Robustness and additional results} (Tables \oaref{tab:final_cluster_table4_h3}--\oaref{tab:appendix_singlepolicy}). Sector and project-activity cuts; company-size H0, diaspora-only, and DEP-count models; ICT results by diaspora generation and education, ICT occupation, company size, and tech-hub metros; single-policy estimates for every DEP by treatment support.
+    \item \textbf{Extended discussion.} What diaspora-specific policies add, why more states do not adopt economic DEPs, state versus national policy, and generalizability.
+    \item \textbf{List of tech hubs} used for the tech-hub restriction.
+\end{enumerate}
 
 \end{document}

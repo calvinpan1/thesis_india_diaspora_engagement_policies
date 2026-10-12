@@ -3,12 +3,12 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
 > mes.log
   log type:  text
- opened on:  12 Oct 2026, 05:42:48
+ opened on:  12 Oct 2026, 14:52:49
 
 . 
 . ********
 . *
-. *       1. Figure 2: Diaspora vs non-diaspora shares
+. *       1. Figure 5: Diaspora vs non-diaspora shares
 . *
 . ********
 . 
@@ -32,9 +32,9 @@
 >                 blabel(bar, format(%4.1f) position(outside)) ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_6_fig2_indian_name_shares.png", replace wi
+.         graph export "${figures}/4_6_fig5_indian_name_shares.png", replace wi
 > dth(2400)
-file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_6_fig2_i
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_6_fig5_i
 > ndian_name_shares.png written in PNG format
 
 . 
@@ -49,5 +49,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_6_fig2_i
        log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
 > mes.log
   log type:  text
- closed on:  12 Oct 2026, 05:42:49
+ closed on:  12 Oct 2026, 14:52:50
 -------------------------------------------------------------------------------
