@@ -1,0 +1,4386 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_3_tab_ppml.
+> log
+  log type:  text
+ opened on:  12 Oct 2026, 04:16:30
+
+. 
+. ********
+. *
+. *       1. Which policies have enough support to estimate
+. *
+. ********
+. 
+.         // A policy is "supported" if at least 2 states have it, for at least
+>  10
+.         // state-years in 2005-2017. Rarer policies are basically case studie
+> s, so
+.         // Tables 3 and 4 only count supported ones. The single-policy tables
+>  show
+.         // policies in 2+ states and MORE than 10 state-years.
+. 
+.         use "${gendata}/2_3_dep_turnons_long.dta", clear
+
+.         keep if item_type == "policy" & inrange(year, 2005, 2017)
+(6,184 observations deleted)
+
+. 
+.         gen byte has_it = value > 0
+
+.         bysort item indian_state: gen byte state_has_it = has_it & sum(has_it
+> ) == 1
+
+.         collapse (sum) support_obs = has_it support_states = state_has_it ///
+>                 (first) category item_order, by(item)
+
+. 
+.         gen byte eligible = support_states >= 2 & support_obs >= 10
+
+.         sort item_order
+
+. 
+.         **Origin ID for non-citizens (see note)
+. 
+.                 // The thesis tables were run without this policy: the origin
+> al code
+.                 // renamed it in one place but not another, so it silently dr
+> opped out
+.                 // of the DEP counts, the State Bureaucracy category, and the
+.                 // single-policy tables. Left out here so the tables match th
+> e thesis.
+.                 // Set include_origin_id to 1 in 0_master.do to put it back.
+.                 if "${include_origin_id}" != "1" drop if item == "origin_id_n
+> on_citizens"
+(1 observation deleted)
+
+. 
+.         **Lists used by the models below
+. 
+.                 levelsof item if eligible, local(eligible) clean
+diaspora_admin_unit diaspora_conferences grievance_reporting investment_promoti
+> on_roadshows manpower_companies remains_repatriation tax_regulatory_guidance
+
+.                 global ELIGIBLE_POLICIES "`eligible'"
+
+. 
+.                 // Every policy in DEP-data order (for the single-policy tabl
+> es)
+.                 global ALL_POLICIES ""
+
+.                 forvalues i = 1/`=_N' {
+  2.                         global ALL_POLICIES "${ALL_POLICIES} `=item[`i']'"
+  3.                 }
+
+. 
+.                 // Table 4 categories: any category with at least one support
+> ed policy,
+.                 // in DEP-data order. The category measure only counts suppor
+> ted ones.
+.                 global H4_CATEGORIES ""
+
+.                 levelsof category if eligible, local(cats) clean
+total_abroad total_info total_state_bureaucracy total_symbolic
+
+.                 foreach c in total_symbolic total_religious_cultural total_ci
+> tizenship ///
+>                         total_state_bureaucracy total_abroad total_networks t
+> otal_info total_advantages {
+  2.                         if strpos(" `cats' ", " `c' ") == 0 continue
+  3.                         global H4_CATEGORIES "${H4_CATEGORIES} `c'"
+  4.                         levelsof item if eligible & category == "`c'", loc
+> al(members) clean
+  5.                         global MEMBERS_`c' "`members'"
+  6.                 }
+diaspora_conferences
+diaspora_admin_unit grievance_reporting
+manpower_companies remains_repatriation
+investment_promotion_roadshows tax_regulatory_guidance
+
+. 
+.         di as text "Supported policies: ${ELIGIBLE_POLICIES}"
+Supported policies: diaspora_admin_unit diaspora_conferences grievance_reportin
+> g investment_promotion_roadshows manpower_companies remains_repatriation tax_
+> regulatory_guidance
+
+.         di as text "Table 4 categories: ${H4_CATEGORIES}"
+Table 4 categories:  total_symbolic total_state_bureaucracy total_abroad total_
+> info
+
+. 
+.         rename item policy
+
+.         keep policy category item_order support_states support_obs eligible
+
+.         save "${gendata}/3_3_policy_support.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_policy_
+    > support.dta saved
+
+. 
+. ********
+. *
+. *       2. Programs that prep data and run each kind of model
+. *
+. ********
+. 
+.         **Load a sample and build the regressors
+. 
+.                 capture program drop prep_panel
+
+.                 program define prep_panel
+  1.                         syntax , FILE(string) [TECHHUBS]
+  2. 
+.                         use "${gendata}/2_4_`file'.dta", clear
+  3. 
+.                         // Tech-hub check (Tables 7.27-7.28): metros where bi
+> g tech firms are
+.                         // headquartered, see Appendix Table C.1
+.                         if "`techhubs'" != "" {
+  4.                                 keep if inlist(met2013, 42660, 41940, 4186
+> 0, 38900, 14260, 38060, 41740) ///
+>                                         | inlist(met2013, 12420, 39340, 41620
+> , 31540, 22220, 39580, 20500)
+  5.                         }
+  6. 
+.                         // No DEP row means no DEPs (leaves total_indian_dias
+> pora_pop alone)
+.                         foreach v of varlist total_deps total_non_econ total_
+> econ total_symbolic ///
+>                                 total_religious_cultural total_citizenship to
+> tal_state_bureaucracy ///
+>                                 total_abroad total_networks total_info total_
+> advantages ${ALL_POLICIES} {
+  7.                                 replace `v' = 0 if missing(`v')
+  8.                         }
+  9. 
+.                         gen origin_id = met2013
+ 10.                         egen od_id = group(origin_id languaged)         //
+>  metro x state pair
+ 11.                         gen ln_dias = ln(1 + n_people)
+ 12.                         gen ln_total_indian_dias = ln(1 + total_indian_dia
+> spora_pop)
+ 13. 
+.                         // Table 2: any DEP at all. Table 3: count of support
+> ed DEPs.
+.                         gen byte any_dep = total_deps > 0
+ 14.                         egen double sc_dep_count = rowtotal(${ELIGIBLE_POL
+> ICIES})
+ 15. 
+.                         // Table 4: count of supported DEPs in each category
+.                         foreach c of global H4_CATEGORIES {
+ 16.                                 egen double sc_`c' = rowtotal(${MEMBERS_`c
+> '})
+ 17.                         }
+ 18.                 end
+
+. 
+.         **Record the sample-size details shown under every table
+. 
+.                 capture program drop post_accounting
+
+.                 program define post_accounting
+  1.                         syntax , OUTCOME(name) RHS(varlist) TABLE(string) 
+> SPEC(integer) SAMPLEID(integer)
+  2. 
+.                         tempvar touse
+  3.                         gen byte `touse' = 1
+  4.                         markout `touse' `outcome' origin_id languaged year
+>  od_id `rhs'
+  5. 
+.                         quietly count if `touse'
+  6.                         local raw_N = r(N)
+  7.                         quietly summarize `outcome' if `touse'
+  8.                         local projects = r(sum)
+  9.                         quietly summarize n_people if `touse'
+ 10.                         local pop = r(sum)
+ 11. 
+.                         frame post accounting (`sampleid') ("`table'") (`spec
+> ') ///
+>                                 (`raw_N') (`projects') (`pop') (e(N_full)) (e
+> (N)) ///
+>                                 (e(num_singletons)) (e(num_separated))
+ 12.                 end
+
+. 
+.         **Save one coefficient from the last model
+. 
+.                 capture program drop post_coef
+
+.                 program define post_coef
+  1.                         syntax , TERM(string) TABLE(string) SPEC(integer) 
+> SPECLABEL(string) ///
+>                                 SAMPLEID(integer) [POLICY(string)]
+  2. 
+.                         capture quietly lincom `term'
+  3.                         if _rc exit
+  4.                         frame post results (`sampleid') ("`table'") (`spec
+> ') (`"`speclabel'"') ///
+>                                 ("`policy'") (r(estimate)) (r(se)) (r(p))
+  5.                 end
+
+. 
+.         **H0 (Tables 7.1, 7.12): local vs national diaspora, metro FE + state
+> -year FE
+. 
+.                 capture program drop run_h0
+
+.                 program define run_h0
+  1.                         syntax , OUTCOME(name) SAMPLEID(integer)
+  2. 
+.                         local spec = 0
+  3.                         foreach x in ln_dias ln_total_indian_dias {
+  4.                                 local ++spec
+  5.                                 local lab "Subnational diaspora: exporter 
+> FE + importer-year FE"
+  6.                                 if "`x'" == "ln_total_indian_dias" local l
+> ab "National Indian diaspora: exporter FE + importer-year FE"
+  7. 
+.                                 capture quietly ppmlhdfe `outcome' c.`x', ///
+>                                         absorb(origin_id i.languaged#i.year) 
+> vce(cluster od_id)
+  8.                                 if _rc continue
+  9.                                 post_accounting, outcome(`outcome') rhs(`x
+> ') table(h0) spec(`spec') sampleid(`sampleid')
+ 10.                                 post_coef, term(`x') table(h0) spec(`spec'
+> ) speclabel("`lab'") sampleid(`sampleid')
+ 11.                         }
+ 12.                 end
+
+. 
+.         **Table 1 (Table 7.13): diaspora only, two sets of fixed effects
+. 
+.                 capture program drop run_table1
+
+.                 program define run_table1
+  1.                         syntax , OUTCOME(name) SAMPLEID(integer)
+  2. 
+.                         forvalues spec = 1/2 {
+  3.                                 if `spec' == 1 {
+  4.                                         local lab "PPML exporter-year FE +
+>  importer-year FE"
+  5.                                         local fe "i.origin_id#i.year i.lan
+> guaged#i.year"
+  6.                                 }
+  7.                                 else {
+  8.                                         local lab "PPML exporter FE + impo
+> rter-year FE"
+  9.                                         local fe "origin_id i.languaged#i.
+> year"
+ 10.                                 }
+ 11. 
+.                                 capture quietly ppmlhdfe `outcome' c.ln_dias,
+>  absorb(`fe') vce(cluster od_id)
+ 12.                                 if _rc continue
+ 13.                                 post_accounting, outcome(`outcome') rhs(ln
+> _dias) table(table1_baseline) spec(`spec') sampleid(`sampleid')
+ 14.                                 post_coef, term(ln_dias) table(table1_base
+> line) spec(`spec') speclabel("`lab'") sampleid(`sampleid')
+ 15.                         }
+ 16.                 end
+
+. 
+.         **Tables 2-4 and single-policy tables: ln diaspora x policy
+. 
+.                 // Pair FE + metro-year FE + state-year FE, clustered by Indi
+> an state.
+.                 // The policy itself is absorbed by the state-year FE, so we 
+> only report
+.                 // the interaction.
+.                 capture program drop run_interaction
+
+.                 program define run_interaction
+  1.                         syntax , OUTCOME(name) POLICY(name) TABLE(string) 
+> SPEC(integer) ///
+>                                 SPECLABEL(string) SAMPLEID(integer)
+  2. 
+.                         quietly summarize `policy'
+  3.                         if missing(r(sd)) | r(sd) <= 0 exit             //
+>  policy never varies here
+  4. 
+.                         capture quietly ppmlhdfe `outcome' c.ln_dias##c.`poli
+> cy', ///
+>                                 absorb(od_id i.origin_id#i.year i.languaged#i
+> .year) vce(cluster languaged)
+  5.                         if _rc exit
+  6. 
+.                         post_accounting, outcome(`outcome') rhs(ln_dias `poli
+> cy') table(`table') ///
+>                                 spec(`spec') sampleid(`sampleid')
+  7.                         post_coef, term(c.ln_dias#c.`policy') table(`table
+> ') spec(`spec') ///
+>                                 speclabel(`"`speclabel'"') sampleid(`sampleid
+> ') policy(`policy')
+  8.                 end
+
+. 
+.         **Run whichever tables a sample needs
+. 
+.                 capture program drop run_model
+
+.                 program define run_model
+  1.                         syntax , SAMPLEID(integer) FILE(string) OUTCOME(na
+> me) ///
+>                                 [H0 TABLE1 TABLE2 TABLE3 TABLE4 SINGLEPOLICY 
+> TECHHUBS]
+  2. 
+.                         prep_panel, file(`file') `techhubs'
+  3.                         di as text "Sample `sampleid': `file', `outcome'"
+  4. 
+.                         if "`h0'" != ""         run_h0, outcome(`outcome') sa
+> mpleid(`sampleid')
+  5.                         if "`table1'" != ""     run_table1, outcome(`outco
+> me') sampleid(`sampleid')
+  6. 
+.                         if "`table2'" != "" {
+  7.                                 run_interaction, outcome(`outcome') policy
+> (any_dep) table(table2_h1) ///
+>                                         spec(1) speclabel("Any DEP adoption")
+>  sampleid(`sampleid')
+  8.                         }
+  9.                         if "`table3'" != "" {
+ 10.                                 run_interaction, outcome(`outcome') policy
+> (sc_dep_count) table(table3_h2) ///
+>                                         spec(1) speclabel("DEP count (support
+> -screened)") sampleid(`sampleid')
+ 11.                         }
+ 12.                         if "`table4'" != "" {
+ 13.                                 local spec = 0
+ 14.                                 foreach c of global H4_CATEGORIES {
+ 15.                                         local ++spec
+ 16.                                         local lab = proper(subinstr(subins
+> tr("`c'", "total_", "", 1), "_", " ", .))
+ 17.                                         run_interaction, outcome(`outcome'
+> ) policy(sc_`c') table(table4_h3) ///
+>                                                 spec(`spec') speclabel("`lab'
+> ") sampleid(`sampleid')
+ 18.                                 }
+ 19.                         }
+ 20.                         if "`singlepolicy'" != "" {
+ 21.                                 local spec = 0
+ 22.                                 foreach p of global ALL_POLICIES {
+ 23.                                         local ++spec
+ 24.                                         local lab = proper(subinstr("`p'",
+>  "_", " ", .))
+ 25.                                         run_interaction, outcome(`outcome'
+> ) policy(`p') table(singlepolicy) ///
+>                                                 spec(`spec') speclabel("`lab'
+> ") sampleid(`sampleid')
+ 26.                                 }
+ 27.                         }
+ 28.                 end
+
+. 
+. ********
+. *
+. *       3. Run every model
+. *
+. ********
+. 
+.         // Results and sample sizes collect in two frames, saved at the end
+.         capture frame drop results
+
+.         capture frame drop accounting
+
+.         frame create results int sample_id str30 table_id int spec_order str8
+> 0 spec_label ///
+>                 str40 policy double(coef_b coef_se coef_p)
+
+.         frame create accounting int sample_id str30 table_id int spec_order /
+> //
+>                 double(raw_N projects pop N_full N_used singletons separated)
+
+. 
+.         // Sample IDs are the column IDs used in the tables below. Several ta
+> bles
+.         // reuse the same model under a different column label, those get cop
+> ied
+.         // at the end of this section instead of being re-estimated.
+. 
+.         **Baseline samples (Tables 7.1-7.5)
+. 
+.                 run_model, sampleid(15) file(s3_firstgen_all)                
+>    outcome(fdi_projects_ict) h0 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 15: s3_firstgen_all, fdi_projects_ict
+
+.                 run_model, sampleid(11) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_all) h0 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 11: s1_firstgen_highed_25plus, fdi_projects_all
+
+.                 run_model, sampleid(12) file(s3_firstgen_all_25plus)    outco
+> me(fdi_projects_all) h0 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 12: s3_firstgen_all_25plus, fdi_projects_all
+
+.                 run_model, sampleid(13) file(s4_allgen_all_25plus)           
+>    outcome(fdi_projects_all) h0 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 13: s4_allgen_all_25plus, fdi_projects_all
+
+.                 run_model, sampleid(14) file(s4_allgen_all)                  
+>            outcome(fdi_projects_all) h0 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 14: s4_allgen_all, fdi_projects_all
+
+. 
+.         **Sector (cluster) and activity cuts (Tables 7.6-7.11), first-gen 25+
+>  high-ed
+. 
+.                 run_model, sampleid(22) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_ict)                               table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 22: s1_firstgen_highed_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(23) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_profsvc)                   table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 23: s1_firstgen_highed_25plus, fdi_projects_profsvc
+
+.                 run_model, sampleid(24) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_finsvc)                    table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 24: s1_firstgen_highed_25plus, fdi_projects_finsvc
+
+.                 run_model, sampleid(25) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_creative)                  table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 25: s1_firstgen_highed_25plus, fdi_projects_creative
+
+.                 run_model, sampleid(26) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_lifesciences)              table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 26: s1_firstgen_highed_25plus, fdi_projects_lifesciences
+
+.                 run_model, sampleid(27) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_industrial)                table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 27: s1_firstgen_highed_25plus, fdi_projects_industrial
+
+.                 run_model, sampleid(28) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_transportequip)    table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 28: s1_firstgen_highed_25plus, fdi_projects_transportequip
+
+. 
+.                 run_model, sampleid(32) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_sales_mkt_support) table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 32: s1_firstgen_highed_25plus, fdi_projects_sales_mkt_support
+
+.                 run_model, sampleid(33) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_design_dev_testing)        table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 33: s1_firstgen_highed_25plus, fdi_projects_design_dev_testing
+
+.                 run_model, sampleid(34) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_all_mfg)                   table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 34: s1_firstgen_highed_25plus, fdi_projects_all_mfg
+
+.                 run_model, sampleid(35) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_business_services) table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 35: s1_firstgen_highed_25plus, fdi_projects_business_services
+
+. 
+.         **Company-size samples (Tables 7.12-7.17)
+. 
+.                 run_model, sampleid(41) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_all_small75) h0 table1 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 41: s1_firstgen_highed_25plus, fdi_projects_all_small75
+
+.                 run_model, sampleid(42) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_ict_small75) h0 table1 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 42: s1_firstgen_highed_25plus, fdi_projects_ict_small75
+
+.                 run_model, sampleid(43) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_all_large75) h0 table1 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 43: s1_firstgen_highed_25plus, fdi_projects_all_large75
+
+.                 run_model, sampleid(44) file(s1_firstgen_highed_25plus) outco
+> me(fdi_projects_ict_large75) h0 table1 table2 table3 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 44: s1_firstgen_highed_25plus, fdi_projects_ict_large75
+
+. 
+.         **ICT deeper cuts (Tables 7.18-7.28), all with ICT FDI as the outcome
+. 
+.                 run_model, sampleid(51) file(s3_firstgen_all_25plus)         
+>            outcome(fdi_projects_ict)                       table2 table4 sing
+> lepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 51: s3_firstgen_all_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(52) file(s4_allgen_all_25plus)           
+>                    outcome(fdi_projects_ict)                       table2 tab
+> le4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 52: s4_allgen_all_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(54) file(s24_allgen_highed_25plus)       
+>            outcome(fdi_projects_ict)                       table2 table4 sing
+> lepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 54: s24_allgen_highed_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(63) file(s27_firstgen_highed_ict_25plus) 
+>    outcome(fdi_projects_ict)                       table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 63: s27_firstgen_highed_ict_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(64) file(s28_allgen_highed_ict_25plus)   
+>            outcome(fdi_projects_ict)                       table2 table4 sing
+> lepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 64: s28_allgen_highed_ict_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(74) file(s27_firstgen_highed_ict_25plus) 
+>    outcome(fdi_projects_ict_small75)       table2 table4 singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 74: s27_firstgen_highed_ict_25plus, fdi_projects_ict_small75
+
+. 
+.                 run_model, sampleid(81) file(s3_firstgen_all_25plus)         
+>            outcome(fdi_projects_ict)                       table2 table4 tech
+> hubs
+(4,248 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 81: s3_firstgen_all_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(82) file(s25_firstgen_all_ict_25plus)    
+>            outcome(fdi_projects_ict)                       table2 table4 tech
+> hubs
+(2,862 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 82: s25_firstgen_all_ict_25plus, fdi_projects_ict
+
+.                 run_model, sampleid(83) file(s3_firstgen_all_25plus)         
+>            outcome(fdi_projects_ict_small75)       table2 table4 techhubs
+(4,248 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 83: s3_firstgen_all_25plus, fdi_projects_ict_small75
+
+.                 run_model, sampleid(84) file(s25_firstgen_all_ict_25plus)    
+>            outcome(fdi_projects_ict_small75)       table2 table4 techhubs
+(2,862 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 84: s25_firstgen_all_ict_25plus, fdi_projects_ict_small75
+
+. 
+.         **Appendix Table B.1: the four main samples from Table 5.2, all polic
+> ies
+. 
+.                 run_model, sampleid(1) file(s1_firstgen_highed) outcome(fdi_p
+> rojects_ict) singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 1: s1_firstgen_highed, fdi_projects_ict
+
+.                 run_model, sampleid(2) file(s1_firstgen_highed) outcome(fdi_p
+> rojects_all) singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 2: s1_firstgen_highed, fdi_projects_all
+
+.                 run_model, sampleid(3) file(s3_firstgen_all)    outcome(fdi_p
+> rojects_all) singlepolicy
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+Sample 3: s3_firstgen_all, fdi_projects_all
+
+. 
+.         **Columns that reuse a model above
+. 
+.                 // new column <- existing model
+.                 foreach pair in "4 14" "21 11" "31 11" "53 22" "61 22" "71 22
+> " "62 54" "72 63" "73 42" {
+  2.                         gettoken new src : pair
+  3.                         foreach f in results accounting {
+  4.                                 frame `f' {
+  5.                                         quietly expand 2 if sample_id == `
+> src', generate(copy)
+  6.                                         quietly replace sample_id = `new' 
+> if copy
+  7.                                         drop copy
+  8.                                 }
+  9.                         }
+ 10.                 }
+
+. 
+.         frame results: save "${gendata}/3_3_ppml_results.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_ppml_re
+    > sults.dta saved
+
+.         frame accounting: save "${gendata}/3_3_ppml_accounting.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/3_3_ppml_ac
+    > counting.dta saved
+
+. 
+. ********
+. *
+. *       4. Programs that write the LaTeX tables
+. *
+. ********
+. 
+.         **Write a results table in the thesis format
+. 
+.                 // columns() holds one sample ID per column, labels() the mat
+> ching
+.                 // column headers separated by "|". singlepolicy adds the # S
+> tates and
+.                 // # State-years columns and splits rows by how much support 
+> a policy has.
+.                 capture program drop write_table
+
+.                 program define write_table
+  1.                         syntax , TABLE(string) FILE(string) LABEL(string) 
+> TITLE(string) ///
+>                                 COLUMNS(numlist) LABELS(string) [SINGLEPOLICY
+> ]
+  2. 
+.                         local ncols : word count `columns'
+  3.                         local extra = cond("`singlepolicy'" != "", 2, 0)
+  4.                         local totalcols = 1 + `extra' + `ncols'
+  5. 
+.                         **Coefficients, one row per spec with columns side by
+>  side
+. 
+.                                 use "${gendata}/3_3_ppml_results.dta", clear
+  6.                                 keep if table_id == "`table'"
+  7.                                 gen col = .
+  8.                                 local j = 0
+  9.                                 foreach s of local columns {
+ 10.                                         local ++j
+ 11.                                         replace col = `j' if sample_id == 
+> `s'
+ 12.                                 }
+ 13.                                 keep if !missing(col)
+ 14. 
+.                                 gen stars = cond(coef_p < .01, "***", cond(co
+> ef_p < .05, "**", cond(coef_p < .10, "*", "")))
+ 15.                                 gen coef = string(round(coef_b, .001), "%9
+> .3f") + stars
+ 16.                                 gen se = "(" + string(round(coef_se, .001)
+> , "%9.3f") + ")"
+ 17. 
+.                                 // Single-policy tables only show policies in
+>  2+ states and more
+.                                 // than 10 state-years, split into two panels
+>  by support
+.                                 gen byte panel = 1
+ 18.                                 if "`singlepolicy'" != "" {
+ 19.                                         merge m:1 policy using "${gendata}
+> /3_3_policy_support.dta", ///
+>                                                 keepusing(support_states supp
+> ort_obs) keep(match) nogen
+ 20.                                         keep if support_states >= 2 & supp
+> ort_obs > 10
+ 21.                                         replace panel = cond(support_state
+> s >= 3 & support_obs >= 20, 1, 2)
+ 22.                                 }
+ 23.                                 else {
+ 24.                                         gen support_states = .
+ 25.                                         gen support_obs = .
+ 26.                                 }
+ 27. 
+.                                 keep spec_order spec_label panel support_stat
+> es support_obs col coef se
+ 28.                                 reshape wide coef se, i(spec_order) j(col)
+ 29.                                 forvalues j = 1/`ncols' {
+ 30.                                         capture gen coef`j' = ""
+ 31.                                         capture gen se`j' = ""
+ 32.                                 }
+ 33.                                 sort panel spec_order
+ 34.                                 replace spec_label = subinstr(subinstr(spe
+> c_label, "_", "\_", .), "&", "\&", .)
+ 35. 
+.                                 tempfile rows
+ 36.                                 save `rows'
+ 37. 
+.                         **Sample-size footer (shows a range when it varies ac
+> ross specs)
+. 
+.                                 use "${gendata}/3_3_ppml_accounting.dta", cle
+> ar
+ 38.                                 keep if table_id == "`table'"
+ 39.                                 collapse (min) raw_N_lo = raw_N projects_l
+> o = projects pop_lo = pop ///
+>                                                 N_full_lo = N_full N_used_lo 
+> = N_used singletons_lo = singletons separated_lo = separated ///
+>                                         (max) raw_N_hi = raw_N projects_hi = 
+> projects pop_hi = pop ///
+>                                                 N_full_hi = N_full N_used_hi 
+> = N_used singletons_hi = singletons separated_hi = separated, ///
+>                                         by(sample_id)
+ 40.                                 foreach m in raw_N projects pop N_full N_u
+> sed singletons separated {
+ 41.                                         gen `m' = string(`m'_lo, "%9.0f") 
+> if `m'_lo < .
+ 42.                                         replace `m' = `m' + "-" + string(`
+> m'_hi, "%9.0f") if `m'_lo != `m'_hi & `m'_hi < .
+ 43.                                 }
+ 44.                                 local j = 0
+ 45.                                 foreach s of local columns {
+ 46.                                         local ++j
+ 47.                                         foreach m in raw_N projects pop N_
+> full N_used singletons separated {
+ 48.                                                 quietly levelsof `m' if sa
+> mple_id == `s', local(`m'`j') clean
+ 49.                                         }
+ 50.                                 }
+ 51. 
+.                         **Write the file
+. 
+.                                 use `rows', clear
+ 52.                                 // Wide tables (8+ columns) get smaller te
+> xt and tighter spacing
+.                                 local size = cond(`totalcols' >= 8, "\scripts
+> ize", "\footnotesize")
+ 53.                                 local sep = cond(`totalcols' >= 8, "2pt", 
+> "3pt")
+ 54.                                 local fullwidth "@{}>{\RaggedRight\arrayba
+> ckslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}"
+ 55.                                 local blank = cond("`singlepolicy'" != "",
+>  " &  & ", "")
+ 56. 
+.                                 file open tab using "${tables}/`file'", write
+>  replace text
+ 57.                                 file write tab "\begin{table}[!htbp]" _n
+ 58.                                 file write tab "\centering" _n
+ 59.                                 file write tab "`size'" _n
+ 60.                                 file write tab "\setlength{\tabcolsep}{`se
+> p'}" _n
+ 61.                                 file write tab "\renewcommand{\arraystretc
+> h}{1.08}" _n
+ 62.                                 file write tab "\caption{`title'}" _n
+ 63.                                 file write tab "\label{tab:`label'}" _n
+ 64.                                 file write tab "\begin{tabularx}{\textwidt
+> h}{@{}>{\RaggedRight\arraybackslash}X *{`=`totalcols'-1'}{>{\Centering\arrayb
+> ackslash}X}@{}}" _n
+ 65.                                 file write tab "\hline" _n
+ 66. 
+.                                 // Header row
+.                                 file write tab "Specification"
+ 67.                                 if "`singlepolicy'" != "" file write tab "
+>  & \# States & \# State-years"
+ 68.                                 local rest `"`labels'"'
+ 69.                                 forvalues j = 1/`ncols' {
+ 70.                                         gettoken lab rest : rest, parse("|
+> ")
+ 71.                                         if "`lab'" == "|" gettoken lab res
+> t : rest, parse("|")
+ 72.                                         file write tab " & " (subinstr(tri
+> m("`lab'"), "&", "\&", .))
+ 73.                                 }
+ 74.                                 file write tab " \\" _n
+ 75.                                 file write tab "\hline" _n
+ 76. 
+.                                 // Coefficient rows, with standard errors und
+> erneath
+.                                 forvalues i = 1/`=_N' {
+ 77.                                         if "`singlepolicy'" != "" & (`i' =
+> = 1 | panel[`i'] != panel[max(`i'-1, 1)]) {
+ 78.                                                 local heading = cond(panel
+> [`i'] == 1, "Policies with 3+ states and 20+ state-years", ///
+>                                                         "Policies with 2+ sta
+> tes and more than 10 state-years")
+ 79.                                                 file write tab "\multicolu
+> mn{`totalcols'}{`fullwidth'}{\textit{`heading'}}\\" _n
+ 80.                                         }
+ 81.                                         file write tab (spec_label[`i'])
+ 82.                                         if "`singlepolicy'" != "" {
+ 83.                                                 file write tab " & " (stri
+> ng(support_states[`i'], "%9.0f")) " & " (string(support_obs[`i'], "%9.0f"))
+ 84.                                         }
+ 85.                                         forvalues j = 1/`ncols' {
+ 86.                                                 file write tab " & " (coef
+> `j'[`i'])
+ 87.                                         }
+ 88.                                         file write tab " \\" _n
+ 89.                                         file write tab "`blank'"
+ 90.                                         forvalues j = 1/`ncols' {
+ 91.                                                 file write tab " & " (se`j
+> '[`i'])
+ 92.                                         }
+ 93.                                         file write tab " \\" _n
+ 94.                                 }
+ 95.                                 file write tab "\hline" _n
+ 96. 
+.                                 // Footer
+.                                 local f_raw_N           "Raw sample N"
+ 97.                                 local f_projects        "Projects, 2005--2
+> 017"
+ 98.                                 local f_pop                     "Total dia
+> spora pop., 2005--2017"
+ 99.                                 local f_N_full          "e(N\_full)"
+100.                                 local f_N_used          "e(N)"
+101.                                 local f_singletons      "Dropped singleton
+> s"
+102.                                 local f_separated       "Dropped separated
+>  obs"
+103.                                 foreach m in raw_N projects pop N_full N_u
+> sed singletons separated {
+104.                                         file write tab "`f_`m''`blank'"
+105.                                         forvalues j = 1/`ncols' {
+106.                                                 file write tab " & ``m'`j'
+> '"
+107.                                         }
+108.                                         file write tab " \\" _n
+109.                                 }
+110.                                 file write tab "\hline" _n
+111.                                 file write tab "\fulltablenote{`totalcols'
+> }{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly 
+> underneath.}" _n
+112.                                 file write tab "\fulltablenote{`totalcols'
+> }{* p<0.10, ** p<0.05, *** p<0.01.}" _n
+113.                                 file write tab "\end{tabularx}" _n
+114.                                 file write tab "\end{table}" _n
+115.                                 file close tab
+116.                 end
+
+. 
+. ********
+. *
+. *       5. Tables 7.1-7.28
+. *
+. ********
+. 
+.         **Column headers for each group of tables
+. 
+.                 local base_cols "15 11 12 13 14"
+
+.                 local base_labs "First-gen all diaspora, ICT FDI | First-gen 
+> 25+ high-ed, all FDI | First-gen 25+ all diaspora, all FDI | All-gen 25+ all 
+> diaspora, all FDI | All-gen all diaspora, all FDI"
+
+. 
+.                 local clus_cols "21 22 23 24 25 26 27 28"
+
+.                 local clus_labs "First-gen 25+ high-ed, all FDI | First-gen 2
+> 5+ high-ed, ICT FDI | First-gen 25+ high-ed, Professional Services FDI | Firs
+> t-gen 25+ high-ed, Financial Services FDI | First-gen 25+ high-ed, Creative I
+> ndustries FDI | First-gen 25+ high-ed, Life Sciences FDI | First-gen 25+ high
+> -ed, Industrial FDI | First-gen 25+ high-ed, Transport Equipment FDI"
+
+. 
+.                 local act_cols "31 32 33 34 35"
+
+.                 local act_labs "First-gen 25+ high-ed, all FDI | First-gen 25
+> + high-ed, Sales, Marketing & Support FDI | First-gen 25+ high-ed, Design, De
+> velopment & Testing FDI | First-gen 25+ high-ed, Manufacturing FDI | First-ge
+> n 25+ high-ed, Business Services FDI"
+
+. 
+.                 local size_cols "41 42 43 44"
+
+.                 local size_labs "First-gen 25+ high-ed, all FDI, small-75 com
+> panies | First-gen 25+ high-ed, ICT FDI, small-75 companies | First-gen 25+ h
+> igh-ed, all FDI, large-75 companies | First-gen 25+ high-ed, ICT FDI, large-7
+> 5 companies"
+
+. 
+.                 local gen_cols "51 52 53 54"
+
+.                 local gen_labs "First-gen 25+ all diaspora, ICT FDI | All-gen
+>  25+ all diaspora, ICT FDI | First-gen 25+ high-ed, ICT FDI | All-gen 25+ hig
+> h-ed, ICT FDI"
+
+. 
+.                 local wrk_cols "61 62 63 64"
+
+.                 local wrk_labs "First-gen 25+ high-ed, ICT FDI | All-gen 25+ 
+> high-ed, ICT FDI | First-gen 25+ high-ed, ICT FDI, ICT worker | All-gen 25+ h
+> igh-ed, ICT FDI, ICT worker"
+
+. 
+.                 local ictsize_cols "71 72 73 74"
+
+.                 local ictsize_labs "First-gen 25+ high-ed, ICT FDI, all compa
+> nies | First-gen 25+ high-ed, ICT FDI, all companies, ICT worker | First-gen 
+> 25+ high-ed, ICT FDI, small-75 companies | First-gen 25+ high-ed, ICT FDI, sm
+> all-75 companies, ICT worker"
+
+. 
+.                 local hub_cols "81 82 83 84"
+
+.                 local hub_labs "First-gen 25+ all diaspora, ICT FDI, all comp
+> anies, tech hubs | First-gen 25+ all diaspora, ICT FDI, all companies, ICT wo
+> rker, tech hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, te
+> ch hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, ICT worker
+> , tech hubs"
+
+. 
+.         **Tables 7.1-7.5: baseline all-FDI samples
+. 
+.                 write_table, table(h0) file(3_3_tab7_1_h0_baseline.tex) label
+> (final_baseline_h0) ///
+>                         title("H0: location-specific diaspora versus national
+>  Indian diaspora stock: baseline all-FDI samples") ///
+>                         columns(`base_cols') labels("`base_labs'")
+(862 observations deleted)
+(26 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(16 observations deleted)
+(5 missing values generated)
+(10 missing values generated)
+(10 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               10   ->   2           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(862 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table2_h1) file(3_3_tab7_2_any_dep_baselin
+> e.tex) label(final_baseline_table2_h1) ///
+>                         title("Table 2: any DEP adoption x diaspora: baseline
+>  all-FDI samples") ///
+>                         columns(`base_cols') labels("`base_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(34 observations deleted)
+(4 missing values generated)
+(5 missing values generated)
+(5 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                5   ->   1           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table3_h2) file(3_3_tab7_3_dep_count_basel
+> ine.tex) label(final_baseline_table3_h2) ///
+>                         title("Table 3: DEP-count intensity x diaspora: basel
+> ine all-FDI samples") ///
+>                         columns(`base_cols') labels("`base_labs'")
+(875 observations deleted)
+(13 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(8 observations deleted)
+(4 missing values generated)
+(5 missing values generated)
+(5 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                5   ->   1           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(875 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_4_dep_category_ba
+> seline.tex) label(final_baseline_table4_h3) ///
+>                         title("Table 4: category-level policy interactions: b
+> aseline all-FDI samples") ///
+>                         columns(`base_cols') labels("`base_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(135 observations deleted)
+(12 missing values generated)
+(20 missing values generated)
+(20 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               20   ->   4           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_5_single_polic
+> y_baseline.tex) label(final_baseline_appendix_singlepolicy) ///
+>                         title("Baseline all-FDI samples: single-policy intera
+> ctions, 2+ states and more than 10 state-years") ///
+>                         columns(`base_cols') labels("`base_labs'") singlepoli
+> cy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(560 observations deleted)
+(36 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                85  
+    -----------------------------------------
+(55 observations deleted)
+(10 real changes made)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               30   ->   6           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.6-7.8: sector (cluster) cuts
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_6_any_dep_cluster
+> .tex) label(final_cluster_table2_h1) ///
+>                         title("Sector cuts: Table 2 any DEP adoption") ///
+>                         columns(`clus_cols') labels("`clus_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(31 observations deleted)
+(6 missing values generated)
+(8 missing values generated)
+(8 missing values generated)
+(j = 1 2 3 4 5 6 7 8)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                8   ->   1           
+Number of variables                   8   ->   21          
+j variable (8 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef8
+                                     se   ->   se1 se2 ... se8
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_7_dep_category_cl
+> uster.tex) label(final_cluster_table4_h3) ///
+>                         title("Cluster cuts: Table 4 DEP type interactions") 
+> ///
+>                         columns(`clus_cols') labels("`clus_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(3 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(124 observations deleted)
+(22 missing values generated)
+(31 missing values generated)
+(31 missing values generated)
+(j = 1 2 3 4 5 6 7 8)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               31   ->   4           
+Number of variables                   8   ->   21          
+j variable (8 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef8
+                                     se   ->   se1 se2 ... se8
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_8_single_polic
+> y_cluster.tex) label(final_cluster_appendix_singlepolicy) ///
+>                         title("Cluster cuts: single-policy interactions, 2+ s
+> tates and more than 10 state-years") ///
+>                         columns(`clus_cols') labels("`clus_labs'") singlepoli
+> cy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(16 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(510 observations deleted)
+(108 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               135  
+    -----------------------------------------
+(87 observations deleted)
+(16 real changes made)
+(j = 1 2 3 4 5 6 7 8)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               48   ->   6           
+Number of variables                   8   ->   21          
+j variable (8 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef8
+                                     se   ->   se1 se2 ... se8
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.9-7.11: activity cuts
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_9_any_dep_activit
+> y.tex) label(final_activity_table2_h1) ///
+>                         title("Activity cuts: Table 2 any DEP adoption") ///
+>                         columns(`act_cols') labels("`act_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(34 observations deleted)
+(5 missing values generated)
+(5 missing values generated)
+(5 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                5   ->   1           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_10_dep_category_a
+> ctivity.tex) label(final_activity_table4_h3) ///
+>                         title("Activity cuts: Table 4 DEP type interactions")
+>  ///
+>                         columns(`act_cols') labels("`act_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(135 observations deleted)
+(14 missing values generated)
+(20 missing values generated)
+(20 missing values generated)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               20   ->   4           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_11_single_poli
+> cy_activity.tex) label(final_activity_appendix_singlepolicy) ///
+>                         title("Activity cuts: single-policy interactions, 2+ 
+> states and more than 10 state-years") ///
+>                         columns(`act_cols') labels("`act_labs'") singlepolicy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(560 observations deleted)
+(49 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                85  
+    -----------------------------------------
+(55 observations deleted)
+(10 real changes made)
+(j = 1 2 3 4 5)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               30   ->   6           
+Number of variables                   8   ->   15          
+j variable (5 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef5
+                                     se   ->   se1 se2 ... se5
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.12-7.17: company-size samples
+. 
+.                 write_table, table(h0) file(3_3_tab7_12_h0_company_size.tex) 
+> label(final_company_size_h0) ///
+>                         title("H0: location-specific diaspora versus national
+>  Indian diaspora stock: company-size FDI samples") ///
+>                         columns(`size_cols') labels("`size_labs'")
+(862 observations deleted)
+(26 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(18 observations deleted)
+(6 missing values generated)
+(8 missing values generated)
+(8 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                8   ->   2           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(862 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table1_baseline) file(3_3_tab7_13_diaspora
+> _only_company_size.tex) label(final_company_size_table1_baseline) ///
+>                         title("Table 1: baseline diaspora-only PPML: company-
+> size FDI samples") ///
+>                         columns(`size_cols') labels("`size_labs'")
+(878 observations deleted)
+(10 missing values generated)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(2 real changes made)
+(2 observations deleted)
+(6 missing values generated)
+(8 missing values generated)
+(8 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                8   ->   2           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(878 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str9
+(5 real changes made)
+variable singletons was str4 now str9
+(5 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table2_h1) file(3_3_tab7_14_any_dep_compan
+> y_size.tex) label(final_company_size_table2_h1) ///
+>                         title("Table 2: any DEP adoption x diaspora: company-
+> size FDI samples") ///
+>                         columns(`size_cols') labels("`size_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(35 observations deleted)
+(1 missing value generated)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table3_h2) file(3_3_tab7_15_dep_count_comp
+> any_size.tex) label(final_company_size_table3_h2) ///
+>                         title("Table 3: DEP-count intensity x diaspora: compa
+> ny-size FDI samples") ///
+>                         columns(`size_cols') labels("`size_labs'")
+(875 observations deleted)
+(13 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(9 observations deleted)
+(3 missing values generated)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(875 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_16_dep_category_c
+> ompany_size.tex) label(final_company_size_table4_h3) ///
+>                         title("Table 4: category-level policy interactions: c
+> ompany-size FDI samples") ///
+>                         columns(`size_cols') labels("`size_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(139 observations deleted)
+(12 missing values generated)
+(16 missing values generated)
+(16 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               16   ->   4           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_17_single_poli
+> cy_company_size.tex) label(final_company_size_appendix_singlepolicy) ///
+>                         title("Company-size FDI samples: single-policy intera
+> ctions, 2+ states and more than 10 state-years") ///
+>                         columns(`size_cols') labels("`size_labs'") singlepoli
+> cy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(577 observations deleted)
+(38 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  
+    -----------------------------------------
+(44 observations deleted)
+(8 real changes made)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               24   ->   6           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.18-7.20: ICT cuts by generation and education
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_18_any_dep_ict_ge
+> neration.tex) label(final_ict_generations_education_table2_h1) ///
+>                         title("ICT deeper cuts: generations and education, Ta
+> ble 2") ///
+>                         columns(`gen_cols') labels("`gen_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(35 observations deleted)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_19_dep_category_i
+> ct_generation.tex) label(final_ict_generations_education_table4_h3) ///
+>                         title("ICT deeper cuts: generations and education, Ta
+> ble 4") ///
+>                         columns(`gen_cols') labels("`gen_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(139 observations deleted)
+(4 missing values generated)
+(16 missing values generated)
+(16 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               16   ->   4           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_20_single_poli
+> cy_ict_generation.tex) label(final_ict_generations_education_appendix_singlep
+> olicy) ///
+>                         title("ICT deeper cuts: generations and education sin
+> gle-policy interactions, 2+ states and more than 10 state-years") ///
+>                         columns(`gen_cols') labels("`gen_labs'") singlepolicy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(577 observations deleted)
+(40 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  
+    -----------------------------------------
+(44 observations deleted)
+(8 real changes made)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               24   ->   6           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.21-7.23: ICT cuts, ICT workers vs everyone
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_21_any_dep_ict_wo
+> rker.tex) label(final_ict_worker_table2_h1) ///
+>                         title("ICT deeper cuts: ICT worker comparison, Table 
+> 2") ///
+>                         columns(`wrk_cols') labels("`wrk_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(35 observations deleted)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_22_dep_category_i
+> ct_worker.tex) label(final_ict_worker_table4_h3) ///
+>                         title("ICT deeper cuts: ICT worker comparison, Table 
+> 4") ///
+>                         columns(`wrk_cols') labels("`wrk_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(139 observations deleted)
+(4 missing values generated)
+(16 missing values generated)
+(16 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               16   ->   4           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_23_single_poli
+> cy_ict_worker.tex) label(final_ict_worker_appendix_singlepolicy) ///
+>                         title("ICT deeper cuts: ICT worker single-policy inte
+> ractions, 2+ states and more than 10 state-years") ///
+>                         columns(`wrk_cols') labels("`wrk_labs'") singlepolicy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(577 observations deleted)
+(36 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  
+    -----------------------------------------
+(44 observations deleted)
+(8 real changes made)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               24   ->   6           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.24-7.26: ICT cuts by company size
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_24_any_dep_ict_co
+> mpany_size.tex) label(final_ict_company_size_table2_h1) ///
+>                         title("ICT deeper cuts: company size comparison, Tabl
+> e 2") ///
+>                         columns(`ictsize_cols') labels("`ictsize_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(35 observations deleted)
+(1 missing value generated)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_25_dep_category_i
+> ct_company_size.tex) label(final_ict_company_size_table4_h3) ///
+>                         title("ICT deeper cuts: company size comparison, Tabl
+> e 4") ///
+>                         columns(`ictsize_cols') labels("`ictsize_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(139 observations deleted)
+(7 missing values generated)
+(16 missing values generated)
+(16 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               16   ->   4           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+.                 write_table, table(singlepolicy) file(3_3_tab7_26_single_poli
+> cy_ict_company_size.tex) label(final_ict_company_size_appendix_singlepolicy) 
+> ///
+>                         title("ICT deeper cuts: company size single-policy in
+> teractions, 2+ states and more than 10 state-years") ///
+>                         columns(`ictsize_cols') labels("`ictsize_labs'") sing
+> lepolicy
+(243 observations deleted)
+(645 missing values generated)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(17 real changes made)
+(577 observations deleted)
+(41 missing values generated)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  
+    -----------------------------------------
+(44 observations deleted)
+(8 real changes made)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               24   ->   6           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(243 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(9 real changes made)
+variable singletons was str4 now str9
+(9 real changes made)
+variable separated was str2 now str5
+(9 real changes made)
+
+. 
+.         **Tables 7.27-7.28: ICT cuts in tech-hub metros only
+. 
+.                 write_table, table(table2_h1) file(3_3_tab7_27_any_dep_tech_h
+> ubs.tex) label(final_ict_company_size_techhubs_table2_h1) ///
+>                         title("ICT deeper cuts: company size from tech hubs, 
+> Table 2") ///
+>                         columns(`hub_cols') labels("`hub_labs'")
+(849 observations deleted)
+(39 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(35 observations deleted)
+(4 missing values generated)
+(4 missing values generated)
+(4 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations                4   ->   1           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(849 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 write_table, table(table4_h3) file(3_3_tab7_28_dep_category_t
+> ech_hubs.tex) label(final_ict_company_size_techhubs_table4_h3) ///
+>                         title("ICT deeper cuts: company size from tech hubs, 
+> Table 4") ///
+>                         columns(`hub_cols') labels("`hub_labs'")
+(733 observations deleted)
+(155 missing values generated)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(4 real changes made)
+(139 observations deleted)
+(10 missing values generated)
+(16 missing values generated)
+(16 missing values generated)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               16   ->   4           
+Number of variables                   8   ->   13          
+j variable (4 values)               col   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+(0 real changes made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(733 observations deleted)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+variable N_used was str4 now str7
+(7 real changes made)
+variable singletons was str4 now str9
+(7 real changes made)
+variable separated was str2 now str5
+(7 real changes made)
+
+. 
+. ********
+. *
+. *       6. Table 7.29: State-specific policy interactions
+. *
+. ********
+. 
+.         // Same interaction model, but the policy only "counts" in one state 
+> at a
+.         // time, to see whether a result is driven by a single state
+. 
+.         tempfile state_results
+
+.         frame create statecut int col str40 policy str20 state double(coef_b 
+> coef_se coef_p)
+
+.         local j = 0
+
+.         foreach outcome in fdi_projects_all fdi_projects_ict {
+  2.                 local ++j
+  3.                 prep_panel, file(s1_firstgen_highed_25plus)
+  4.                 quietly summarize `outcome'
+  5.                 local projects`j' = string(r(sum), "%9.0f")
+  6.                 quietly summarize n_people
+  7.                 local pop`j' = string(r(sum), "%9.0f")
+  8. 
+.                 foreach p in diaspora_admin_unit tax_regulatory_guidance dias
+> pora_conferences {
+  9.                         foreach st in "punjab" "tamil nadu" "kerala" "guja
+> rat" {
+ 10.                                 capture drop p_state
+ 11.                                 gen double p_state = cond(indian_state == 
+> "`st'", `p', 0)
+ 12.                                 quietly summarize p_state
+ 13.                                 if missing(r(sd)) | r(sd) <= 0 continue
+ 14. 
+.                                 capture quietly ppmlhdfe `outcome' c.ln_dias#
+> #c.p_state, ///
+>                                         absorb(od_id i.origin_id#i.year i.lan
+> guaged#i.year) vce(cluster languaged)
+ 15.                                 if _rc continue
+ 16.                                 capture quietly lincom c.ln_dias#c.p_state
+ 17.                                 if _rc continue
+ 18.                                 frame post statecut (`j') ("`p'") ("`st'")
+>  (r(estimate)) (r(se)) (r(p))
+ 19.                         }
+ 20.                 }
+ 21.         }
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+. 
+.         frame change statecut
+
+.         gen stars = cond(coef_p < .01, "***", cond(coef_p < .05, "**", cond(c
+> oef_p < .10, "*", "")))
+(8 missing values generated)
+
+.         gen coef = string(round(coef_b, .001), "%9.3f") + stars
+
+.         gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
+
+. 
+.         local fullwidth "@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidt
+> h-2\tabcolsep\relax}@{}"
+
+.         file open tab using "${tables}/3_3_tab7_29_state_specific_policies.te
+> x", write replace text
+
+.         file write tab "\begin{table}[!htbp]" _n
+
+.         file write tab "\centering" _n
+
+.         file write tab "\footnotesize" _n
+
+.         file write tab "\setlength{\tabcolsep}{3pt}" _n
+
+.         file write tab "\renewcommand{\arraystretch}{1.08}" _n
+
+.         file write tab "\caption{State-specific policy interactions}" _n
+
+.         file write tab "\label{tab:final_statecuts_appendix_singlepolicy}" _n
+
+.         file write tab "\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arrayb
+> ackslash}X *{2}{>{\Centering\arraybackslash}X}@{}}" _n
+
+.         file write tab "\hline" _n
+
+.         file write tab "Policy & First-gen 25+ high-ed, all FDI & First-gen 2
+> 5+ high-ed, ICT FDI \\" _n
+
+.         file write tab "\hline" _n
+
+.         foreach st in "punjab" "tamil nadu" "kerala" "gujarat" {
+  2.                 file write tab "\multicolumn{3}{`fullwidth'}{\textit{`=pro
+> per("`st'")'}}\\" _n
+  3.                 foreach p in diaspora_admin_unit tax_regulatory_guidance d
+> iaspora_conferences {
+  4.                         quietly count if state == "`st'" & policy == "`p'"
+  5.                         if r(N) == 0 continue
+  6.                         local coefrow = proper(subinstr("`p'", "_", " ", .
+> ))
+  7.                         local serow ""
+  8.                         forvalues j = 1/2 {
+  9.                                 quietly levelsof coef if state == "`st'" &
+>  policy == "`p'" & col == `j', local(c) clean
+ 10.                                 quietly levelsof se if state == "`st'" & p
+> olicy == "`p'" & col == `j', local(s) clean
+ 11.                                 local coefrow "`coefrow' & `c'"
+ 12.                                 local serow "`serow' & `s'"
+ 13.                         }
+ 14.                         file write tab "`coefrow' \\" _n
+ 15.                         file write tab "`serow' \\" _n
+ 16.                 }
+ 17.         }
+
+.         file write tab "\hline" _n
+
+.         file write tab "Projects, 2005--2017 & `projects1' & `projects2' \\" 
+> _n
+
+.         file write tab "Total diaspora pop., 2005--2017 & `pop1' & `pop2' \\"
+>  _n
+
+.         file write tab "\hline" _n
+
+.         file write tab "\fulltablenote{3}{Each cell is from a PPML model inte
+> racting ln\_dias with the named policy limited to the section state.}" _n
+
+.         file write tab "\fulltablenote{3}{* p<0.10, ** p<0.05, *** p<0.01.}" 
+> _n
+
+.         file write tab "\end{tabularx}" _n
+
+.         file write tab "\end{table}" _n
+
+.         file close tab
+
+. 
+.         frame change default
+
+.         frame drop statecut
+
+. 
+. ********
+. *
+. *       7. Appendix Table B.1: One-at-a-time policy interactions by support
+. *
+. ********
+. 
+.         // Every policy we could estimate, for the four main samples (S1-S4 a
+> re
+.         // Samples 1-4 in Table 5.2), split into three panels by how many sta
+> tes
+.         // and state-years have the policy
+. 
+.         **Coefficients side by side
+. 
+.                 use "${gendata}/3_3_ppml_results.dta", clear
+
+.                 keep if table_id == "singlepolicy" & inlist(sample_id, 1, 2, 
+> 3, 4)
+(820 observations deleted)
+
+.                 merge m:1 policy using "${gendata}/3_3_policy_support.dta", /
+> //
+>                         keepusing(support_states support_obs item_order) keep
+> (match) nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  
+    -----------------------------------------
+
+. 
+.                 gen stars = cond(coef_p < .01, "***", cond(coef_p < .05, "**"
+> , cond(coef_p < .10, "*", "")))
+(29 missing values generated)
+
+.                 gen coef = string(round(coef_b, .001), "%9.3f") + stars
+
+.                 gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
+
+.                 keep policy item_order support_states support_obs sample_id c
+> oef se
+
+.                 reshape wide coef se, i(policy) j(sample_id)
+(j = 1 2 3 4)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations               68   ->   17          
+Number of variables                   7   ->   12          
+j variable (4 values)         sample_id   ->   (dropped)
+xij variables:
+                                   coef   ->   coef1 coef2 ... coef4
+                                     se   ->   se1 se2 ... se4
+-----------------------------------------------------------------------------
+
+. 
+.                 gen byte panel = 3
+
+.                 replace panel = 2 if support_states >= 2 & support_obs >= 10
+(7 real changes made)
+
+.                 replace panel = 1 if support_states >= 3 & support_obs >= 20
+(4 real changes made)
+
+.                 sort panel item_order
+
+. 
+.                 gen rowlabel = proper(subinstr(policy, "_", " ", .))
+
+.                 replace rowlabel = subinstr(subinstr(rowlabel, "Nri ", "NRI "
+> , .), " For ", " for ", .)
+(3 real changes made)
+
+. 
+.         **Sample-size footer
+. 
+.                 preserve
+
+.                         use "${gendata}/3_3_ppml_accounting.dta", clear
+
+.                         keep if table_id == "singlepolicy" & inlist(sample_id
+> , 1, 2, 3, 4)
+(820 observations deleted)
+
+.                         collapse (min) raw_N_lo = raw_N N_full_lo = N_full N_
+> used_lo = N_used ///
+>                                         singletons_lo = singletons separated_
+> lo = separated ///
+>                                 (max) raw_N_hi = raw_N N_full_hi = N_full N_u
+> sed_hi = N_used ///
+>                                         singletons_hi = singletons separated_
+> hi = separated, by(sample_id)
+
+.                         foreach m in raw_N N_full N_used singletons separated
+>  {
+  2.                                 gen `m' = string(`m'_lo, "%9.0f")
+  3.                                 replace `m' = `m' + "-" + string(`m'_hi, "
+> %9.0f") if `m'_lo != `m'_hi
+  4.                                 forvalues s = 1/4 {
+  5.                                         quietly levelsof `m' if sample_id 
+> == `s', local(`m'`s') clean
+  6.                                 }
+  7.                         }
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.                 restore
+
+. 
+.         **Write the longtable (it runs across several pages)
+. 
+.                 local width "4.1cm+1.2cm+1.7cm+1.35cm+1.35cm+1.35cm+1.35cm"
+
+.                 local fullrow "\multicolumn{7}{@{}p{\dimexpr`width'\relax}@{}
+> }"
+
+.                 local header "Policy & \# States & \# State-years & S1 & S2 &
+>  S3 & S4 \\"
+
+. 
+.                 file open tab using "${tables}/3_3_tabB_1_single_policy_by_su
+> pport.tex", write replace text
+
+.                 file write tab "\begin{longtable}{@{}>{\raggedright\arrayback
+> slash}p{4.1cm}" _n
+
+.                 file write tab ">{\centering\arraybackslash}p{1.2cm}" _n
+
+.                 file write tab ">{\centering\arraybackslash}p{1.7cm}" _n
+
+.                 forvalues j = 1/3 {
+  2.                         file write tab ">{\centering\arraybackslash}p{1.35
+> cm}" _n
+  3.                 }
+
+.                 file write tab ">{\centering\arraybackslash}p{1.35cm}@{}}" _n
+
+.                 file write tab "\caption{Appendix. One-at-a-Time Policy Inter
+> actions Split by Treatment Support}" _n
+
+.                 file write tab "\label{tab:appendix_singlepolicy}\\" _n
+
+.                 file write tab "\toprule" _n
+
+.                 file write tab "`header'" _n
+
+.                 file write tab "\midrule" _n
+
+.                 file write tab "\endfirsthead" _n
+
+.                 file write tab "" _n
+
+.                 file write tab "\multicolumn{7}{@{}l}{\textit{Table \thetable
+> \ continued}}\\" _n
+
+.                 file write tab "\toprule" _n
+
+.                 file write tab "`header'" _n
+
+.                 file write tab "\midrule" _n
+
+.                 file write tab "\endhead" _n
+
+.                 file write tab "" _n
+
+.                 file write tab "\midrule" _n
+
+.                 file write tab "\multicolumn{7}{r@{}}{\textit{Continued on ne
+> xt page}}\\" _n
+
+.                 file write tab "\endfoot" _n
+
+.                 file write tab "" _n
+
+.                 file write tab "\bottomrule" _n
+
+.                 file write tab "\endlastfoot" _n
+
+.                 file write tab "" _n
+
+. 
+.                 local heading1 "Panel A: Policies with support in at least 3 
+> states and 20 state-years"
+
+.                 local heading2 "Panel B: Policies with support in at least 2 
+> states and 10 state-years, but below 3 states and 20 state-years"
+
+.                 local heading3 "Panel C: All remaining policies"
+
+. 
+.                 forvalues i = 1/`=_N' {
+  2.                         local p = panel[`i']
+  3.                         if `i' == 1 | `p' != panel[max(`i'-1, 1)] {
+  4.                                 if `i' > 1 {
+  5.                                         file write tab "" _n
+  6.                                         file write tab "\midrule" _n
+  7.                                 }
+  8.                                 file write tab "`fullrow'{\textit{`heading
+> `p''}}\\" _n
+  9.                         }
+ 10.                         // Support counts repeat on the standard-error row
+.                         local support = string(support_states[`i'], "%9.0f") 
+> + " & " + string(support_obs[`i'], "%9.0f")
+ 11.                         file write tab (rowlabel[`i']) " & `support'"
+ 12.                         forvalues s = 1/4 {
+ 13.                                 file write tab " & " (coef`s'[`i'])
+ 14.                         }
+ 15.                         file write tab " \\" _n
+ 16.                         file write tab " & `support'"
+ 17.                         forvalues s = 1/4 {
+ 18.                                 file write tab " & " (se`s'[`i'])
+ 19.                         }
+ 20.                         file write tab " \\" _n
+ 21.                 }
+
+. 
+.                 file write tab "" _n
+
+.                 file write tab "\midrule" _n
+
+.                 local f_raw_N           "Raw sample N"
+
+.                 local f_N_full          "e(N full)"
+
+.                 local f_N_used          "e(N)"
+
+.                 local f_singletons      "Dropped singletons"
+
+.                 local f_separated       "Dropped separated observations"
+
+.                 foreach m in raw_N N_full N_used singletons separated {
+  2.                         file write tab "`f_`m'' &  & "
+  3.                         forvalues s = 1/4 {
+  4.                                 file write tab " & ``m'`s''"
+  5.                         }
+  6.                         file write tab " \\" _n
+  7.                 }
+
+.                 file write tab "" _n
+
+.                 // Dollar signs built with char(36), since Stata reads "$S1" 
+> as a global
+.                 local d = char(36)
+
+.                 file write tab "`fullrow'{\footnotesize \textit{Notes:} Cells
+>  report coefficients from one-at-a-time policy interaction models, with stand
+> ard errors in parentheses directly underneath. Support counts come from the r
+> aw DEP state-year panel, 2005--2017. `d'S1`d'--`d'S4`d' correspond to the fou
+> r main estimation samples used in the paper. `d'^{*}p<0.10`d', `d'^{**}p<0.05
+> `d', `d'^{***}p<0.01`d'.} \\" _n
+
+.                 file write tab "\end{longtable}" _n
+
+.                 file close tab
+
+. 
+. ********
+. *
+. *       8. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_3_tab_ppml.
+> log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:44
+-------------------------------------------------------------------------------

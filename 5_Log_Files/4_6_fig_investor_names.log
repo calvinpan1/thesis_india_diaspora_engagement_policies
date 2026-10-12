@@ -1,0 +1,53 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_6_fig_inves
+> tor_names.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:22:57
+
+. 
+. ********
+. *
+. *       1. Figure 5.1: Diaspora vs non-diaspora shares
+. *
+. ********
+. 
+.         import delimited using "${rawdata}/fdi_extracts/2_2_investor_name_sha
+> res.csv", clear varnames(1)
+(encoding automatically selected: ISO-8859-2)
+(4 vars, 2 obs)
+
+. 
+.         // "diaspora" sits on top
+.         gen status_order = cond(diaspora_status == "diaspora", 1, 2)
+
+. 
+.         graph hbar project_share investor_share capital_share, ///
+>                 over(diaspora_status, sort(status_order) descending label(lab
+> size(medsmall))) ///
+>                 title("Diaspora vs non-diaspora shares") ///
+>                 ytitle("Percent") ///
+>                 legend(order(1 "Projects" 2 "Unique investors" 3 "Capital") r
+> ows(1)) ///
+>                 blabel(bar, format(%4.1f) position(outside)) ///
+>                 graphregion(color(white))
+
+.         graph export "${figures}/4_6_fig5_1_indian_name_shares.png", replace 
+> width(2400)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_6_
+> fig5_1_indian_name_shares.png written in PNG format
+
+. 
+. ********
+. *
+. *       2. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_6_fig_inves
+> tor_names.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:58
+-------------------------------------------------------------------------------

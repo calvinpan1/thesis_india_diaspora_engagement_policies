@@ -1,0 +1,667 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_2_fdi_clean
+> .log
+  log type:  text
+ opened on:  12 Oct 2026, 04:16:29
+
+. 
+.         global fdiraw "${rawdata}/fdi_private"
+
+.         global fdiout "${rawdata}/fdi_extracts"
+
+. 
+. ********
+. *
+. *       0. Skip if the licensed data isn't here
+. *
+. ********
+. 
+.         capture confirm file "${fdiraw}/0428.fdi.csv"
+
+.         if _rc {
+.                 di as text "No licensed fDi Markets files in 2_Raw_Data/fdi_p
+> rivate/."
+.                 di as text "Skipping, later files use the extracts in 2_Raw_D
+> ata/fdi_extracts/."
+.                 log close stage
+.                 exit
+.         }
+
+. 
+. ********
+. *
+. *       1. Company flags (public company, project activity)
+. *
+. ********
+. 
+.         **Public company: parent matched to CRSP and listed when the project 
+> happened
+. 
+.                 import delimited using "${fdiraw}/0428.fdi.crsp_parent_public
+> .csv", ///
+>                         clear varnames(1) stringcols(_all)
+(encoding automatically selected: ISO-8859-1)
+(38 vars, 3,183 obs)
+
+.                 keep id public_by_txn_date public_by_exact_crsp_window
+
+.                 destring id public_by_txn_date public_by_exact_crsp_window, r
+> eplace force
+id: all characters numeric; replaced as int
+public_by_txn_date: all characters numeric; replaced as byte
+public_by_exact_crsp_window: all characters numeric; replaced as byte
+
+.                 replace public_by_txn_date = 0 if missing(public_by_txn_date)
+(0 real changes made)
+
+.                 replace public_by_exact_crsp_window = 0 if missing(public_by_
+> exact_crsp_window)
+(0 real changes made)
+
+.                 bysort id: egen byte public_company = max(public_by_txn_date 
+> == 1 | public_by_exact_crsp_window == 1)
+
+.                 keep id public_company
+
+.                 duplicates drop id, force
+
+Duplicates in terms of id
+
+(0 observations are duplicates)
+
+. 
+.                 tempfile public_flags
+
+.                 save `public_flags'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+
+. 
+.         **Project activity (manufacturing, sales, R&D, business services)
+. 
+.                 import delimited using "${fdiraw}/0428.fdi.sectoral.csv", ///
+>                         clear varnames(1) stringcols(_all)
+(encoding automatically selected: ISO-8859-1)
+(20 vars, 3,183 obs)
+
+.                 keep id activity
+
+.                 destring id, replace force
+id: all characters numeric; replaced as int
+
+.                 gen activity_clean = lower(trim(itrim(activity)))
+
+.                 gen byte manufacturing_activity         = activity_clean == "
+> manufacturing"
+
+.                 gen byte sales_mkt_support_activity     = activity_clean == "
+> sales, marketing & support"
+
+.                 gen byte design_dev_testing_activity    = activity_clean == "
+> design, development & testing"
+
+.                 gen byte business_services_activity     = activity_clean == "
+> business services"
+
+.                 drop activity activity_clean
+
+.                 duplicates drop id, force
+
+Duplicates in terms of id
+
+(0 observations are duplicates)
+
+. 
+.                 tempfile activity_flags
+
+.                 save `activity_flags'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+
+. 
+. ********
+. *
+. *       2. Clean projects and build outcome counts
+. *
+. ********
+. 
+.         import delimited using "${fdiraw}/0428.fdi.csv", clear varnames(1) st
+> ringcols(_all)
+(encoding automatically selected: ISO-8859-1)
+(19 vars, 3,183 obs)
+
+.         destring id, replace force
+id: all characters numeric; replaced as int
+
+. 
+.         merge m:1 id using `public_flags', nogen keep(master match)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             3,183  
+    -----------------------------------------
+
+.         merge m:1 id using `activity_flags', nogen keep(master match)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             3,183  
+    -----------------------------------------
+
+.         foreach v in public_company manufacturing_activity sales_mkt_support_
+> activity ///
+>                 design_dev_testing_activity business_services_activity {
+  2.                 replace `v' = 0 if missing(`v')
+  3.         }
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+. 
+.         **Year, source metro, money and jobs
+. 
+.                 gen year = year(date(trim(project_date), "MD20Y"))
+
+.                 keep if inrange(year, 2005, 2017)
+(0 observations deleted)
+
+. 
+.                 gen met2013 = real(subinstr(trim(itrim(sourcecitymetro2013)),
+>  ",", "", .))
+
+. 
+.                 // Strip "$", commas and spaces before converting to numbers
+.                 foreach v in capitalinvestmentreal jobscreated {
+  2.                         replace `v' = subinstr(subinstr(subinstr(trim(`v')
+> , "$", "", .), ",", "", .), " ", "", .)
+  3.                         destring `v', replace force
+  4.                 }
+(0 real changes made)
+capitalinvestmentreal: all characters numeric; replaced as double
+(0 real changes made)
+jobscreated: all characters numeric; replaced as int
+
+. 
+.         **Destination state -> its dominant language code
+. 
+.                 gen dest = lower(trim(itrim(destinationstate)))
+
+.                 gen languaged = .
+(3,183 missing values generated)
+
+.                 replace languaged = 4004 if dest == "kerala"
+(53 real changes made)
+
+.                 replace languaged = 4005 if inlist(dest, "tamil nadu", "tamil
+> nadu")
+(307 real changes made)
+
+.                 replace languaged = 3115 if dest == "gujarat"
+(134 real changes made)
+
+.                 replace languaged = 3130 if dest == "karnataka"
+(684 real changes made)
+
+.                 replace languaged = 3114 if dest == "maharashtra"
+(651 real changes made)
+
+.                 replace languaged = 3113 if dest == "punjab"
+(31 real changes made)
+
+.                 replace languaged = 4003 if inlist(dest, "andhra pradesh", "a
+> ndhra")
+(380 real changes made)
+
+.                 replace languaged = 3112 if inlist(dest, "west bengal", "beng
+> al")
+(49 real changes made)
+
+.                 drop if missing(languaged)
+(894 observations deleted)
+
+.                 drop if languaged == 4003 & inrange(year, 2014, 2017)   // AP
+>  split in 2014
+(130 observations deleted)
+
+. 
+.         **Company size (Tables 7.12-7.17, 7.24-7.28)
+. 
+.                 // A company is "large" if it's ever public or any of its pro
+> jects is at
+.                 // or above the 75th percentile of jobs or capital. "Small" i
+> s everyone
+.                 // else with at least one jobs or capital number to judge by.
+.                 gen parent_clean = lower(trim(itrim(parent_company)))
+
+.                 replace parent_clean = "__missing_parent_" + string(id, "%12.
+> 0f") if parent_clean == ""
+(0 real changes made)
+
+.                 egen corp_id = group(parent_clean)
+
+. 
+.                 quietly summarize jobscreated, detail
+
+.                 local p75_jobs = r(p75)
+
+.                 quietly summarize capitalinvestmentreal, detail
+
+.                 local p75_capital = r(p75)
+
+. 
+.                 gen byte has_size_info = !missing(jobscreated) | !missing(cap
+> italinvestmentreal)
+
+.                 gen byte big_project = (jobscreated >= `p75_jobs' & jobscreat
+> ed < .) ///
+>                         | (capitalinvestmentreal >= `p75_capital' & capitalin
+> vestmentreal < .)
+
+. 
+.                 bysort corp_id: egen byte corp_public = max(public_company ==
+>  1)
+
+.                 bysort corp_id: egen byte corp_has_size_info = max(has_size_i
+> nfo)
+
+.                 bysort corp_id: egen byte corp_ever_big = max(big_project)
+
+. 
+.                 gen largecompany_75 = .
+(2,159 missing values generated)
+
+.                 replace largecompany_75 = 0 if corp_has_size_info == 1
+(2,159 real changes made)
+
+.                 replace largecompany_75 = 1 if corp_ever_big == 1 | corp_publ
+> ic == 1
+(1,551 real changes made)
+
+.                 gen small_company_75 = largecompany_75 == 0 if !missing(large
+> company_75)
+
+. 
+.         **Outcome counts, one row per project
+. 
+.                 replace cluster = trim(itrim(cluster))
+(0 real changes made)
+
+.                 gen cluster_clean = lower(cluster)
+
+.                 gen byte ict = cluster_clean == "ict & electronics"
+
+. 
+.                 gen byte fdi_projects_all                               = 1
+
+.                 gen byte fdi_projects_ict                               = ict
+
+.                 gen byte fdi_projects_profsvc                   = cluster_cle
+> an == "professional services"
+
+.                 gen byte fdi_projects_finsvc                    = cluster_cle
+> an == "financial services"
+
+.                 gen byte fdi_projects_creative                  = cluster_cle
+> an == "creative industries"
+
+.                 gen byte fdi_projects_lifesciences              = cluster_cle
+> an == "life sciences"
+
+.                 gen byte fdi_projects_industrial                = cluster_cle
+> an == "industrial"
+
+.                 gen byte fdi_projects_transportequip    = cluster_clean == "t
+> ransport equipment"
+
+.                 gen byte fdi_projects_consgoods                 = cluster == 
+> "Consumer Goods"
+
+.                 gen byte fdi_projects_all_mfg                   = manufacturi
+> ng_activity
+
+.                 gen byte fdi_projects_sales_mkt_support = sales_mkt_support_a
+> ctivity
+
+.                 gen byte fdi_projects_design_dev_testing        = design_dev_
+> testing_activity
+
+.                 gen byte fdi_projects_business_services = business_services_a
+> ctivity
+
+. 
+.                 // Size-split counts are 0 (not missing) for companies we can
+> 't size
+.                 gen byte fdi_projects_all_small75       = small_company_75 ==
+>  1
+
+.                 gen byte fdi_projects_ict_small75       = ict & small_company
+> _75 == 1
+
+.                 gen byte fdi_projects_all_large75       = largecompany_75 == 
+> 1
+
+.                 gen byte fdi_projects_ict_large75       = ict & largecompany_
+> 75 == 1
+
+. 
+.                 tempfile projects
+
+.                 save `projects'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+    as .dta format
+
+. 
+. ********
+. *
+. *       3. Extract A, project counts by metro x language x year
+. *
+. ********
+. 
+.         // Counts only. Capital and jobs at this level could pin down single
+.         // licensed records, so those only go out as state-year totals (Extra
+> ct B).
+.         collapse (sum) fdi_projects_*, by(year met2013 languaged)
+
+.         drop if missing(met2013)
+(0 observations deleted)
+
+.         sort year met2013 languaged
+
+.         export delimited using "${fdiout}/2_2_fdi_counts_metro_language_year.
+> csv", replace
+file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_c
+> ounts_metro_language_year.csv saved
+
+. 
+. ********
+. *
+. *       4. Extract B, state-year totals in top-50 metros
+. *
+. ********
+. 
+.         // Feeds Figures 5.2-5.7: projects, capital and jobs by Indian state-
+> year,
+.         // counting only projects from the top-50 diaspora metros
+.         use `projects', clear
+
+.         merge m:1 met2013 using "${gendata}/2_1_top50_metros.dta", keep(match
+> ) nogen
+(variable met2013 was float, now double to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             1,928  
+    -----------------------------------------
+
+.         collapse (sum) fdi_projects_all fdi_projects_ict fdi_projects_consgoo
+> ds ///
+>                 capital_real_all = capitalinvestmentreal jobs_all = jobscreat
+> ed, by(year languaged)
+
+. 
+.         gen indian_state = ""
+(94 missing values generated)
+
+.         replace indian_state = "Kerala"                 if languaged == 4004
+variable indian_state was str1 now str6
+(13 real changes made)
+
+.         replace indian_state = "Tamil Nadu"             if languaged == 4005
+variable indian_state was str6 now str10
+(13 real changes made)
+
+.         replace indian_state = "Gujarat"                if languaged == 3115
+(13 real changes made)
+
+.         replace indian_state = "Karnataka"              if languaged == 3130
+(13 real changes made)
+
+.         replace indian_state = "Maharashtra"    if languaged == 3114
+variable indian_state was str10 now str11
+(13 real changes made)
+
+.         replace indian_state = "Punjab"                 if languaged == 3113
+(9 real changes made)
+
+.         replace indian_state = "Andhra Pradesh" if languaged == 4003
+variable indian_state was str11 now str14
+(9 real changes made)
+
+.         replace indian_state = "West Bengal"    if languaged == 3112
+(11 real changes made)
+
+.         drop languaged
+
+. 
+.         // Fill in every state-year so states with no projects show up as 0
+.         fillin indian_state year
+
+.         drop _fillin
+
+.         foreach v of varlist fdi_projects_* capital_real_all jobs_all {
+  2.                 replace `v' = 0 if missing(`v')
+  3.         }
+(10 real changes made)
+(10 real changes made)
+(10 real changes made)
+(10 real changes made)
+(10 real changes made)
+
+. 
+.         order indian_state year
+
+.         sort indian_state year
+
+.         format capital_real_all jobs_all %20.4f
+
+.         export delimited using "${fdiout}/2_2_fdi_state_year_top50.csv", data
+> fmt replace
+file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_s
+> tate_year_top50.csv saved
+
+. 
+. ********
+. *
+. *       5. Extract C, projects by cluster
+. *
+. ********
+. 
+.         // Feeds Figure 6.4. All projects in the sectoral file, every year.
+.         import delimited using "${fdiraw}/0428.fdi.sectoral.csv", clear varna
+> mes(1) stringcols(_all)
+(encoding automatically selected: ISO-8859-1)
+(20 vars, 3,183 obs)
+
+.         destring id, replace ignore("$, ") force
+id: all characters numeric; replaced as int
+
+.         replace cluster = "Missing/Not specified" if trim(cluster) == ""
+(0 real changes made)
+
+.         collapse (count) n_projects = id, by(cluster)
+
+.         gsort -n_projects cluster
+
+.         export delimited using "${fdiout}/2_2_fdi_projects_by_cluster.csv", r
+> eplace
+file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_fdi_p
+> rojects_by_cluster.csv saved
+
+. 
+. ********
+. *
+. *       6. Extract D, Indian-name investor shares
+. *
+. ********
+. 
+.         // Feeds Figure 5.1. The "Indian name?" column was hand-coded from ea
+> ch
+.         // project's first listed contact, using a name-origin classifier
+.         // (Dhingra 2023) and checked in Excel.
+.         import delimited using "${fdiraw}/investor_name_results.csv", ///
+>                 clear varnames(1) stringcols(_all) bindquote(strict)
+(encoding automatically selected: ISO-8859-1)
+(33 vars, 3,183 obs)
+
+. 
+.         // Only need 4 of the 33 columns, picked by position since the header
+> s are
+.         // messy: 1 ID, 12 capital, 17 first contact's name, 18 Indian name f
+> lag
+.         unab allvars : _all
+
+.         local keepvars
+
+.         foreach i in 1 12 17 18 {
+  2.                 local keepvars `keepvars' `: word `i' of `allvars''
+  3.         }
+
+.         keep `keepvars'
+
+.         rename (`keepvars') (id capital contact indian_name)
+
+. 
+.         foreach v of varlist _all {
+  2.                 replace `v' = trim(`v')
+  3.         }
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+.         destring capital, replace ignore(",") force
+capital: all characters numeric; replaced as double
+
+. 
+.         gen byte indian_led = indian_name == "Y"
+
+.         gen diaspora_status = cond(indian_led, "diaspora", "non_diaspora")
+
+. 
+.         **Share of projects and of capital
+. 
+.                 quietly count
+
+.                 local n_projects = r(N)
+
+.                 quietly summarize capital, meanonly
+
+.                 local total_capital = r(sum)
+
+. 
+.                 preserve
+
+.                         gen byte one = 1
+
+.                         collapse (sum) n_projects = one capital_total = capit
+> al, by(diaspora_status)
+
+.                         gen project_share = 100 * n_projects / `n_projects'
+
+.                         gen capital_share = 100 * capital_total / `total_capi
+> tal'
+
+.                         tempfile project_shares
+
+.                         save `project_shares'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000005 saved
+    as .dta format
+
+.                 restore
+
+. 
+.         **Share of unique investors (a person counts as Indian-named if any o
+> f their projects is)
+. 
+.                 gen investor = lower(trim(contact))
+(1,080 missing values generated)
+
+.                 foreach ch in "." "," "'" {
+  2.                         replace investor = subinstr(investor, "`ch'", "", 
+> .)
+  3.                 }
+(52 real changes made)
+(4 real changes made)
+(10 real changes made)
+
+.                 replace investor = itrim(subinstr(investor, "-", " ", .))
+(19 real changes made)
+
+.                 keep if investor != ""
+(1,080 observations deleted)
+
+. 
+.                 bysort investor: egen byte investor_indian = max(indian_led)
+
+.                 by investor: keep if _n == 1
+(464 observations deleted)
+
+.                 quietly count
+
+.                 local n_investors = r(N)
+
+. 
+.                 gen investor_status = cond(investor_indian, "diaspora", "non_
+> diaspora")
+
+.                 gen byte one = 1
+
+.                 collapse (sum) n_investors = one, by(investor_status)
+
+.                 rename investor_status diaspora_status
+
+.                 gen investor_share = 100 * n_investors / `n_investors'
+
+. 
+.                 merge 1:1 diaspora_status using `project_shares', nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 2  
+    -----------------------------------------
+
+.                 replace investor_share = 0 if missing(investor_share)
+(0 real changes made)
+
+. 
+.         keep diaspora_status project_share investor_share capital_share
+
+.         sort diaspora_status
+
+.         format *_share %9.4f
+
+.         export delimited using "${fdiout}/2_2_investor_name_shares.csv", data
+> fmt replace
+file /Users/calvin/thesis_replication_package/2_Raw_Data/fdi_extracts/2_2_inves
+> tor_name_shares.csv saved
+
+.         list
+
+     +-----------------------------------------------+
+     | diaspora_s~s   invest~e   projec~e   capita~e |
+     |-----------------------------------------------|
+  1. |     diaspora    47.9561    32.6422    29.7773 |
+  2. | non_diaspora    52.0439    67.3578    70.2227 |
+     +-----------------------------------------------+
+
+. 
+. ********
+. *
+. *       7. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_2_fdi_clean
+> .log
+  log type:  text
+ closed on:  12 Oct 2026, 04:16:30
+-------------------------------------------------------------------------------

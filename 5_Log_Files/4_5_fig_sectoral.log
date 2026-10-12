@@ -1,0 +1,46 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_5_fig_secto
+> ral.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:22:56
+
+. 
+. ********
+. *
+. *       1. Figure 6.4: All companies by sector
+. *
+. ********
+. 
+.         import delimited using "${rawdata}/fdi_extracts/2_2_fdi_projects_by_c
+> luster.csv", clear varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(2 vars, 17 obs)
+
+. 
+.         graph hbar (asis) n_projects, ///
+>                 over(cluster, sort(1) descending label(labsize(small))) ///
+>                 title("All Companies: Projects by Cluster", size(11pt)) ///
+>                 ytitle("Number of projects", size(10pt)) ///
+>                 blabel(bar, size(vsmall) format(%9.0fc)) ///
+>                 graphregion(color(white))
+
+.         graph export "${figures}/4_5_fig6_4_projects_by_cluster.png", replace
+>  width(3600) height(2400)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_5_
+> fig6_4_projects_by_cluster.png written in PNG format
+
+. 
+. ********
+. *
+. *       2. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_5_fig_secto
+> ral.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:57
+-------------------------------------------------------------------------------

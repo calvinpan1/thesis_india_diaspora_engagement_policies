@@ -1,0 +1,128 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/1_1_acs_clean
+> .log
+  log type:  text
+ opened on:  12 Oct 2026, 04:03:20
+
+. 
+. ********
+. *
+. *       0. Language codes used everywhere
+. *
+. ********
+. 
+.         // IPUMS LANGUAGED codes for each Indian state's dominant language
+.         //      4004 Malayalam (Kerala)                 4005 Tamil (Tamil Nad
+> u)
+.         //      3115 Gujarati (Gujarat)                 3130 Kannada (Karnata
+> ka)
+.         //      3114 Marathi (Maharashtra)              3113 Punjabi (Punjab)
+.         //      4003 Telugu (Andhra Pradesh)    3112 Bengali (West Bengal)
+.         //      4011 Nepali (only used for the birthplace check figure)
+.         global state_langs      "4004, 4005, 3115, 3130, 3114, 3113, 4003, 31
+> 12"
+
+. 
+. ********
+. *
+. *       1. Read only the rows and columns we need
+. *
+. ********
+. 
+.         // Filtering inside -use- means Stata never holds all 62 million rows
+>  in
+.         // memory, which is most of the speedup over the old cleanup file
+.         use year statefip met2013 perwt age bpld languaged educd occ1990 ///
+>                 using "${rawdata}/ipums/usa_00014.dta" ///
+>                 if inrange(year, 2005, 2017) & met2013 != 0 ///
+>                 & (bpld == 52100 | inlist(languaged, ${state_langs}, 4011)), 
+> clear
+
+. 
+.         rename statefip state
+
+. 
+. ********
+. *
+. *       2. Build person-level indicators
+. *
+. ********
+. 
+.         gen byte firstgen_india = bpld == 52100         // born in India
+
+. 
+.         // ICT occupations, 1990 occupation codes (computer scientists, engin
+> eers,
+.         // programmers, technicians)
+.         gen byte ict_worker = inlist(occ1990, ///
+>                 229, 308, ///
+>                 64, 65, 66, 67, 68, ///
+>                 213, 214, 215, 233, ///
+>                 69, 73, 78, 83, ///
+>                 114, 115, 116, 127, 128, 129, 133, 153)
+
+. 
+.         gen byte higher_ed = educd >= 101 if !missing(educd)    // bachelor's
+>  or more
+
+. 
+.         // First-gen samples use all 8 state languages. All-gen samples drop 
+> Bengali,
+.         // since most US Bengali speakers are from Bangladesh, not West Benga
+> l.
+.         gen byte lang_first = inlist(languaged, ${state_langs})
+
+.         gen byte lang_all = inlist(languaged, 4004, 4005, 3115, 3130, 3114, 3
+> 113, 4003)
+
+. 
+. ********
+. *
+. *       3. Save and close log file
+. *
+. ********
+. 
+.         compress
+  (0 bytes saved)
+
+.         save "${gendata}/1_1_acs_india_microdata.dta", replace
+(file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/1_1_acs_ind
+    > ia_microdata.dta not found)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/1_1_acs_ind
+    > ia_microdata.dta saved
+
+. 
+.         tab year
+
+census year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2005 |     14,902        5.34        5.34
+       2006 |     15,800        5.66       11.01
+       2007 |     17,122        6.14       17.14
+       2008 |     18,101        6.49       23.63
+       2009 |     19,290        6.91       30.55
+       2010 |     20,760        7.44       37.99
+       2011 |     19,755        7.08       45.07
+       2012 |     21,517        7.71       52.78
+       2013 |     23,550        8.44       61.22
+       2014 |     24,670        8.84       70.07
+       2015 |     26,325        9.44       79.50
+       2016 |     27,379        9.81       89.32
+       2017 |     29,797       10.68      100.00
+------------+-----------------------------------
+      Total |    278,968      100.00
+
+.         count
+  278,968
+
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/1_1_acs_clean
+> .log
+  log type:  text
+ closed on:  12 Oct 2026, 04:03:29
+-------------------------------------------------------------------------------

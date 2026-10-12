@@ -1,0 +1,349 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_3_deps_clea
+> n.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:16:30
+
+. 
+. ********
+. *
+. *       1. DEP state-year panel
+. *
+. ********
+. 
+.         import delimited using "${rawdata}/public/deps_state_year.csv", clear
+>  varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(57 vars, 196 obs)
+
+. 
+.         rename state indian_state
+
+.         replace indian_state = lower(trim(itrim(indian_state)))
+(196 real changes made)
+
+.         rename total_citizenship_participation total_citizenship
+
+.         rename total_state_bureaucratic total_state_bureaucracy
+
+. 
+.         **Recompute the totals under the final taxonomy
+. 
+.                 // The spreadsheet totals were typed in by hand. Recomputing 
+> them makes
+.                 // sure they match the taxonomy in Appendix D, where diaspora
+.                 // conferences count as symbolic.
+.                 // Overwrites a total in place (egen can't), so its column st
+> ays put
+.                 capture program drop retotal
+
+.                 program define retotal
+  1.                         syntax varname, FROM(varlist)
+  2.                         tempvar sum
+  3.                         egen double `sum' = rowtotal(`from')
+  4.                         replace `varlist' = `sum'
+  5.                 end
+
+. 
+.                 retotal total_symbolic, from(diaspora_day expat_awards ///
+>                         diaspora_affinity_proclamation media_coverage_extende
+> d diaspora_conferences)
+(0 real changes made)
+
+.                 retotal total_info, from(tax_regulatory_guidance project_matc
+> hing_program ///
+>                         investment_promotion_roadshows single_window_facilita
+> tion aftercare_services ///
+>                         entrepreneurship_support)
+(0 real changes made)
+
+.                 retotal total_non_econ, from(total_symbolic total_religious_c
+> ultural ///
+>                         total_citizenship total_state_bureaucracy total_abroa
+> d)
+(0 real changes made)
+
+.                 retotal total_econ, from(total_networks total_info total_adva
+> ntages)
+(0 real changes made)
+
+.                 retotal total_deps, from(total_non_econ total_econ)
+(94 real changes made)
+
+. 
+.         // Column order matters: each category total sits right before its
+.         // policies, and later files use that order to know which policy belo
+> ngs
+.         // to which category. -replace- above keeps every column where it was
+> .
+.         compress
+  (0 bytes saved)
+
+.         save "${gendata}/2_3_deps_state_year.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_deps_st
+    > ate_year.dta saved
+
+. 
+. ********
+. *
+. *       2. Policy turn-ons, one row per state x year x policy
+. *
+. ********
+. 
+.         **Reshape long, keeping column order and each policy's category
+. 
+.                 ds indian_state year, not
+total_deps    heritage_t~s  extensive_~s  total_netw~s  entreprene~t
+total_non_~n  schools_ab~d  grievance_~g  scientific~s  total_adva~s
+total_symb~c  total_citi~p  total_abroad  business_n~s  tax_advant~s
+diaspora_day  special_le~i  remains_re~n  temporary_~s  loan_advan~s
+expat_awards  expatriate~s  health_ser~d  innovation~s  matching_f~s
+diaspora_c~s  total_stat~y  other_welf~d  total_info    diaspora_b~t
+diaspora_a~n  origin_id_~s  other_pred~t  tax_regula~e  fee_waivers
+media_cove~d  nri_courts    welfare_fo~s  project_ma~m  credit_gua~s
+total_reli~l  nri_police    manpower_c~s  investment~s  preferenti~n
+religious_~d  improved_s~s  remittance~n  single_win~n  expedited_~s
+cultural_c~d  diaspora_a~t  total_econ    aftercare_~s  sectoral_r~s
+
+.                 local depvars `r(varlist)'
+
+.                 local order = 0
+
+.                 local category ""
+
+.                 tempfile long
+
+.                 foreach v of local depvars {
+  2.                         local ++order
+  3.                         if "`v'" == "total_deps" continue
+  4. 
+.                         // Broad totals (non-econ, econ) reset the category, 
+> other totals
+.                         // start a new one, and everything else is a policy i
+> n that category
+.                         local type "policy"
+  5.                         if inlist("`v'", "total_non_econ", "total_econ") {
+  6.                                 local type "broad_total"
+  7.                                 local category ""
+  8.                         }
+  9.                         else if substr("`v'", 1, 6) == "total_" {
+ 10.                                 local type "category_total"
+ 11.                                 local category "`v'"
+ 12.                         }
+ 13. 
+.                         preserve
+ 14.                                 keep indian_state year `v'
+ 15.                                 rename `v' value
+ 16.                                 gen item = "`v'"
+ 17.                                 gen item_type = "`type'"
+ 18.                                 gen category = "`category'"
+ 19.                                 gen item_order = `order'
+ 20.                                 capture append using `long'
+ 21.                                 save `long', replace
+ 22.                         restore
+ 23.                 }
+(196 missing values generated)
+(file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 not
+    found)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+(196 missing values generated)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+
+.                 use `long', clear
+
+. 
+.         **Flag the year a policy switches on
+. 
+.                 // "On" means the state has it this year and didn't the year 
+> before
+.                 // (or this is the first year in the data)
+.                 replace value = 0 if missing(value)
+(0 real changes made)
+
+.                 sort item indian_state year
+
+.                 by item indian_state: gen byte turned_on = value > 0 & ///
+>                         (_n == 1 | value[_n-1] <= 0 | missing(value[_n-1]))
+
+. 
+.         **Labels for tables and figures
+. 
+.                 // "Diaspora Admin Unit", "NRI Police", "Welfare for Returnee
+> s", etc.
+.                 gen item_label = proper(subinstr(item, "_", " ", .))
+
+.                 replace item_label = subinstr(item_label, "Nri ", "NRI ", .)
+(392 real changes made)
+
+.                 replace item_label = subinstr(item_label, " For ", " for ", .
+> )
+(196 real changes made)
+
+.                 replace item_label = "Single-Window Facilitation" if item == 
+> "single_window_facilitation"
+(196 real changes made)
+
+.                 replace item_label = "Origin ID for Non-Citizens" if item == 
+> "origin_id_non_citizens"
+(196 real changes made)
+
+. 
+.                 sort item_order indian_state year
+
+.                 order indian_state year item item_label item_type category it
+> em_order value turned_on
+
+.                 compress
+  variable item_order was float now byte
+  (31,752 bytes saved)
+
+.                 save "${gendata}/2_3_dep_turnons_long.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_dep_tur
+    > nons_long.dta saved
+
+. 
+. ********
+. *
+. *       3. DEP budgets
+. *
+. ********
+. 
+.         // Budgets in 2023 rupees. Gujarat (all years), Karnataka 2016-17 and
+.         // Kerala 2015 are blank because the budget documents weren't availab
+> le.
+.         import delimited using "${rawdata}/public/dep_budgets_state_year.csv"
+> , clear varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(5 vars, 100 obs)
+
+.         compress
+  (0 bytes saved)
+
+.         save "${gendata}/2_3_dep_budgets_state_year.dta", replace
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_3_dep_bud
+    > gets_state_year.dta saved
+
+. 
+. ********
+. *
+. *       4. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_3_deps_clea
+> n.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:16:30
+-------------------------------------------------------------------------------

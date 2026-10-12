@@ -1,0 +1,587 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_1_fig_descr
+> iptives.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:22:44
+
+. 
+.         // Matches the thesis font. Falls back to Stata's default if not inst
+> alled.
+.         capture graph set window fontface "CMU Serif"
+
+. 
+. ********
+. *
+. *       1. Program that draws one line per state
+. *
+. ********
+. 
+.         // Expects data with indian_state ("Andhra Pradesh", ...), year, and 
+> the
+.         // variable to plot. Three styles:
+.         //      allstates:      adds an "All states" total line (Fig 5.7)
+.         //      allindia:       adds an all-India total, split at 2014 when A
+> ndhra Pradesh
+.         //                              drops out so the line doesn't fake a 
+> drop (Figs 5.2, 5.6)
+.         //      statesonly:     just the 8 states (Figs 5.3-5.5, 5.9-5.11)
+. 
+.         capture program drop plot_by_state
+
+.         program define plot_by_state
+  1.                 syntax , VAR(name) TITLE(string) YTITLE(string) FILE(strin
+> g) STYLE(string) ///
+>                         [AUTOXLABEL]
+  2. 
+.                 // Default ticks every other year, or let Stata pick (Fig 5.1
+> 1)
+.                 local xlabel "2005(2)2017"
+  3.                 if "`autoxlabel'" != "" local xlabel ""
+  4.                 local states `""Andhra Pradesh" "Gujarat" "Karnataka" "Ker
+> ala" "Maharashtra" "Punjab" "Tamil Nadu" "West Bengal""'
+  5. 
+.                 preserve
+  6.                         **Extra total lines
+. 
+.                                 if "`style'" == "allstates" {
+  7.                                         tempfile total
+  8.                                         collapse (sum) `var', by(year)
+  9.                                         gen indian_state = "All states"
+ 10.                                         save `total'
+ 11.                                         restore, preserve
+ 12.                                         append using `total'
+ 13.                                         local extra `""All states""'
+ 14.                                 }
+ 15.                                 if "`style'" == "allindia" {
+ 16.                                         tempfile pre post
+ 17.                                         collapse (sum) `var', by(year)
+ 18.                                         gen indian_state = "All India obse
+> rvations (through 2013)"
+ 19.                                         replace `var' = . if year > 2013
+ 20.                                         save `pre'
+ 21.                                         restore, preserve
+ 22.                                         collapse (sum) `var', by(year)
+ 23.                                         gen indian_state = "All India obse
+> rvations (2015-2017)"
+ 24.                                         replace `var' = . if year < 2015
+ 25.                                         save `post'
+ 26.                                         restore, preserve
+ 27.                                         append using `pre' `post'
+ 28.                                         local extra `""All India observati
+> ons (through 2013)" "All India observations (2015-2017)""'
+ 29.                                 }
+ 30. 
+.                         **One line per group, legend in the same order
+. 
+.                                 local lines ""
+ 31.                                 local legend ""
+ 32.                                 local i = 0
+ 33.                                 foreach s in `extra' `states' {
+ 34.                                         local ++i
+ 35.                                         local lines `"`lines' (line `var' 
+> year if indian_state == "`s'", sort)"'
+ 36.                                         local legend `"`legend' `i' "`s'""
+> '
+ 37.                                 }
+ 38. 
+.                                 local cols = cond("`style'" == "statesonly", 
+> 4, 3)
+ 39.                                 local legsize = cond("`style'" == "allindi
+> a", "8pt", "9pt")
+ 40. 
+.                                 graph twoway `lines', ///
+>                                         title("`title'", size(12pt)) ///
+>                                         ytitle("`ytitle'", size(12pt)) ///
+>                                         xtitle("Year", size(12pt)) ///
+>                                         xlabel(`xlabel', labsize(10pt)) ///
+>                                         ylabel(, labsize(10pt) angle(horizont
+> al)) ///
+>                                         legend(order(`legend') position(6) ri
+> ng(1) cols(`cols') size(`legsize') region(lstyle(none))) ///
+>                                         graphregion(color(white))
+ 41.                                 graph export "${figures}/`file'", replace
+ 42.                 restore
+ 43.         end
+
+. 
+. ********
+. *
+. *       2. Figures 5.2-5.7: FDI by state, top-50 diaspora metros only
+. *
+. ********
+. 
+.         import delimited using "${rawdata}/fdi_extracts/2_2_fdi_state_year_to
+> p50.csv", clear varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(7 vars, 104 obs)
+
+. 
+.         **Figures 5.4, 5.5, 5.7 (Andhra Pradesh shown as 0 after 2013)
+. 
+.                 // Value and jobs are states only: a total line would dwarf e
+> very state
+.                 plot_by_state, var(capital_real_all) style(statesonly) ///
+>                         title("FDI project value over time (top 50 metros onl
+> y)") ytitle("Real capital investment") ///
+>                         file(4_1_fig5_4_fdi_value_by_state.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_4_fdi_value_by_state.png written in PNG format
+
+.                 plot_by_state, var(jobs_all) style(statesonly) ///
+>                         title("All FDI jobs created over time (top 50 metros 
+> only)") ytitle("All FDI jobs created") ///
+>                         file(4_1_fig5_5_fdi_jobs_by_state.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_5_fdi_jobs_by_state.png written in PNG format
+
+.                 plot_by_state, var(fdi_projects_consgoods) style(allstates) /
+> //
+>                         title("Consumer goods FDI projects over time (top 50 
+> metros only)") ytitle("Consumer goods FDI projects") ///
+>                         file(4_1_fig5_7_fdi_consumer_goods_by_state.png)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+(variable fdi_projects_consgoods was byte, now double to accommodate using
+       data's values)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_7_fdi_consumer_goods_by_state.png written in PNG format
+
+. 
+.         **Figures 5.2 (= 6.1), 5.3, 5.6 (Andhra Pradesh line stops in 2013)
+. 
+.                 replace fdi_projects_all = . if indian_state == "Andhra Prade
+> sh" & year >= 2014
+(4 real changes made, 4 to missing)
+
+.                 replace fdi_projects_ict = . if indian_state == "Andhra Prade
+> sh" & year >= 2014
+(4 real changes made, 4 to missing)
+
+. 
+.                 plot_by_state, var(fdi_projects_all) style(allindia) ///
+>                         title("FDI projects over time (top 50 metros only)") 
+> ytitle("FDI projects") ///
+>                         file(4_1_fig5_2_fdi_projects_by_state.png)
+(4 real changes made, 4 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+(10 real changes made, 10 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+    as .dta format
+(variable fdi_projects_all was byte, now double to accommodate using data's
+       values)
+(variable indian_state was str14, now str37 to accommodate using data's
+       values)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_2_fdi_projects_by_state.png written in PNG format
+
+.                 plot_by_state, var(fdi_projects_all) style(statesonly) ///
+>                         title("FDI projects over time (top 50 metros only)") 
+> ytitle("FDI projects") ///
+>                         file(4_1_fig5_3_fdi_projects_by_state_no_total.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_3_fdi_projects_by_state_no_total.png written in PNG format
+
+.                 plot_by_state, var(fdi_projects_ict) style(allindia) ///
+>                         title("ICT FDI projects over time (top 50 metros only
+> )") ytitle("ICT FDI projects") ///
+>                         file(4_1_fig5_6_fdi_ict_projects_by_state.png)
+(4 real changes made, 4 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+(10 real changes made, 10 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000003 saved
+    as .dta format
+(variable fdi_projects_ict was byte, now double to accommodate using data's
+       values)
+(variable indian_state was str14, now str37 to accommodate using data's
+       values)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_6_fdi_ict_projects_by_state.png written in PNG format
+
+. 
+. ********
+. *
+. *       3. Figure 5.8: Gujarati diaspora in its 10 biggest metros
+. *
+. ********
+. 
+.         use "${gendata}/2_4_s4_allgen_all.dta", clear
+
+.         keep if languaged == 3115       // Gujarati
+(3,824 observations deleted)
+
+.         collapse (sum) n_people, by(year met2013)
+
+. 
+.         **Find the 10 metros with the most Gujaratis over 2005-2017
+. 
+.                 preserve
+
+.                         collapse (sum) total = n_people, by(met2013)
+
+.                         gsort -total
+
+.                         keep in 1/10
+(40 observations deleted)
+
+.                         keep met2013
+
+.                         tempfile top10
+
+.                         save `top10'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+
+.                 restore
+
+.                 merge m:1 met2013 using `top10', keep(match) nogen
+(label MET2013 already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               130  
+    -----------------------------------------
+
+. 
+.         **One line per metro, labeled by metro code
+. 
+.                 levelsof met2013, local(metros)
+12060 14460 16980 19100 26420 31080 35620 37980 41860 47900
+
+.                 local lines ""
+
+.                 local legend ""
+
+.                 local i = 0
+
+.                 foreach m of local metros {
+  2.                         local ++i
+  3.                         local lines `"`lines' (line n_people year if met20
+> 13 == `m', sort)"'
+  4.                         local legend `"`legend' `i' "Metro `m'""'
+  5.                 }
+
+. 
+.                 graph twoway `lines', ///
+>                         title("Gujarati diaspora in Sample 3 top 50-metro sam
+> ple: top 10 metros", size(12pt)) ///
+>                         ytitle("Estimated population", size(12pt)) ///
+>                         xtitle("Year", size(12pt)) ///
+>                         xlabel(2005(2)2017, labsize(10pt)) ///
+>                         ylabel(, labsize(10pt) angle(horizontal)) ///
+>                         legend(order(`legend') position(6) ring(1) cols(2) si
+> ze(8pt) region(lstyle(none))) ///
+>                         graphregion(color(white))
+
+.                 graph export "${figures}/4_1_fig5_8_gujarati_top10_metros.png
+> ", replace
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_8_gujarati_top10_metros.png written in PNG format
+
+. 
+. ********
+. *
+. *       4. Figures 5.9-5.10: diaspora population by state, top-50 metros
+. *
+. ********
+. 
+.         **Program: diaspora count by state-year for one definition of diaspor
+> a
+. 
+.                 capture program drop diaspora_by_state
+
+.                 program define diaspora_by_state
+  1.                         syntax , KEEPIF(string)
+  2. 
+.                         use "${gendata}/1_1_acs_india_microdata.dta", clear
+  3.                         merge m:1 met2013 using "${gendata}/2_1_top50_metr
+> os.dta", keep(match) nogen
+  4.                         keep if `keepif'
+  5.                         drop if languaged == 4003 & inrange(year, 2014, 20
+> 17)
+  6.                         collapse (sum) n_people = perwt, by(year languaged
+> )
+  7. 
+.                         gen indian_state = ""
+  8.                         replace indian_state = "Kerala"                 if
+>  languaged == 4004
+  9.                         replace indian_state = "Tamil Nadu"             if
+>  languaged == 4005
+ 10.                         replace indian_state = "Gujarat"                if
+>  languaged == 3115
+ 11.                         replace indian_state = "Karnataka"              if
+>  languaged == 3130
+ 12.                         replace indian_state = "Maharashtra"    if languag
+> ed == 3114
+ 13.                         replace indian_state = "Punjab"                 if
+>  languaged == 3113
+ 14.                         replace indian_state = "Andhra Pradesh" if languag
+> ed == 4003
+ 15.                         replace indian_state = "West Bengal"    if languag
+> ed == 3112
+ 16.                         drop languaged
+ 17. 
+.                         // Every state-year shows up, with 0 if nobody's ther
+> e
+.                         fillin indian_state year
+ 18.                         replace n_people = 0 if missing(n_people)
+ 19.                         replace n_people = . if indian_state == "Andhra Pr
+> adesh" & year >= 2014
+ 20.                 end
+
+. 
+.         **Figure 5.9: first-gen (born in India), all 8 languages
+. 
+.                 diaspora_by_state, keepif(firstgen_india & lang_first)
+(label MET2013 already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                           261,440  
+    -----------------------------------------
+(149,666 observations deleted)
+(9,410 observations deleted)
+(100 missing values generated)
+variable indian_state was str1 now str6
+(13 real changes made)
+variable indian_state was str6 now str10
+(13 real changes made)
+(13 real changes made)
+(13 real changes made)
+variable indian_state was str10 now str11
+(13 real changes made)
+(13 real changes made)
+variable indian_state was str11 now str14
+(9 real changes made)
+(13 real changes made)
+(4 real changes made)
+(4 real changes made, 4 to missing)
+
+.                 plot_by_state, var(n_people) style(statesonly) ///
+>                         title("First-gen all people (18+) over time (top 50 m
+> etros only)") ytitle("Estimated population") ///
+>                         file(4_1_fig5_9_firstgen_diaspora_by_state.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_9_firstgen_diaspora_by_state.png written in PNG format
+
+. 
+.         **Figure 5.10: all generations, all 8 languages
+. 
+.                 // Includes Bengali speakers of any birthplace, as in the the
+> sis figure.
+.                 // (The all-gen regression sample drops Bengali, see Table 5.
+> 2.)
+.                 diaspora_by_state, keepif(lang_first)
+(label MET2013 already defined)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                           261,440  
+    -----------------------------------------
+(94,116 observations deleted)
+(11,264 observations deleted)
+(100 missing values generated)
+variable indian_state was str1 now str6
+(13 real changes made)
+variable indian_state was str6 now str10
+(13 real changes made)
+(13 real changes made)
+(13 real changes made)
+variable indian_state was str10 now str11
+(13 real changes made)
+(13 real changes made)
+variable indian_state was str11 now str14
+(9 real changes made)
+(13 real changes made)
+(4 real changes made)
+(4 real changes made, 4 to missing)
+
+.                 plot_by_state, var(n_people) style(statesonly) ///
+>                         title("Migrant stock over time (top 50 metros only)")
+>  ytitle("Estimated migrant stock") ///
+>                         file(4_1_fig5_10_allgen_diaspora_by_state.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_10_allgen_diaspora_by_state.png written in PNG format
+
+. 
+. ********
+. *
+. *       5. Figures 5.11-5.14 and 8.2: DEPs
+. *
+. ********
+. 
+.         use "${gendata}/2_3_deps_state_year.dta", clear
+
+.         replace indian_state = proper(indian_state)
+(196 real changes made)
+
+. 
+.         **Figure 5.11 (= 6.2): total DEPs by state
+. 
+.                 preserve
+
+.                         keep if inrange(year, 2005, 2017)
+(96 observations deleted)
+
+.                         plot_by_state, var(total_deps) style(statesonly) auto
+> xlabel ///
+>                                 title("Total DEPs over time by state") ytitle
+> ("Total DEPs") ///
+>                                 file(4_1_fig5_11_total_deps_by_state.png)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_11_total_deps_by_state.png written in PNG format
+
+.                 restore
+
+. 
+.         **Figure 5.12: economic vs non-economic DEPs, all states stacked
+. 
+.                 preserve
+
+.                         keep if inrange(year, 2000, 2017)
+(56 observations deleted)
+
+.                         collapse (sum) total_non_econ total_econ, by(year)
+
+.                         gen total_stack = total_non_econ + total_econ
+
+. 
+.                         twoway ///
+>                                 (area total_stack year, sort color(cranberry%
+> 30) lcolor(cranberry)) ///
+>                                 (area total_econ year, sort color(navy%35) lc
+> olor(navy)), ///
+>                                 title("Composition of DEPs: Economic vs Non-E
+> conomic (2000-2017)", size(12pt)) ///
+>                                 ytitle("Number of Policies", size(12pt)) ///
+>                                 xtitle("Year", size(12pt)) ///
+>                                 xlabel(2000(5)2017, labsize(10pt)) ///
+>                                 ylabel(, labsize(10pt) angle(horizontal)) ///
+>                                 legend(order(1 "total_non_econ" 2 "total_econ
+> ") ///
+>                                         position(6) ring(1) cols(2) size(9pt)
+>  region(lstyle(none))) ///
+>                                 graphregion(color(white))
+
+.                         graph export "${figures}/4_1_fig5_12_econ_vs_nonecon_
+> deps.png", replace
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_12_econ_vs_nonecon_deps.png written in PNG format
+
+.                 restore
+
+. 
+.         **Category labels for the remaining figures ("total_state_bureaucracy
+> " -> "State Bureaucracy")
+. 
+.                 local nonecon total_symbolic total_religious_cultural total_c
+> itizenship total_state_bureaucracy total_abroad
+
+.                 local econ total_networks total_info total_advantages
+
+.                 foreach v in `nonecon' `econ' {
+  2.                         local lab_`v' = proper(subinstr(subinstr("`v'", "t
+> otal_", "", 1), "_", " ", .))
+  3.                 }
+
+. 
+.         **Figure 8.2: economic DEP types over time, all states
+. 
+.                 preserve
+
+.                         keep if inrange(year, 2000, 2017)
+(56 observations deleted)
+
+.                         collapse (sum) `econ', by(year)
+
+.                         local lines ""
+
+.                         local legend ""
+
+.                         local i = 0
+
+.                         foreach v of local econ {
+  2.                                 local ++i
+  3.                                 local lines `"`lines' (line `v' year, sort
+> )"'
+  4.                                 local legend `"`legend' `i' "`lab_`v''""'
+  5.                         }
+
+.                         graph twoway `lines', ///
+>                                 title("Economic DEP types over time (2000-201
+> 7)", size(12pt)) ///
+>                                 ytitle("Number of Policies", size(12pt)) ///
+>                                 xtitle("Year", size(12pt)) ///
+>                                 xlabel(2000(5)2017, labsize(10pt)) ///
+>                                 ylabel(, labsize(10pt) angle(horizontal)) ///
+>                                 legend(order(`legend') position(6) ring(1) co
+> ls(3) size(9pt) region(lstyle(none))) ///
+>                                 graphregion(color(white))
+
+.                         graph export "${figures}/4_1_fig8_2_econ_dep_types.pn
+> g", replace
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig8_2_econ_dep_types.png written in PNG format
+
+.                 restore
+
+. 
+.         **Figures 5.13 and 5.14 (= 8.1): DEP categories by state in 2017
+. 
+.                 keep if year == 2017
+(189 observations deleted)
+
+.                 foreach group in nonecon econ {
+  2.                         local legend ""
+  3.                         local i = 0
+  4.                         foreach v of local `group' {
+  5.                                 local ++i
+  6.                                 local legend `"`legend' `i' "`lab_`v''""'
+  7.                         }
+  8.                         egen double sort_total = rowtotal(``group'')
+  9. 
+.                         local title = cond("`group'" == "econ", "Breakdown of
+>  Economic DEPs by State (2017)", ///
+>                                 "Breakdown of Non-Economic DEPs by State (201
+> 7)")
+ 10.                         local file = cond("`group'" == "econ", "4_1_fig5_1
+> 4_econ_deps_by_state_2017.png", ///
+>                                 "4_1_fig5_13_nonecon_deps_by_state_2017.png")
+ 11. 
+.                         graph hbar (asis) ``group'', ///
+>                                 over(indian_state, sort(sort_total) descendin
+> g label(labsize(10pt))) ///
+>                                 stack ///
+>                                 title("`title'", size(12pt)) ///
+>                                 ytitle("State", size(12pt)) ///
+>                                 blabel(none) ///
+>                                 legend(order(`legend') position(6) ring(1) co
+> ls(3) size(9pt) region(lstyle(none))) ///
+>                                 graphregion(color(white))
+ 12.                         graph export "${figures}/`file'", replace
+ 13.                         drop sort_total
+ 14.                 }
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_13_nonecon_deps_by_state_2017.png written in PNG format
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_1_
+> fig5_14_econ_deps_by_state_2017.png written in PNG format
+
+. 
+. ********
+. *
+. *       6. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_1_fig_descr
+> iptives.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:51
+-------------------------------------------------------------------------------

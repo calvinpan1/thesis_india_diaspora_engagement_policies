@@ -1,0 +1,627 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_4_merge_sam
+> ples.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:16:30
+
+. 
+. ********
+. *
+. *       1. FDI counts as a Stata file
+. *
+. ********
+. 
+.         import delimited using "${rawdata}/fdi_extracts/2_2_fdi_counts_metro_
+> language_year.csv", ///
+>                 clear varnames(1)
+(encoding automatically selected: ISO-8859-1)
+(20 vars, 1,130 obs)
+
+.         tempfile fdi
+
+.         save `fdi'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+
+. 
+. ********
+. *
+. *       2. Merge each sample
+. *
+. ********
+. 
+.         local samples s1_firstgen_highed s3_firstgen_all s4_allgen_all ///
+>                 s1_firstgen_highed_25plus s3_firstgen_all_25plus s4_allgen_al
+> l_25plus ///
+>                 s24_allgen_highed_25plus s25_firstgen_all_ict_25plus s27_firs
+> tgen_highed_ict_25plus ///
+>                 s28_allgen_highed_ict_25plus
+
+. 
+.         foreach s of local samples {
+  2. 
+.                 use "${gendata}/2_1_`s'.dta", clear
+  3.                 keep if metro_rank <= 50        // each language's top 50 
+> US metros
+  4. 
+.                 **FDI projects from that metro to that language's home state
+. 
+.                         merge m:1 year met2013 languaged using `fdi', keep(ma
+> ster match) nogen
+  5.                         foreach v of varlist fdi_projects_* {
+  6.                                 replace `v' = 0 if missing(`v')         //
+>  no row means no projects
+  7.                         }
+  8. 
+.                 **DEPs in the home state that year
+. 
+.                         gen indian_state = ""
+  9.                         replace indian_state = "kerala"                 if
+>  languaged == 4004
+ 10.                         replace indian_state = "tamil nadu"             if
+>  languaged == 4005
+ 11.                         replace indian_state = "gujarat"                if
+>  languaged == 3115
+ 12.                         replace indian_state = "karnataka"              if
+>  languaged == 3130
+ 13.                         replace indian_state = "maharashtra"    if languag
+> ed == 3114
+ 14.                         replace indian_state = "punjab"                 if
+>  languaged == 3113
+ 15.                         replace indian_state = "andhra pradesh" if languag
+> ed == 4003
+ 16.                         replace indian_state = "west bengal"    if languag
+> ed == 3112
+ 17. 
+.                         merge m:1 indian_state year using "${gendata}/2_3_dep
+> s_state_year.dta", ///
+>                                 keep(master match) nogen
+ 18. 
+.                 // Row order doesn't change the math, but a few thin-data PPM
+> L models
+.                 // that never really converge (e.g. Life Sciences FDI) give d
+> ifferent
+.                 // numbers if it changes. Sorting on a unique key keeps every
+>  run identical.
+.                 sort languaged met2013 year state
+ 19.                 compress
+ 20.                 save "${gendata}/2_4_`s'.dta", replace
+ 21. 
+.                 di as text "`s': " _N " metro x state x year rows"
+ 22.         }
+(3,366 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,953
+        from master                     3,953  
+        from using                          0  
+
+    Matched                               966  
+    -----------------------------------------
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(3,953 real changes made)
+(4,919 missing values generated)
+variable indian_state was str1 now str6
+(642 real changes made)
+variable indian_state was str6 now str10
+(725 real changes made)
+(728 real changes made)
+(530 real changes made)
+variable indian_state was str10 now str11
+(628 real changes made)
+(606 real changes made)
+variable indian_state was str11 now str14
+(513 real changes made)
+(547 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             4,919  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (4,919 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s1_firs
+    > tgen_highed.dta saved
+s1_firstgen_highed: 4919 metro x state x year rows
+(3,841 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         4,087
+        from master                     4,087  
+        from using                          0  
+
+    Matched                               971  
+    -----------------------------------------
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(4,087 real changes made)
+(5,058 missing values generated)
+variable indian_state was str1 now str6
+(665 real changes made)
+variable indian_state was str6 now str10
+(726 real changes made)
+(750 real changes made)
+(533 real changes made)
+variable indian_state was str10 now str11
+(631 real changes made)
+(678 real changes made)
+variable indian_state was str11 now str14
+(514 real changes made)
+(561 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             5,058  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (5,058 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s3_firs
+    > tgen_all.dta saved
+s3_firstgen_all: 5058 metro x state x year rows
+(4,066 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,643
+        from master                     3,643  
+        from using                          0  
+
+    Matched                               941  
+    -----------------------------------------
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(3,643 real changes made)
+(4,584 missing values generated)
+variable indian_state was str1 now str6
+(682 real changes made)
+variable indian_state was str6 now str10
+(742 real changes made)
+(760 real changes made)
+(545 real changes made)
+variable indian_state was str10 now str11
+(645 real changes made)
+(695 real changes made)
+variable indian_state was str11 now str14
+(515 real changes made)
+(0 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             4,584  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (4,584 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s4_allg
+    > en_all.dta saved
+s4_allgen_all: 4584 metro x state x year rows
+(3,266 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,932
+        from master                     3,932  
+        from using                          0  
+
+    Matched                               965  
+    -----------------------------------------
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(3,932 real changes made)
+(4,897 missing values generated)
+variable indian_state was str1 now str6
+(642 real changes made)
+variable indian_state was str6 now str10
+(723 real changes made)
+(723 real changes made)
+(523 real changes made)
+variable indian_state was str10 now str11
+(626 real changes made)
+(605 real changes made)
+variable indian_state was str11 now str14
+(508 real changes made)
+(547 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             4,897  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (4,897 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s1_firs
+    > tgen_highed_25plus.dta saved
+s1_firstgen_highed_25plus: 4897 metro x state x year rows
+(3,635 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         4,064
+        from master                     4,064  
+        from using                          0  
+
+    Matched                               961  
+    -----------------------------------------
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(4,064 real changes made)
+(5,025 missing values generated)
+variable indian_state was str1 now str6
+(660 real changes made)
+variable indian_state was str6 now str10
+(725 real changes made)
+(744 real changes made)
+(525 real changes made)
+variable indian_state was str10 now str11
+(627 real changes made)
+(675 real changes made)
+variable indian_state was str11 now str14
+(508 real changes made)
+(561 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             5,025  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (5,025 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s3_firs
+    > tgen_all_25plus.dta saved
+s3_firstgen_all_25plus: 5025 metro x state x year rows
+(3,703 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,608
+        from master                     3,608  
+        from using                          0  
+
+    Matched                               938  
+    -----------------------------------------
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(3,608 real changes made)
+(4,546 missing values generated)
+variable indian_state was str1 now str6
+(671 real changes made)
+variable indian_state was str6 now str10
+(735 real changes made)
+(761 real changes made)
+(531 real changes made)
+variable indian_state was str10 now str11
+(646 real changes made)
+(693 real changes made)
+variable indian_state was str11 now str14
+(509 real changes made)
+(0 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             4,546  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (4,546 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s4_allg
+    > en_all_25plus.dta saved
+s4_allgen_all_25plus: 4546 metro x state x year rows
+(3,318 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         3,504
+        from master                     3,504  
+        from using                          0  
+
+    Matched                               933  
+    -----------------------------------------
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(3,504 real changes made)
+(4,437 missing values generated)
+variable indian_state was str1 now str6
+(654 real changes made)
+variable indian_state was str6 now str10
+(733 real changes made)
+(745 real changes made)
+(528 real changes made)
+variable indian_state was str10 now str11
+(632 real changes made)
+(636 real changes made)
+variable indian_state was str11 now str14
+(509 real changes made)
+(0 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             4,437  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (4,437 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s24_all
+    > gen_highed_25plus.dta saved
+s24_allgen_highed_25plus: 4437 metro x state x year rows
+(964 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         2,731
+        from master                     2,731  
+        from using                          0  
+
+    Matched                               808  
+    -----------------------------------------
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(2,731 real changes made)
+(3,539 missing values generated)
+variable indian_state was str1 now str6
+(483 real changes made)
+variable indian_state was str6 now str10
+(644 real changes made)
+(502 real changes made)
+(386 real changes made)
+variable indian_state was str10 now str11
+(443 real changes made)
+(261 real changes made)
+variable indian_state was str11 now str14
+(473 real changes made)
+(347 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             3,539  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (3,539 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s25_fir
+    > stgen_all_ict_25plus.dta saved
+s25_firstgen_all_ict_25plus: 3539 metro x state x year rows
+(945 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         2,685
+        from master                     2,685  
+        from using                          0  
+
+    Matched                               805  
+    -----------------------------------------
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(2,685 real changes made)
+(3,490 missing values generated)
+variable indian_state was str1 now str6
+(480 real changes made)
+variable indian_state was str6 now str10
+(640 real changes made)
+(492 real changes made)
+(384 real changes made)
+variable indian_state was str10 now str11
+(439 real changes made)
+(237 real changes made)
+variable indian_state was str11 now str14
+(473 real changes made)
+(345 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             3,490  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (3,490 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s27_fir
+    > stgen_highed_ict_25plus.dta saved
+s27_firstgen_highed_ict_25plus: 3490 metro x state x year rows
+(949 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                         2,435
+        from master                     2,435  
+        from using                          0  
+
+    Matched                               782  
+    -----------------------------------------
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(2,435 real changes made)
+(3,217 missing values generated)
+variable indian_state was str1 now str6
+(488 real changes made)
+variable indian_state was str6 now str10
+(646 real changes made)
+(509 real changes made)
+(385 real changes made)
+variable indian_state was str10 now str11
+(444 real changes made)
+(272 real changes made)
+variable indian_state was str11 now str14
+(473 real changes made)
+(0 real changes made)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                             3,217  
+    -----------------------------------------
+  variable metro_rank was int now byte
+  (3,217 bytes saved)
+file
+    /Users/calvin/thesis_replication_package/4_Generated_Datasets/2_4_s28_all
+    > gen_highed_ict_25plus.dta saved
+s28_allgen_highed_ict_25plus: 3217 metro x state x year rows
+
+. 
+. ********
+. *
+. *       3. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/2_4_merge_sam
+> ples.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:16:30
+-------------------------------------------------------------------------------

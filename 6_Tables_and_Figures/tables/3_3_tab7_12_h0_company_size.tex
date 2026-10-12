@@ -1,0 +1,28 @@
+\begin{table}[!htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.08}
+\caption{H0: location-specific diaspora versus national Indian diaspora stock: company-size FDI samples}
+\label{tab:final_company_size_h0}
+\begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}X *{4}{>{\Centering\arraybackslash}X}@{}}
+\hline
+Specification & First-gen 25+ high-ed, all FDI, small-75 companies & First-gen 25+ high-ed, ICT FDI, small-75 companies & First-gen 25+ high-ed, all FDI, large-75 companies & First-gen 25+ high-ed, ICT FDI, large-75 companies \\
+\hline
+Subnational diaspora: exporter FE + importer-year FE & 0.006 & 0.030 & 0.093** & 0.095 \\
+ & (0.048) & (0.094) & (0.040) & (0.058) \\
+National Indian diaspora: exporter FE + importer-year FE & -0.785* & -0.184 & 0.026 & 0.147 \\
+ & (0.411) & (0.662) & (0.238) & (0.352) \\
+\hline
+Raw sample N & 4897 & 4897 & 4897 & 4897 \\
+Projects, 2005--2017 & 585 & 241 & 1545 & 550 \\
+Total diaspora pop., 2005--2017 & 7021199 & 7021199 & 7021199 & 7021199 \\
+e(N\_full) & 4897 & 4897 & 4897 & 4897 \\
+e(N) & 2603 & 1636 & 3338 & 2020 \\
+Dropped singletons & 2294 & 3261 & 1559 & 2877 \\
+Dropped separated obs & 0 & 0 & 0 & 0 \\
+\hline
+\fulltablenote{5}{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly underneath.}
+\fulltablenote{5}{* p<0.10, ** p<0.05, *** p<0.01.}
+\end{tabularx}
+\end{table}

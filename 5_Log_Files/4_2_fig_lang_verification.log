@@ -1,0 +1,122 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_2_fig_lang_
+> verification.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:22:51
+
+. 
+.         capture graph set window fontface "CMU Serif"
+
+. 
+. ********
+. *
+. *       1. Speakers by birthplace and year
+. *
+. ********
+. 
+.         use "${gendata}/1_1_acs_india_microdata.dta", clear
+
+.         collapse (sum) n_people = perwt, by(year languaged bpld)
+
+.         gen byte us_born = bpld <= 12092                // US states, territo
+> ries, and "US, n.s."
+
+.         tempfile speakers
+
+.         save `speakers'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+
+. 
+. ********
+. *
+. *       2. One figure per language
+. *
+. ********
+. 
+.         // language code, name, birthplace code of the other country, its nam
+> e, figure
+.         local figs `" "3113 Punjabi 52140 Pakistan 4_4" "4005 Tamil 52150 Sri
+> _Lanka 4_5" "3112 Bengali 52110 Bangladesh 4_6" "4011 Nepali 52400 Nepal 4_7"
+>  "'
+
+. 
+.         foreach f of local figs {
+  2.                 tokenize `f'
+  3.                 local code `1'
+  4.                 local lang `2'
+  5.                 local other_bpl `3'
+  6.                 local other = subinstr("`4'", "_", " ", .)
+  7.                 local fignum `5'
+  8. 
+.                 use `speakers', clear
+  9.                 keep if languaged == `code'
+ 10. 
+.                 gen birthplace = 4                                           
+>    // other countries
+ 11.                 replace birthplace = 1 if bpld == 52100 // India
+ 12.                 replace birthplace = 2 if bpld == `other_bpl'
+ 13.                 replace birthplace = 3 if us_born
+ 14.                 collapse (sum) n_people, by(year birthplace)
+ 15. 
+.                 twoway ///
+>                         (line n_people year if birthplace == 1, sort) ///
+>                         (line n_people year if birthplace == 2, sort) ///
+>                         (line n_people year if birthplace == 3, sort) ///
+>                         (line n_people year if birthplace == 4, sort), ///
+>                         title("`lang' speakers by birthplace over time", size
+> (12pt)) ///
+>                         ytitle("Estimated number of speakers", size(12pt)) //
+> /
+>                         xtitle("Year", size(12pt)) ///
+>                         xlabel(, labsize(10pt)) ///
+>                         ylabel(, labsize(10pt) angle(horizontal)) ///
+>                         legend(order(1 "India" 2 "`other'" 3 "US" 4 "Other co
+> untries") ///
+>                                 position(6) ring(1) cols(2) size(10pt) region
+> (lstyle(none))) ///
+>                         graphregion(color(white)) ///
+>                         plotregion(margin(medium))
+ 16.                 graph export "${figures}/4_2_fig`fignum'_`=lower("`lang'")
+> '_birthplace.png", replace
+ 17.         }
+(5,468 observations deleted)
+(13 real changes made)
+(13 real changes made)
+(365 real changes made)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
+> fig4_4_punjabi_birthplace.png written in PNG format
+(5,550 observations deleted)
+(13 real changes made)
+(13 real changes made)
+(391 real changes made)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
+> fig4_5_tamil_birthplace.png written in PNG format
+(5,477 observations deleted)
+(13 real changes made)
+(13 real changes made)
+(392 real changes made)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
+> fig4_6_bengali_birthplace.png written in PNG format
+(5,894 observations deleted)
+(13 real changes made)
+(13 real changes made)
+(191 real changes made)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_2_
+> fig4_7_nepali_birthplace.png written in PNG format
+
+. 
+. ********
+. *
+. *       3. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_2_fig_lang_
+> verification.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:51
+-------------------------------------------------------------------------------

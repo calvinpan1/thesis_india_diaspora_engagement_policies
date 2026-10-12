@@ -1,0 +1,379 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_4_fig_polic
+> y_bundling.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:22:52
+
+. 
+. ********
+. *
+. *       1. Figure 5.15: Policy-pair Jaccard distribution
+. *
+. ********
+. 
+.         use "${gendata}/3_2_policy_pair_jaccard.dta", clear
+
+. 
+.         gen byte jaccard_bin = floor(jaccard * 10)
+
+.         replace jaccard_bin = 9 if jaccard_bin == 10    // put exactly 1.0 in
+>  the top bin
+(0 real changes made)
+
+.         collapse (count) pair_count = jaccard, by(jaccard_bin)
+
+. 
+.         label define jaccard_bin ///
+>                 0 "0.0-0.1" 1 "0.1-0.2" 2 "0.2-0.3" 3 "0.3-0.4" 4 "0.4-0.5" /
+> //
+>                 5 "0.5-0.6" 6 "0.6-0.7" 7 "0.7-0.8" 8 "0.8-0.9" 9 "0.9-1.0"
+
+.         label values jaccard_bin jaccard_bin
+
+. 
+.         twoway bar pair_count jaccard_bin, ///
+>                 barwidth(.8) ///
+>                 xlabel(0(1)9, valuelabel angle(45)) ///
+>                 ytitle("Number of policy pairs") ///
+>                 xtitle("Jaccard range") ///
+>                 title("Policy-pair Jaccard distribution") ///
+>                 graphregion(color(white))
+
+.         graph export "${figures}/4_4_fig5_15_jaccard_distribution.png", repla
+> ce width(3200) height(2000)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
+> fig5_15_jaccard_distribution.png written in PNG format
+
+. 
+. ********
+. *
+. *       2. Program for adoption-timing dot plots
+. *
+. ********
+. 
+.         // One row per state, a dot at the year it first adopted the policy.
+.         // Expects indian_state and first_year. "Never", "Pre-2005" and
+.         // "Post-2017" get their own spots on the axis unless ADMINUNIT is se
+> t.
+. 
+.         capture program drop timing_plot
+
+.         program define timing_plot
+  1.                 syntax , TITLE(string) NAME(name) [ADMINUNIT]
+  2. 
+.                 gen yorder = .
+  3.                 local i = 0
+  4.                 foreach s in "karnataka" "kerala" "maharashtra" "west beng
+> al" ///
+>                         "andhra pradesh" "gujarat" "punjab" "tamil nadu" {
+  5.                         local ++i
+  6.                         replace yorder = `i' if indian_state == "`s'"
+  7.                 }
+  8.                 local ylab `"1 "Karnataka" 2 "Kerala" 3 "Maharashtra" 4 "W
+> est Bengal" 5 "Andhra Pradesh" 6 "Gujarat" 7 "Punjab" 8 "Tamil Nadu""'
+  9. 
+.                 if "`adminunit'" != "" {
+ 10.                         gen plot_year = cond(missing(first_year), 1994, fi
+> rst_year)
+ 11.                         twoway ///
+>                                 (scatter yorder plot_year if !missing(first_y
+> ear), msymbol(O) msize(medlarge) mcolor(green) mfcolor(green)) ///
+>                                 (scatter yorder plot_year if missing(first_ye
+> ar), msymbol(X) msize(medlarge) mcolor(red)), ///
+>                                 xline(2005, lpattern(solid) lcolor(blue)) ///
+>                                 xline(2017, lpattern(solid) lcolor(blue)) ///
+>                                 xscale(range(1994 2025)) ///
+>                                 xlabel(1994 "Never" 1995(5)2025, angle(35) la
+> bsize(vsmall)) ///
+>                                 yscale(range(0.5 8.5)) ///
+>                                 ylabel(`ylab', angle(0) noticks labsize(small
+> )) ///
+>                                 xtitle("") ytitle("") ///
+>                                 title("`title'", size(small)) ///
+>                                 legend(off) ///
+>                                 graphregion(color(white)) plotregion(margin(s
+> mall)) ///
+>                                 xsize(8.2) ysize(4.2) name(`name', replace)
+ 12.                 }
+ 13.                 else {
+ 14.                         // Filled dot = adopted 2005-2017, open dot = outs
+> ide the sample years
+.                         gen byte inside = inrange(first_year, 2005, 2017)
+ 15.                         gen plot_year = first_year
+ 16.                         replace plot_year = 2003 if missing(first_year)
+ 17.                         replace plot_year = 2004 if first_year < 2005
+ 18.                         replace plot_year = 2018 if first_year > 2017 & !m
+> issing(first_year)
+ 19.                         twoway ///
+>                                 (scatter yorder plot_year if inside, msymbol(
+> O) msize(medlarge) mcolor(green) mfcolor(green)) ///
+>                                 (scatter yorder plot_year if !inside & !missi
+> ng(first_year), msymbol(Oh) msize(medlarge) mcolor(green) mfcolor(none)) ///
+>                                 (scatter yorder plot_year if missing(first_ye
+> ar), msymbol(X) msize(medlarge) mcolor(red)), ///
+>                                 xline(2005, lpattern(dash) lcolor(gs12)) ///
+>                                 xline(2017, lpattern(dash) lcolor(gs12)) ///
+>                                 xscale(range(2003 2018)) ///
+>                                 xlabel(2003 "Never" 2004 "Pre-2005" 2005(5)20
+> 15 2017 "2017" 2018 "Post-2017", angle(35) labsize(vsmall)) ///
+>                                 yscale(range(0.5 8.5)) ///
+>                                 ylabel(`ylab', angle(0) noticks labsize(small
+> )) ///
+>                                 xtitle("") ytitle("") ///
+>                                 title("`title'", size(small)) ///
+>                                 legend(off) ///
+>                                 graphregion(color(white)) plotregion(margin(s
+> mall)) ///
+>                                 xsize(7.5) ysize(4.2) name(`name', replace)
+ 20.                 }
+ 21.         end
+
+. 
+.         **First year each state has each policy (any year in the data, not ju
+> st 2005-2017)
+. 
+.                 use "${gendata}/2_3_dep_turnons_long.dta", clear
+
+.                 keep if item_type == "policy"
+(1,960 observations deleted)
+
+.                 collapse (min) first_year = year if value > 0, by(item indian
+> _state)
+
+.                 tempfile first_years
+
+.                 save `first_years'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000001 saved
+    as .dta format
+
+. 
+.                 // Every state, so states that never adopt still get a row
+.                 use "${gendata}/2_3_dep_turnons_long.dta", clear
+
+.                 keep indian_state
+
+.                 duplicates drop
+
+Duplicates in terms of all variables
+
+(10,576 observations deleted)
+
+.                 tempfile states
+
+.                 save `states'
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St85947.000002 saved
+    as .dta format
+
+. 
+. ********
+. *
+. *       3. Figure 5.16 (= 6.3): Diaspora admin unit adoption timing
+. *
+. ********
+. 
+.         use `first_years', clear
+
+.         keep if item == "diaspora_admin_unit"
+(49 observations deleted)
+
+.         merge 1:1 indian_state using `states', nogen
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                 8  
+    -----------------------------------------
+
+. 
+.         // Kerala (1996) and Gujarat (1998) set theirs up before the DEP data
+>  starts
+.         replace first_year = 1996 if indian_state == "kerala"
+(1 real change made)
+
+.         replace first_year = 1998 if indian_state == "gujarat"
+(1 real change made)
+
+. 
+.         timing_plot, title("Diaspora Admin Unit Adoption Timing") name(admin_
+> unit) adminunit
+(8 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+
+.         graph export "${figures}/4_4_fig5_16_admin_unit_timing.png", replace 
+> width(4200) height(2550)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
+> fig5_16_admin_unit_timing.png written in PNG format
+
+. 
+. ********
+. *
+. *       4. Unnumbered figure after Figure 8.2: informational DEP timing
+. *
+. ********
+. 
+.         // Every informational policy that any state ever adopts, one panel e
+> ach
+.         use "${gendata}/2_3_dep_turnons_long.dta", clear
+
+.         keep if category == "total_info" & item_type == "policy"
+(9,408 observations deleted)
+
+.         bysort item: egen ever = max(turned_on)
+
+.         keep if ever
+(392 observations deleted)
+
+.         by item: keep if _n == 1
+(780 observations deleted)
+
+.         sort item_order         // panels in DEP-data order, not alphabetical
+
+.         local info_policies ""
+
+.         forvalues i = 1/`=_N' {
+  2.                 local info_policies `info_policies' `=item[`i']'
+  3.         }
+
+. 
+.         local panels ""
+
+.         foreach p of local info_policies {
+  2.                 use `first_years', clear
+  3.                 keep if item == "`p'"
+  4.                 merge 1:1 indian_state using `states', nogen
+  5.                 local title = proper(subinstr("`p'", "_", " ", .))
+  6.                 timing_plot, title("`title'") name(g_`p')
+  7.                 local panels `panels' g_`p'
+  8.         }
+(55 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             6
+        from master                         0  
+        from using                          6  
+
+    Matched                                 2  
+    -----------------------------------------
+(8 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(6 missing values generated)
+(6 real changes made)
+(0 real changes made)
+(0 real changes made)
+(55 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             6
+        from master                         0  
+        from using                          6  
+
+    Matched                                 2  
+    -----------------------------------------
+(8 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(6 missing values generated)
+(6 real changes made)
+(0 real changes made)
+(0 real changes made)
+(55 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             6
+        from master                         0  
+        from using                          6  
+
+    Matched                                 2  
+    -----------------------------------------
+(8 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(6 missing values generated)
+(6 real changes made)
+(0 real changes made)
+(1 real change made)
+(56 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             7
+        from master                         0  
+        from using                          7  
+
+    Matched                                 1  
+    -----------------------------------------
+(8 missing values generated)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(7 missing values generated)
+(7 real changes made)
+(0 real changes made)
+(0 real changes made)
+
+. 
+.         graph combine `panels', ///
+>                 cols(2) imargin(vsmall) ///
+>                 title("Policy Adoption Timing: Total Info", size(medsmall)) /
+> //
+>                 note("Open circles = pre-2005/post-2017 adoption; X = never t
+> reated", size(vsmall)) ///
+>                 graphregion(color(white) margin(small)) ///
+>                 xsize(14) ysize(8.5)
+
+.         graph export "${figures}/4_4_fig8_x_info_policy_timing.png", replace 
+> width(4200) height(2550)
+file /Users/calvin/thesis_replication_package/6_Tables_and_Figures/figures/4_4_
+> fig8_x_info_policy_timing.png written in PNG format
+
+.         graph drop _all
+
+. 
+. ********
+. *
+. *       5. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/4_4_fig_polic
+> y_bundling.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:22:56
+-------------------------------------------------------------------------------

@@ -1,0 +1,91 @@
+-------------------------------------------------------------------------------
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_1_tab_descr
+> iptives.log
+  log type:  text
+ opened on:  12 Oct 2026, 04:16:30
+
+. 
+. ********
+. *
+. *       1. Table 5.2: Samples by number of observations
+. *
+. ********
+. 
+.         **Count rows in each sample (one row = one metro x state x year)
+. 
+.                 // Samples 1 and 2 share a diaspora definition and only diffe
+> r in which
+.                 // FDI they count, so they have the same observations
+.                 foreach s in s1_firstgen_highed s3_firstgen_all s4_allgen_all
+>  {
+  2.                         use "${gendata}/2_4_`s'.dta", clear
+  3.                         local n_`s' = _N
+  4.                 }
+
+. 
+.         **Write the table
+. 
+.                 file open tab using "${tables}/3_1_tab5_2_samples_by_n.tex", 
+> write replace text
+
+.                 file write tab "\begin{table}[htbp]" _n
+
+.                 file write tab "\centering" _n
+
+.                 file write tab "\caption{Samples by number of observations}" 
+> _n
+
+.                 file write tab "\label{tab:samples_by_n}" _n
+
+.                 file write tab "\begin{tabularx}{\textwidth}{@{}l Y r@{}}" _n
+
+.                 file write tab "\hline" _n
+
+.                 file write tab "Sample & Description & Distinct metro $\times
+> $ state $\times$ year observations \\" _n
+
+.                 file write tab "\hline" _n
+
+.                 file write tab "Sample 1 & First-gen, high-edu, ICT FDI & `n_
+> s1_firstgen_highed' \\" _n
+
+.                 file write tab "Sample 2 & First-gen, high-edu, all FDI & `n_
+> s1_firstgen_highed' \\" _n
+
+.                 file write tab "Sample 3 & First-gen, all people, all FDI & `
+> n_s3_firstgen_all' \\" _n
+
+.                 file write tab "Sample 4 & All-gen, all people, all FDI & `n_
+> s4_allgen_all'*\\" _n
+
+.                 file write tab "\hline" _n
+
+.                 file write tab "\multicolumn{3}{@{}>{\RaggedRight\arraybacksl
+> ash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\footnotesize *Note: Sample 4
+>  is smaller because it excludes West Bengal (we are unable to make reliable i
+> nferences about Bengali speakers without a birthplace of India, as most Benga
+> li-Americans are born in Bangladesh).} \\" _n
+
+.                 file write tab "\end{tabularx}" _n
+
+.                 file write tab "" _n
+
+.                 file write tab "\end{table}" _n
+
+.                 file close tab
+
+. 
+. ********
+. *
+. *       2. Close log file
+. *
+. ********
+. 
+.         log close stage
+      name:  stage
+       log:  /Users/calvin/thesis_replication_package/5_Log_Files/3_1_tab_descr
+> iptives.log
+  log type:  text
+ closed on:  12 Oct 2026, 04:16:30
+-------------------------------------------------------------------------------
