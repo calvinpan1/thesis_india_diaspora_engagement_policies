@@ -1,10 +1,10 @@
 *********************************************************************************
 /*	TITLE:		4_1_fig_descriptives
 *	PURPOSE:	Descriptive figures for FDI, diasporas, and DEPs by Indian state.
-*				Figures 5.2-5.7: FDI projects, value, and jobs (also Fig 6.1)
-*				Figure 5.8: Gujarati diaspora in its 10 biggest metros
-*				Figures 5.9-5.10: diaspora population by state
-*				Figures 5.11-5.14, 8.2: DEPs over time (also Figs 6.2, 8.1)
+*				Figures 3 and A8-A12: FDI projects, value, and jobs
+*				Figure A13: Gujarati diaspora in its 10 biggest metros
+*				Figures A14-A15: diaspora population by state
+*				Figures 4, A18-A20, A23: DEPs over time
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
 *	UPDATED:	2026_1012
@@ -13,15 +13,15 @@
 *				"${gendata}/2_1_top50_metros.dta"
 *				"${gendata}/2_4_s4_allgen_all.dta"
 *				"${gendata}/2_3_deps_state_year.dta"
-*	PRODUCES:	Figures:	"${figures}/4_1_fig5_*.png", "${figures}/4_1_fig8_2_*.png"
+*	PRODUCES:	Figures:	"${figures}/4_1_fig*.png" (2 paper figures, 11 appendix figures)
 *				Tables:		No
 *				Datasets:	No
 *	CONTENTS:	0: Start log file, graph font
 *				1: Program that draws one line per state
-*				2: Figures 5.2-5.7, FDI by state
-*				3: Figure 5.8, Gujarati diaspora by metro
-*				4: Figures 5.9-5.10, diaspora by state
-*				5: Figures 5.11-5.14 and 8.2, DEPs
+*				2: Figures 3, A8-A12, FDI by state
+*				3: Figure A13, Gujarati diaspora by metro
+*				4: Figures A14-A15, diaspora by state
+*				5: Figures 4, A18-A20, A23, DEPs
 *				6: Close log file
 */
 *********************************************************************************
@@ -29,7 +29,7 @@
 	capture log close stage
 	log using "${logs}/4_1_fig_descriptives.log", replace text name(stage)
 
-	// Matches the thesis font. Falls back to Stata's default if not installed.
+	// Matches the paper font. Falls back to Stata's default if not installed.
 	capture graph set window fontface "CMU Serif"
 
 ********
@@ -40,17 +40,17 @@
 
 	// Expects data with indian_state ("Andhra Pradesh", ...), year, and the
 	// variable to plot. Three styles:
-	//	allstates:	adds an "All states" total line (Fig 5.7)
+	//	allstates:	adds an "All states" total line (Fig A12)
 	//	allindia:	adds an all-India total, split at 2014 when Andhra Pradesh
-	//				drops out so the line doesn't fake a drop (Figs 5.2, 5.6)
-	//	statesonly:	just the 8 states (Figs 5.3-5.5, 5.9-5.11)
+	//				drops out so the line doesn't fake a drop (Figs 3, A11)
+	//	statesonly:	just the 8 states (Figs 4, A8-A10, A14-A15)
 
 	capture program drop plot_by_state
 	program define plot_by_state
 		syntax , VAR(name) TITLE(string) YTITLE(string) FILE(string) STYLE(string) ///
 			[AUTOXLABEL]
 
-		// Default ticks every other year, or let Stata pick (Fig 5.11)
+		// Default ticks every other year, or let Stata pick (Fig 4)
 		local xlabel "2005(2)2017"
 		if "`autoxlabel'" != "" local xlabel ""
 		local states `""Andhra Pradesh" "Gujarat" "Karnataka" "Kerala" "Maharashtra" "Punjab" "Tamil Nadu" "West Bengal""'
@@ -111,43 +111,43 @@
 
 ********
 *
-*	2. Figures 5.2-5.7: FDI by state, top-50 diaspora metros only
+*	2. Figures 3, A8-A12: FDI by state, top-50 diaspora metros only
 *
 ********
 
 	import delimited using "${rawdata}/fdi_extracts/2_2_fdi_state_year_top50.csv", clear varnames(1)
 
-	**Figures 5.4, 5.5, 5.7 (Andhra Pradesh shown as 0 after 2013)
+	**Figures A9, A10, A12 (Andhra Pradesh shown as 0 after 2013)
 
 		// Value and jobs are states only: a total line would dwarf every state
 		plot_by_state, var(capital_real_all) style(statesonly) ///
 			title("FDI project value over time (top 50 metros only)") ytitle("Real capital investment") ///
-			file(4_1_fig5_4_fdi_value_by_state.png)
+			file(4_1_figA9_fdi_value_by_state.png)
 		plot_by_state, var(jobs_all) style(statesonly) ///
 			title("All FDI jobs created over time (top 50 metros only)") ytitle("All FDI jobs created") ///
-			file(4_1_fig5_5_fdi_jobs_by_state.png)
+			file(4_1_figA10_fdi_jobs_by_state.png)
 		plot_by_state, var(fdi_projects_consgoods) style(allstates) ///
 			title("Consumer goods FDI projects over time (top 50 metros only)") ytitle("Consumer goods FDI projects") ///
-			file(4_1_fig5_7_fdi_consumer_goods_by_state.png)
+			file(4_1_figA12_fdi_consumer_goods_by_state.png)
 
-	**Figures 5.2 (= 6.1), 5.3, 5.6 (Andhra Pradesh line stops in 2013)
+	**Figures 3, A8, A11 (Andhra Pradesh line stops in 2013)
 
 		replace fdi_projects_all = . if indian_state == "Andhra Pradesh" & year >= 2014
 		replace fdi_projects_ict = . if indian_state == "Andhra Pradesh" & year >= 2014
 
 		plot_by_state, var(fdi_projects_all) style(allindia) ///
 			title("FDI projects over time (top 50 metros only)") ytitle("FDI projects") ///
-			file(4_1_fig5_2_fdi_projects_by_state.png)
+			file(4_1_fig3_fdi_projects_by_state.png)
 		plot_by_state, var(fdi_projects_all) style(statesonly) ///
 			title("FDI projects over time (top 50 metros only)") ytitle("FDI projects") ///
-			file(4_1_fig5_3_fdi_projects_by_state_no_total.png)
+			file(4_1_figA8_fdi_projects_by_state_no_total.png)
 		plot_by_state, var(fdi_projects_ict) style(allindia) ///
 			title("ICT FDI projects over time (top 50 metros only)") ytitle("ICT FDI projects") ///
-			file(4_1_fig5_6_fdi_ict_projects_by_state.png)
+			file(4_1_figA11_fdi_ict_projects_by_state.png)
 
 ********
 *
-*	3. Figure 5.8: Gujarati diaspora in its 10 biggest metros
+*	3. Figure A13: Gujarati diaspora in its 10 biggest metros
 *
 ********
 
@@ -187,11 +187,11 @@
 			ylabel(, labsize(10pt) angle(horizontal)) ///
 			legend(order(`legend') position(6) ring(1) cols(2) size(8pt) region(lstyle(none))) ///
 			graphregion(color(white))
-		graph export "${figures}/4_1_fig5_8_gujarati_top10_metros.png", replace
+		graph export "${figures}/4_1_figA13_gujarati_top10_metros.png", replace
 
 ********
 *
-*	4. Figures 5.9-5.10: diaspora population by state, top-50 metros
+*	4. Figures A14-A15: diaspora population by state, top-50 metros
 *
 ********
 
@@ -224,41 +224,41 @@
 			replace n_people = . if indian_state == "Andhra Pradesh" & year >= 2014
 		end
 
-	**Figure 5.9: first-gen (born in India), all 8 languages
+	**Figure A14: first-gen (born in India), all 8 languages
 
 		diaspora_by_state, keepif(firstgen_india & lang_first)
 		plot_by_state, var(n_people) style(statesonly) ///
 			title("First-gen all people (18+) over time (top 50 metros only)") ytitle("Estimated population") ///
-			file(4_1_fig5_9_firstgen_diaspora_by_state.png)
+			file(4_1_figA14_firstgen_diaspora_by_state.png)
 
-	**Figure 5.10: all generations, all 8 languages
+	**Figure A15: all generations, all 8 languages
 
-		// Includes Bengali speakers of any birthplace, as in the thesis figure.
-		// (The all-gen regression sample drops Bengali, see Table 5.2.)
+		// Includes Bengali speakers of any birthplace, as in the original thesis figure.
+		// (The all-gen regression sample drops Bengali, see Table 1.)
 		diaspora_by_state, keepif(lang_first)
 		plot_by_state, var(n_people) style(statesonly) ///
 			title("Migrant stock over time (top 50 metros only)") ytitle("Estimated migrant stock") ///
-			file(4_1_fig5_10_allgen_diaspora_by_state.png)
+			file(4_1_figA15_allgen_diaspora_by_state.png)
 
 ********
 *
-*	5. Figures 5.11-5.14 and 8.2: DEPs
+*	5. Figures 4, A18-A20, A23: DEPs
 *
 ********
 
 	use "${gendata}/2_3_deps_state_year.dta", clear
 	replace indian_state = proper(indian_state)
 
-	**Figure 5.11 (= 6.2): total DEPs by state
+	**Figure 4: total DEPs by state
 
 		preserve
 			keep if inrange(year, 2005, 2017)
 			plot_by_state, var(total_deps) style(statesonly) autoxlabel ///
 				title("Total DEPs over time by state") ytitle("Total DEPs") ///
-				file(4_1_fig5_11_total_deps_by_state.png)
+				file(4_1_fig4_total_deps_by_state.png)
 		restore
 
-	**Figure 5.12: economic vs non-economic DEPs, all states stacked
+	**Figure A18: economic vs non-economic DEPs, all states stacked
 
 		preserve
 			keep if inrange(year, 2000, 2017)
@@ -276,7 +276,7 @@
 				legend(order(1 "total_non_econ" 2 "total_econ") ///
 					position(6) ring(1) cols(2) size(9pt) region(lstyle(none))) ///
 				graphregion(color(white))
-			graph export "${figures}/4_1_fig5_12_econ_vs_nonecon_deps.png", replace
+			graph export "${figures}/4_1_figA18_econ_vs_nonecon_deps.png", replace
 		restore
 
 	**Category labels for the remaining figures ("total_state_bureaucracy" -> "State Bureaucracy")
@@ -287,7 +287,7 @@
 			local lab_`v' = proper(subinstr(subinstr("`v'", "total_", "", 1), "_", " ", .))
 		}
 
-	**Figure 8.2: economic DEP types over time, all states
+	**Figure A23: economic DEP types over time, all states
 
 		preserve
 			keep if inrange(year, 2000, 2017)
@@ -308,10 +308,10 @@
 				ylabel(, labsize(10pt) angle(horizontal)) ///
 				legend(order(`legend') position(6) ring(1) cols(3) size(9pt) region(lstyle(none))) ///
 				graphregion(color(white))
-			graph export "${figures}/4_1_fig8_2_econ_dep_types.png", replace
+			graph export "${figures}/4_1_figA23_econ_dep_types.png", replace
 		restore
 
-	**Figures 5.13 and 5.14 (= 8.1): DEP categories by state in 2017
+	**Figures A19 and A20: DEP categories by state in 2017
 
 		keep if year == 2017
 		foreach group in nonecon econ {
@@ -325,8 +325,8 @@
 
 			local title = cond("`group'" == "econ", "Breakdown of Economic DEPs by State (2017)", ///
 				"Breakdown of Non-Economic DEPs by State (2017)")
-			local file = cond("`group'" == "econ", "4_1_fig5_14_econ_deps_by_state_2017.png", ///
-				"4_1_fig5_13_nonecon_deps_by_state_2017.png")
+			local file = cond("`group'" == "econ", "4_1_figA20_econ_deps_by_state_2017.png", ///
+				"4_1_figA19_nonecon_deps_by_state_2017.png")
 
 			graph hbar (asis) ``group'', ///
 				over(indian_state, sort(sort_total) descending label(labsize(10pt))) ///

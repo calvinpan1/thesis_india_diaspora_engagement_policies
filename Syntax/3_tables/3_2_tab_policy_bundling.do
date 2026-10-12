@@ -1,20 +1,20 @@
 *********************************************************************************
 /*	TITLE:		3_2_tab_policy_bundling
 *	PURPOSE:	Tables on how often DEPs get adopted together (bundling).
-*				Table 5.1: the 10 policy pairs most often adopted together
-*				Table 6.1: every new DEP by state and year, 2005-2017
+*				Online Appendix Table A6: the 10 policy pairs most often adopted together
+*				Online Appendix Table A7: every new DEP by state and year, 2005-2017
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0412
 *	UPDATED:	2026_1012
 *	CALLS UPON:	"${gendata}/2_3_dep_turnons_long.dta"
 *	PRODUCES:	Figures:	No
-*				Tables:		"${tables}/3_2_tab5_1_jaccard_top10.tex"
-*							"${tables}/3_2_tab6_1_dep_turnon_events.tex"
+*				Tables:		"${tables}/3_2_tabA6_jaccard_top10.tex"
+*							"${tables}/3_2_tabA7_dep_turnon_events.tex"
 *				Datasets:	"${gendata}/3_2_policy_pair_jaccard.dta"
 *	CONTENTS:	0: Start log file
 *				1: Jaccard score for every pair of policies
-*				2: Table 5.1, top 10 pairs by Jaccard score
-*				3: Table 6.1, DEP turn-ons by state and year
+*				2: Table A6, top 10 pairs by Jaccard score
+*				3: Table A7, DEP turn-ons by state and year
 *				4: Close log file
 */
 *********************************************************************************
@@ -56,14 +56,14 @@
 
 ********
 *
-*	2. Table 5.1: Policy Pairs with the Top 10 Highest Jaccard Scores
+*	2. Table A6: Policy Pairs with the Top 10 Highest Jaccard Scores
 *
 ********
 
 	gen rank_jaccard_pair = _n
 	keep if rank_jaccard_pair <= 10
 
-	file open tab using "${tables}/3_2_tab5_1_jaccard_top10.tex", write replace text
+	file open tab using "${tables}/3_2_tabA6_jaccard_top10.tex", write replace text
 	file write tab "\begin{table}[htbp]" _n
 	file write tab "\centering" _n
 	file write tab "\footnotesize" _n
@@ -89,7 +89,7 @@
 
 ********
 *
-*	3. Table 6.1: Timing and Bundling of New DEPs, 2005-2017
+*	3. Table A7: Timing and Bundling of New DEPs, 2005-2017
 *
 ********
 
@@ -123,7 +123,7 @@
 
 		local states andhra_pradesh gujarat karnataka kerala maharashtra punjab tamil_nadu west_bengal
 
-		file open tab using "${tables}/3_2_tab6_1_dep_turnon_events.tex", write replace text
+		file open tab using "${tables}/3_2_tabA7_dep_turnon_events.tex", write replace text
 		file write tab "\begin{table}[htbp]" _n
 		file write tab "\centering" _n
 		file write tab "\caption{Timing and Bundling of New Diaspora Engagement Policies across Indian States, 2005--2017}" _n

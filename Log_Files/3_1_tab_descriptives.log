@@ -1,14 +1,14 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_1_tab_descrip
-> tives.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_1_tab_descriptive
+> s.log
   log type:  text
- opened on:  12 Oct 2026, 05:04:21
+ opened on:  12 Oct 2026, 05:37:15
 
 . 
 . ********
 . *
-. *       1. Table 5.2: Samples by number of observations
+. *       1. Table 1: Samples by number of observations
 . *
 . ********
 . 
@@ -26,8 +26,8 @@
 . 
 .         **Write the table
 . 
-.                 file open tab using "${tables}/3_1_tab5_2_samples_by_n.tex", 
-> write replace text
+.                 file open tab using "${tables}/3_1_tab1_samples_by_n.tex", wr
+> ite replace text
 
 .                 file write tab "\begin{table}[htbp]" _n
 
@@ -84,8 +84,8 @@
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_1_tab_descrip
-> tives.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_1_tab_descriptive
+> s.log
   log type:  text
- closed on:  12 Oct 2026, 05:04:21
+ closed on:  12 Oct 2026, 05:37:15
 -------------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_2_tab_policy_
-> bundling.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_2_tab_policy_bund
+> ling.log
   log type:  text
- opened on:  12 Oct 2026, 05:04:21
+ opened on:  12 Oct 2026, 05:37:15
 
 . 
 . ********
@@ -26,7 +26,7 @@
 .         tempfile turnons
 
 .         save `turnons'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 
 . 
@@ -62,13 +62,13 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 
 .         save "${gendata}/3_2_policy_pair_jaccard.dta", replace
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/3_2_policy_pa
-    > ir_jaccard.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/3_2_policy_pair_j
+    > accard.dta saved
 
 . 
 . ********
 . *
-. *       2. Table 5.1: Policy Pairs with the Top 10 Highest Jaccard Scores
+. *       2. Table A6: Policy Pairs with the Top 10 Highest Jaccard Scores
 . *
 . ********
 . 
@@ -78,8 +78,8 @@ file
 (585 observations deleted)
 
 . 
-.         file open tab using "${tables}/3_2_tab5_1_jaccard_top10.tex", write r
-> eplace text
+.         file open tab using "${tables}/3_2_tabA6_jaccard_top10.tex", write re
+> place text
 
 .         file write tab "\begin{table}[htbp]" _n
 
@@ -127,7 +127,7 @@ file
 . 
 . ********
 . *
-. *       3. Table 6.1: Timing and Bundling of New DEPs, 2005-2017
+. *       3. Table A7: Timing and Bundling of New DEPs, 2005-2017
 . *
 . ********
 . 
@@ -204,8 +204,8 @@ xij variables:
 > tra punjab tamil_nadu west_bengal
 
 . 
-.                 file open tab using "${tables}/3_2_tab6_1_dep_turnon_events.t
-> ex", write replace text
+.                 file open tab using "${tables}/3_2_tabA7_dep_turnon_events.te
+> x", write replace text
 
 .                 file write tab "\begin{table}[htbp]" _n
 
@@ -279,8 +279,8 @@ xij variables:
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_2_tab_policy_
-> bundling.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_2_tab_policy_bund
+> ling.log
   log type:  text
- closed on:  12 Oct 2026, 05:04:21
+ closed on:  12 Oct 2026, 05:37:15
 -------------------------------------------------------------------------------

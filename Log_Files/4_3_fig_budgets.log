@@ -1,9 +1,8 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_3_fig_budgets
-> .log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_3_fig_budgets.log
   log type:  text
- opened on:  12 Oct 2026, 05:10:27
+ opened on:  12 Oct 2026, 05:42:43
 
 . 
 .         capture graph set window fontface "CMU Serif"
@@ -54,7 +53,7 @@
 . 
 . ********
 . *
-. *       2. Figure 4.8: DEP budgets
+. *       2. Figure 1: DEP budgets
 . *
 . ********
 . 
@@ -98,10 +97,9 @@
 >                 graphregion(color(white)) ///
 >                 plotregion(color(white) margin(medium))
 
-.         graph export "${figures}/4_3_fig4_8_dep_budgets_by_state.png", replac
-> e
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_3_fi
-> g4_8_dep_budgets_by_state.png written in PNG format
+.         graph export "${figures}/4_3_fig1_dep_budgets_by_state.png", replace
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_3_fig1_d
+> ep_budgets_by_state.png written in PNG format
 
 . 
 . ********
@@ -112,8 +110,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_3_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_3_fig_budgets
-> .log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_3_fig_budgets.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:27
+ closed on:  12 Oct 2026, 05:42:43
 -------------------------------------------------------------------------------

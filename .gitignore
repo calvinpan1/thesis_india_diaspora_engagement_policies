@@ -12,7 +12,7 @@ Generated_Datasets/*
 /*.log
 *.smcl
 
-# LaTeX build files
+# LaTeX build files (paper.pdf and online_appendix.pdf are committed)
 *.aux
 *.bbl
 *.bcf

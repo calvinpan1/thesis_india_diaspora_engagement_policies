@@ -1,6 +1,6 @@
 *********************************************************************************
 /*	TITLE:		4_2_fig_lang_verification
-*	PURPOSE:	Figures 4.4-4.7 (Bengali and Punjabi repeat as Figures A.1-A.2):
+*	PURPOSE:	Online Appendix Figures A4-A7:
 *				where US speakers of four languages were born. Checks whether a
 *				language really points to an Indian state, or mostly to another
 *				country (Bengali -> Bangladesh, Tamil -> Sri Lanka, etc.)
@@ -8,10 +8,10 @@
 *	CREATED:	2026_0331
 *	UPDATED:	2026_1012
 *	CALLS UPON:	"${gendata}/1_1_acs_india_microdata.dta"
-*	PRODUCES:	Figures:	"${figures}/4_2_fig4_4_punjabi_birthplace.png"
-*							"${figures}/4_2_fig4_5_tamil_birthplace.png"
-*							"${figures}/4_2_fig4_6_bengali_birthplace.png"
-*							"${figures}/4_2_fig4_7_nepali_birthplace.png"
+*	PRODUCES:	Figures:	"${figures}/4_2_figA4_punjabi_birthplace.png"
+*							"${figures}/4_2_figA5_tamil_birthplace.png"
+*							"${figures}/4_2_figA6_bengali_birthplace.png"
+*							"${figures}/4_2_figA7_nepali_birthplace.png"
 *				Tables:		No
 *				Datasets:	No
 *	CONTENTS:	0: Start log file, graph font
@@ -45,7 +45,7 @@
 ********
 
 	// language code, name, birthplace code of the other country, its name, figure
-	local figs `" "3113 Punjabi 52140 Pakistan 4_4" "4005 Tamil 52150 Sri_Lanka 4_5" "3112 Bengali 52110 Bangladesh 4_6" "4011 Nepali 52400 Nepal 4_7" "'
+	local figs `" "3113 Punjabi 52140 Pakistan A4" "4005 Tamil 52150 Sri_Lanka A5" "3112 Bengali 52110 Bangladesh A6" "4011 Nepali 52400 Nepal A7" "'
 
 	foreach f of local figs {
 		tokenize `f'

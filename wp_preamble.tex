@@ -1,0 +1,47 @@
+% Shared preamble for paper.tex and online_appendix.tex
+% Standard economics working-paper layout: 12pt, 1-inch margins, 1.5 spacing,
+% author-year citations. Compile with LuaLaTeX.
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\graphicspath{{Tables_and_Figures/figures/}{static_figures/}}
+\usepackage{booktabs, tabularx, threeparttable, array, makecell, longtable}
+\usepackage{ragged2e}
+\usepackage{placeins}
+\usepackage{xcolor}
+\usepackage[bottom]{footmisc}
+\usepackage[font=small, labelfont=bf]{caption}
+\usepackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt}
+
+% Author-year citations, as in most economics working papers
+\usepackage[backend=biber, style=authoryear, natbib=true, maxcitenames=2,
+  uniquename=false, uniquelist=false, giveninits=true, dashed=false]{biblatex}
+\addbibresource{articles.bib}
+% Let long URLs in the references break across lines
+\usepackage{xurl}
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+\setcounter{biburlnumpenalty}{9000}
+
+\usepackage[hidelinks]{hyperref}
+
+% Column types and helpers used by the generated tables
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{Z}{>{\Centering\arraybackslash}X}
+\newcolumntype{C}[1]{>{\Centering\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\emergencystretch}{2em}
+\setlength{\LTcapwidth}{\textwidth}
+\newcommand{\fulltablenote}[2]{%
+  \multicolumn{#1}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\footnotesize #2}\\%
+}
+
+% Tables and figures read single-spaced
+\AtBeginEnvironment{table}{\singlespacing}
+\AtBeginEnvironment{figure}{\singlespacing}
+\AtBeginEnvironment{longtable}{\singlespacing}

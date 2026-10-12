@@ -1,7 +1,7 @@
 *********************************************************************************
 /*	TITLE:		2_1_acs_samples
 *	PURPOSE:	Turns the person-level ACS file into diaspora counts by US metro x
-*				language x year, one file per sample definition in the thesis,
+*				language x year, one file per sample definition in the paper,
 *				and ranks each language's metros so later files can keep the
 *				top 50.
 *	AUTHOR:		Calvin Pan
@@ -14,7 +14,7 @@
 *							"${gendata}/2_1_top50_metros.dta"
 *	CONTENTS:	0: Start log file
 *				1: Program that builds one sample
-*				2: Build every sample used in the thesis
+*				2: Build every sample used in the paper
 *				3: Top-50 metro list for the descriptive figures
 *				4: Close log file
 */
@@ -31,7 +31,7 @@
 
 	// keepif:	who counts as diaspora in this sample
 	// natif:	who counts toward the "national Indian diaspora" in each metro
-	//			(only used by the H0 tables, Tables 7.1 and 7.12)
+	//			(only used by the H0 tables, Tables 3 and A13)
 	// Andhra Pradesh (Telugu) is dropped for 2014-2017 everywhere because the
 	// state split in two in 2014.
 
@@ -76,14 +76,14 @@
 
 ********
 *
-*	2. Build every sample used in the thesis
+*	2. Build every sample used in the paper
 *
 ********
 
 	// Sample numbers follow the old cleanup files so they match my notes.
 	// "lang_first" = all 8 state languages, "lang_all" = drops Bengali.
 
-	**Samples 1-4 (all ages), used in Table 5.2 and the H0/baseline tables
+	**Samples 1-4 (all ages), used in Table 1 and the H0/baseline tables
 
 		build_sample, name("s1_firstgen_highed") ///
 			keepif("firstgen_india & lang_first & higher_ed == 1") ///
@@ -111,7 +111,7 @@
 			keepif("lang_all & age >= 25") ///
 			natif("lang_all & age >= 25 & !ap_split")
 
-	**ICT deeper cuts (Tables 7.18-7.28)
+	**ICT deeper cuts (Tables 12-13, A16-A24)
 
 		build_sample, name("s24_allgen_highed_25plus") ///
 			keepif("lang_all & higher_ed == 1 & age >= 25") ///

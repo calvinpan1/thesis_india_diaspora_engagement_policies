@@ -1,14 +1,14 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_4_fig_policy_
-> bundling.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
+> ling.log
   log type:  text
- opened on:  12 Oct 2026, 05:10:27
+ opened on:  12 Oct 2026, 05:42:43
 
 . 
 . ********
 . *
-. *       1. Figure 5.15: Policy-pair Jaccard distribution
+. *       1. Figure A21: Policy-pair Jaccard distribution
 . *
 . ********
 . 
@@ -40,10 +40,10 @@
 >                 title("Policy-pair Jaccard distribution") ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_4_fig5_15_jaccard_distribution.png", repla
-> ce width(3200) height(2000)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
-> g5_15_jaccard_distribution.png written in PNG format
+.         graph export "${figures}/4_4_figA21_jaccard_distribution.png", replac
+> e width(3200) height(2000)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA21
+> _jaccard_distribution.png written in PNG format
 
 . 
 . ********
@@ -144,7 +144,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
 .                 tempfile first_years
 
 .                 save `first_years'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 
 . 
@@ -162,13 +162,13 @@ Duplicates in terms of all variables
 .                 tempfile states
 
 .                 save `states'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 
 . 
 . ********
 . *
-. *       3. Figure 5.16 (= 6.3): Diaspora admin unit adoption timing
+. *       3. Figure A22: Diaspora admin unit adoption timing
 . *
 . ********
 . 
@@ -207,15 +207,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
 (1 real change made)
 (1 real change made)
 
-.         graph export "${figures}/4_4_fig5_16_admin_unit_timing.png", replace 
-> width(4200) height(2550)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
-> g5_16_admin_unit_timing.png written in PNG format
+.         graph export "${figures}/4_4_figA22_admin_unit_timing.png", replace w
+> idth(4200) height(2550)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA22
+> _admin_unit_timing.png written in PNG format
 
 . 
 . ********
 . *
-. *       4. Unnumbered figure after Figure 8.2: informational DEP timing
+. *       4. Figure A24: informational DEP timing
 . *
 . ********
 . 
@@ -356,10 +356,10 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
 >                 graphregion(color(white) margin(small)) ///
 >                 xsize(14) ysize(8.5)
 
-.         graph export "${figures}/4_4_fig8_x_info_policy_timing.png", replace 
+.         graph export "${figures}/4_4_figA24_info_policy_timing.png", replace 
 > width(4200) height(2550)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
-> g8_x_info_policy_timing.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA24
+> _info_policy_timing.png written in PNG format
 
 .         graph drop _all
 
@@ -372,8 +372,8 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_4_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_4_fig_policy_
-> bundling.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
+> ling.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:35
+ closed on:  12 Oct 2026, 05:42:47
 -------------------------------------------------------------------------------

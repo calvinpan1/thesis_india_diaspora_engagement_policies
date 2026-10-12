@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_4_merge_sampl
-> es.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_4_merge_samples.l
+> og
   log type:  text
- opened on:  12 Oct 2026, 05:04:20
+ opened on:  12 Oct 2026, 05:37:15
 
 . 
 . ********
@@ -21,7 +21,7 @@
 .         tempfile fdi
 
 .         save `fdi'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 
 . 
@@ -139,8 +139,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (4,919 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s1_firstg
-    > en_highed.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s1_firstgen_h
+    > ighed.dta saved
 s1_firstgen_highed: 4919 metro x state x year rows
 (3,841 observations deleted)
 
@@ -191,8 +191,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (5,058 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s3_firstg
-    > en_all.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s3_firstgen_a
+    > ll.dta saved
 s3_firstgen_all: 5058 metro x state x year rows
 (4,066 observations deleted)
 
@@ -243,8 +243,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (4,584 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s4_allgen
-    > _all.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s4_allgen_all
+    > .dta saved
 s4_allgen_all: 4584 metro x state x year rows
 (3,266 observations deleted)
 
@@ -295,8 +295,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (4,897 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s1_firstg
-    > en_highed_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s1_firstgen_h
+    > ighed_25plus.dta saved
 s1_firstgen_highed_25plus: 4897 metro x state x year rows
 (3,635 observations deleted)
 
@@ -347,8 +347,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (5,025 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s3_firstg
-    > en_all_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s3_firstgen_a
+    > ll_25plus.dta saved
 s3_firstgen_all_25plus: 5025 metro x state x year rows
 (3,703 observations deleted)
 
@@ -399,8 +399,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (4,546 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s4_allgen
-    > _all_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s4_allgen_all
+    > _25plus.dta saved
 s4_allgen_all_25plus: 4546 metro x state x year rows
 (3,318 observations deleted)
 
@@ -451,8 +451,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (4,437 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s24_allge
-    > n_highed_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s24_allgen_hi
+    > ghed_25plus.dta saved
 s24_allgen_highed_25plus: 4437 metro x state x year rows
 (964 observations deleted)
 
@@ -503,8 +503,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (3,539 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s25_first
-    > gen_all_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s25_firstgen_
+    > all_ict_25plus.dta saved
 s25_firstgen_all_ict_25plus: 3539 metro x state x year rows
 (945 observations deleted)
 
@@ -555,8 +555,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (3,490 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s27_first
-    > gen_highed_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s27_firstgen_
+    > highed_ict_25plus.dta saved
 s27_firstgen_highed_ict_25plus: 3490 metro x state x year rows
 (949 observations deleted)
 
@@ -607,8 +607,8 @@ variable indian_state was str11 now str14
   variable metro_rank was int now byte
   (3,217 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_4_s28_allge
-    > n_highed_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_4_s28_allgen_hi
+    > ghed_ict_25plus.dta saved
 s28_allgen_highed_ict_25plus: 3217 metro x state x year rows
 
 . 
@@ -620,8 +620,8 @@ s28_allgen_highed_ict_25plus: 3217 metro x state x year rows
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_4_merge_sampl
-> es.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_4_merge_samples.l
+> og
   log type:  text
- closed on:  12 Oct 2026, 05:04:21
+ closed on:  12 Oct 2026, 05:37:15
 -------------------------------------------------------------------------------

@@ -1,14 +1,14 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_6_fig_investo
-> r_names.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
+> mes.log
   log type:  text
- opened on:  12 Oct 2026, 05:10:38
+ opened on:  12 Oct 2026, 05:42:48
 
 . 
 . ********
 . *
-. *       1. Figure 5.1: Diaspora vs non-diaspora shares
+. *       1. Figure 2: Diaspora vs non-diaspora shares
 . *
 . ********
 . 
@@ -32,10 +32,10 @@
 >                 blabel(bar, format(%4.1f) position(outside)) ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_6_fig5_1_indian_name_shares.png", replace 
-> width(2400)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_6_fi
-> g5_1_indian_name_shares.png written in PNG format
+.         graph export "${figures}/4_6_fig2_indian_name_shares.png", replace wi
+> dth(2400)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_6_fig2_i
+> ndian_name_shares.png written in PNG format
 
 . 
 . ********
@@ -46,8 +46,8 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_6_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_6_fig_investo
-> r_names.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
+> mes.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:39
+ closed on:  12 Oct 2026, 05:42:49
 -------------------------------------------------------------------------------

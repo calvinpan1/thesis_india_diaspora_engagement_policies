@@ -1,9 +1,8 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_3_tab_ppml.lo
-> g
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_3_tab_ppml.log
   log type:  text
- opened on:  12 Oct 2026, 05:04:22
+ opened on:  12 Oct 2026, 05:37:15
 
 . 
 . ********
@@ -114,8 +113,8 @@ Table 4 categories:  total_symbolic total_state_bureaucracy total_abroad total_
 
 .         save "${gendata}/3_3_policy_support.dta", replace
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_policy_su
-    > pport.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/3_3_policy_suppor
+    > t.dta saved
 
 . 
 . ********
@@ -133,9 +132,9 @@ file
   2. 
 .                         use "${gendata}/2_4_`file'.dta", clear
   3. 
-.                         // Tech-hub check (Tables 7.27-7.28): metros where bi
-> g tech firms are
-.                         // headquartered, see Appendix Table C.1
+.                         // Tech-hub check (Tables A23-A24): metros where big 
+> tech firms are
+.                         // headquartered, see Online Appendix Table A26
 .                         if "`techhubs'" != "" {
   4.                                 keep if inlist(met2013, 42660, 41940, 4186
 > 0, 38900, 14260, 38060, 41740) ///
@@ -220,8 +219,8 @@ file
   5.                 end
 
 . 
-.         **H0 (Tables 7.1, 7.12): local vs national diaspora, metro FE + state
-> -year FE
+.         **H0 (Tables 3, A13): local vs national diaspora, metro FE + state-ye
+> ar FE
 . 
 .                 capture program drop run_h0
 
@@ -248,7 +247,7 @@ file
  12.                 end
 
 . 
-.         **Table 1 (Table 7.13): diaspora only, two sets of fixed effects
+.         **Diaspora-only models (Table A14), two sets of fixed effects
 . 
 .                 capture program drop run_table1
 
@@ -397,7 +396,7 @@ file
 > ied
 .         // at the end of this section instead of being re-estimated.
 . 
-.         **Baseline samples (Tables 7.1-7.5)
+.         **Baseline samples (Tables 3-7)
 . 
 .                 run_model, sampleid(15) file(s3_firstgen_all)                
 >    outcome(fdi_projects_ict) h0 table2 table3 table4 singlepolicy
@@ -690,8 +689,8 @@ Sample 13: s4_allgen_all_25plus, fdi_projects_all
 Sample 14: s4_allgen_all, fdi_projects_all
 
 . 
-.         **Sector (cluster) and activity cuts (Tables 7.6-7.11), first-gen 25+
->  high-ed
+.         **Sector (cluster) and activity cuts (Tables 8, A8-A12), first-gen 25
+> + high-ed
 . 
 .                 run_model, sampleid(22) file(s1_firstgen_highed_25plus) outco
 > me(fdi_projects_ict)                               table2 table4 singlepolicy
@@ -1333,7 +1332,7 @@ Sample 34: s1_firstgen_highed_25plus, fdi_projects_all_mfg
 Sample 35: s1_firstgen_highed_25plus, fdi_projects_business_services
 
 . 
-.         **Company-size samples (Tables 7.12-7.17)
+.         **Company-size samples (Tables 9-11, A13-A15)
 . 
 .                 run_model, sampleid(41) file(s1_firstgen_highed_25plus) outco
 > me(fdi_projects_all_small75) h0 table1 table2 table3 table4 singlepolicy
@@ -1568,7 +1567,8 @@ Sample 43: s1_firstgen_highed_25plus, fdi_projects_all_large75
 Sample 44: s1_firstgen_highed_25plus, fdi_projects_ict_large75
 
 . 
-.         **ICT deeper cuts (Tables 7.18-7.28), all with ICT FDI as the outcome
+.         **ICT deeper cuts (Tables 12-13, A16-A24), all with ICT FDI as the ou
+> tcome
 . 
 .                 run_model, sampleid(51) file(s3_firstgen_all_25plus)         
 >            outcome(fdi_projects_ict)                       table2 table4 sing
@@ -2162,8 +2162,7 @@ Sample 83: s3_firstgen_all_25plus, fdi_projects_ict_small75
 Sample 84: s25_firstgen_all_ict_25plus, fdi_projects_ict_small75
 
 . 
-.         **Appendix Table B.1: the four main samples from Table 5.2, all polic
-> ies
+.         **Table A25: the four main samples from Table 1, all policies
 . 
 .                 run_model, sampleid(1) file(s1_firstgen_highed) outcome(fdi_p
 > rojects_ict) singlepolicy
@@ -2360,13 +2359,13 @@ Sample 3: s3_firstgen_all, fdi_projects_all
 . 
 .         frame results: save "${gendata}/3_3_ppml_results.dta", replace
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_ppml_resu
-    > lts.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/3_3_ppml_results.
+    > dta saved
 
 .         frame accounting: save "${gendata}/3_3_ppml_accounting.dta", replace
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/3_3_ppml_acco
-    > unting.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/3_3_ppml_accounti
+    > ng.dta saved
 
 . 
 . ********
@@ -2594,7 +2593,7 @@ file
 . 
 . ********
 . *
-. *       5. Tables 7.1-7.28
+. *       5. Tables 3-13 and A8-A24
 . *
 . ********
 . 
@@ -2663,10 +2662,10 @@ file
 > , tech hubs"
 
 . 
-.         **Tables 7.1-7.5: baseline all-FDI samples
+.         **Tables 3-7: baseline all-FDI samples
 . 
-.                 write_table, table(h0) file(3_3_tab7_1_h0_baseline.tex) label
-> (final_baseline_h0) ///
+.                 write_table, table(h0) file(3_3_tab3_h0_baseline.tex) label(f
+> inal_baseline_h0) ///
 >                         title("H0: location-specific diaspora versus national
 >  Indian diaspora stock: baseline all-FDI samples") ///
 >                         columns(`base_cols') labels("`base_labs'")
@@ -2693,7 +2692,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -2704,10 +2703,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table2_h1) file(3_3_tab7_2_any_dep_baselin
-> e.tex) label(final_baseline_table2_h1) ///
->                         title("Table 2: any DEP adoption x diaspora: baseline
->  all-FDI samples") ///
+.                 write_table, table(table2_h1) file(3_3_tab4_any_dep_baseline.
+> tex) label(final_baseline_table2_h1) ///
+>                         title("Any DEP adoption x diaspora: baseline all-FDI 
+> samples") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -2732,7 +2731,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2743,10 +2742,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table3_h2) file(3_3_tab7_3_dep_count_basel
-> ine.tex) label(final_baseline_table3_h2) ///
->                         title("Table 3: DEP-count intensity x diaspora: basel
-> ine all-FDI samples") ///
+.                 write_table, table(table3_h2) file(3_3_tab5_dep_count_baselin
+> e.tex) label(final_baseline_table3_h2) ///
+>                         title("DEP-count intensity x diaspora: baseline all-F
+> DI samples") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (875 observations deleted)
 (13 missing values generated)
@@ -2771,7 +2770,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -2782,10 +2781,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_4_dep_category_ba
-> seline.tex) label(final_baseline_table4_h3) ///
->                         title("Table 4: category-level policy interactions: b
-> aseline all-FDI samples") ///
+.                 write_table, table(table4_h3) file(3_3_tab6_dep_category_base
+> line.tex) label(final_baseline_table4_h3) ///
+>                         title("Category-level policy interactions: baseline a
+> ll-FDI samples") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -2810,7 +2809,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -2824,8 +2823,8 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_5_single_polic
-> y_baseline.tex) label(final_baseline_appendix_singlepolicy) ///
+.                 write_table, table(singlepolicy) file(3_3_tab7_single_policy_
+> baseline.tex) label(final_baseline_appendix_singlepolicy) ///
 >                         title("Baseline all-FDI samples: single-policy intera
 > ctions, 2+ states and more than 10 state-years") ///
 >                         columns(`base_cols') labels("`base_labs'") singlepoli
@@ -2859,7 +2858,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -2874,11 +2873,11 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.6-7.8: sector (cluster) cuts
+.         **Tables 8, A8, A9: sector (cluster) cuts
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_6_any_dep_cluster
-> .tex) label(final_cluster_table2_h1) ///
->                         title("Sector cuts: Table 2 any DEP adoption") ///
+.                 write_table, table(table2_h1) file(3_3_tab8_any_dep_cluster.t
+> ex) label(final_cluster_table2_h1) ///
+>                         title("Sector cuts: any DEP adoption x diaspora") ///
 >                         columns(`clus_cols') labels("`clus_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -2906,7 +2905,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2917,10 +2916,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_7_dep_category_cl
-> uster.tex) label(final_cluster_table4_h3) ///
->                         title("Cluster cuts: Table 4 DEP type interactions") 
-> ///
+.                 write_table, table(table4_h3) file(3_3_tabA8_dep_category_clu
+> ster.tex) label(final_cluster_table4_h3) ///
+>                         title("Sector cuts: category-level policy interaction
+> s") ///
 >                         columns(`clus_cols') labels("`clus_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -2948,7 +2947,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -2962,10 +2961,10 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_8_single_polic
-> y_cluster.tex) label(final_cluster_appendix_singlepolicy) ///
->                         title("Cluster cuts: single-policy interactions, 2+ s
-> tates and more than 10 state-years") ///
+.                 write_table, table(singlepolicy) file(3_3_tabA9_single_policy
+> _cluster.tex) label(final_cluster_appendix_singlepolicy) ///
+>                         title("Sector cuts: single-policy interactions, 2+ st
+> ates and more than 10 state-years") ///
 >                         columns(`clus_cols') labels("`clus_labs'") singlepoli
 > cy
 (243 observations deleted)
@@ -3000,7 +2999,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3015,11 +3014,12 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.9-7.11: activity cuts
+.         **Tables A10-A12: activity cuts
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_9_any_dep_activit
+.                 write_table, table(table2_h1) file(3_3_tabA10_any_dep_activit
 > y.tex) label(final_activity_table2_h1) ///
->                         title("Activity cuts: Table 2 any DEP adoption") ///
+>                         title("Activity cuts: any DEP adoption x diaspora") /
+> //
 >                         columns(`act_cols') labels("`act_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3044,7 +3044,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3055,10 +3055,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_10_dep_category_a
-> ctivity.tex) label(final_activity_table4_h3) ///
->                         title("Activity cuts: Table 4 DEP type interactions")
->  ///
+.                 write_table, table(table4_h3) file(3_3_tabA11_dep_category_ac
+> tivity.tex) label(final_activity_table4_h3) ///
+>                         title("Activity cuts: category-level policy interacti
+> ons") ///
 >                         columns(`act_cols') labels("`act_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3083,7 +3083,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3097,8 +3097,8 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_11_single_poli
-> cy_activity.tex) label(final_activity_appendix_singlepolicy) ///
+.                 write_table, table(singlepolicy) file(3_3_tabA12_single_polic
+> y_activity.tex) label(final_activity_appendix_singlepolicy) ///
 >                         title("Activity cuts: single-policy interactions, 2+ 
 > states and more than 10 state-years") ///
 >                         columns(`act_cols') labels("`act_labs'") singlepolicy
@@ -3131,7 +3131,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3146,10 +3146,10 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.12-7.17: company-size samples
+.         **Tables A13, A14, 9, A15, 10, 11: company-size samples
 . 
-.                 write_table, table(h0) file(3_3_tab7_12_h0_company_size.tex) 
-> label(final_company_size_h0) ///
+.                 write_table, table(h0) file(3_3_tabA13_h0_company_size.tex) l
+> abel(final_company_size_h0) ///
 >                         title("H0: location-specific diaspora versus national
 >  Indian diaspora stock: company-size FDI samples") ///
 >                         columns(`size_cols') labels("`size_labs'")
@@ -3175,7 +3175,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -3186,10 +3186,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table1_baseline) file(3_3_tab7_13_diaspora
-> _only_company_size.tex) label(final_company_size_table1_baseline) ///
->                         title("Table 1: baseline diaspora-only PPML: company-
-> size FDI samples") ///
+.                 write_table, table(table1_baseline) file(3_3_tabA14_diaspora_
+> only_company_size.tex) label(final_company_size_table1_baseline) ///
+>                         title("Diaspora-only PPML: company-size FDI samples")
+>  ///
 >                         columns(`size_cols') labels("`size_labs'")
 (878 observations deleted)
 (10 missing values generated)
@@ -3213,7 +3213,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (878 observations deleted)
 (0 real changes made)
@@ -3226,10 +3226,10 @@ variable singletons was str4 now str9
 (5 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table2_h1) file(3_3_tab7_14_any_dep_compan
-> y_size.tex) label(final_company_size_table2_h1) ///
->                         title("Table 2: any DEP adoption x diaspora: company-
-> size FDI samples") ///
+.                 write_table, table(table2_h1) file(3_3_tab9_any_dep_company_s
+> ize.tex) label(final_company_size_table2_h1) ///
+>                         title("Any DEP adoption x diaspora: company-size FDI 
+> samples") ///
 >                         columns(`size_cols') labels("`size_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3253,7 +3253,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3264,10 +3264,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table3_h2) file(3_3_tab7_15_dep_count_comp
-> any_size.tex) label(final_company_size_table3_h2) ///
->                         title("Table 3: DEP-count intensity x diaspora: compa
-> ny-size FDI samples") ///
+.                 write_table, table(table3_h2) file(3_3_tabA15_dep_count_compa
+> ny_size.tex) label(final_company_size_table3_h2) ///
+>                         title("DEP-count intensity x diaspora: company-size F
+> DI samples") ///
 >                         columns(`size_cols') labels("`size_labs'")
 (875 observations deleted)
 (13 missing values generated)
@@ -3291,7 +3291,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -3302,10 +3302,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_16_dep_category_c
-> ompany_size.tex) label(final_company_size_table4_h3) ///
->                         title("Table 4: category-level policy interactions: c
-> ompany-size FDI samples") ///
+.                 write_table, table(table4_h3) file(3_3_tab10_dep_category_com
+> pany_size.tex) label(final_company_size_table4_h3) ///
+>                         title("Category-level policy interactions: company-si
+> ze FDI samples") ///
 >                         columns(`size_cols') labels("`size_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3329,7 +3329,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3343,8 +3343,8 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_17_single_poli
-> cy_company_size.tex) label(final_company_size_appendix_singlepolicy) ///
+.                 write_table, table(singlepolicy) file(3_3_tab11_single_policy
+> _company_size.tex) label(final_company_size_appendix_singlepolicy) ///
 >                         title("Company-size FDI samples: single-policy intera
 > ctions, 2+ states and more than 10 state-years") ///
 >                         columns(`size_cols') labels("`size_labs'") singlepoli
@@ -3377,7 +3377,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3392,12 +3392,12 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.18-7.20: ICT cuts by generation and education
+.         **Tables 12, A16, A17: ICT cuts by generation and education
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_18_any_dep_ict_ge
-> neration.tex) label(final_ict_generations_education_table2_h1) ///
->                         title("ICT deeper cuts: generations and education, Ta
-> ble 2") ///
+.                 write_table, table(table2_h1) file(3_3_tab12_any_dep_ict_gene
+> ration.tex) label(final_ict_generations_education_table2_h1) ///
+>                         title("ICT FDI by diaspora generation and education: 
+> any DEP adoption x diaspora") ///
 >                         columns(`gen_cols') labels("`gen_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3420,7 +3420,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3431,10 +3431,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_19_dep_category_i
-> ct_generation.tex) label(final_ict_generations_education_table4_h3) ///
->                         title("ICT deeper cuts: generations and education, Ta
-> ble 4") ///
+.                 write_table, table(table4_h3) file(3_3_tabA16_dep_category_ic
+> t_generation.tex) label(final_ict_generations_education_table4_h3) ///
+>                         title("ICT FDI by diaspora generation and education: 
+> category-level policy interactions") ///
 >                         columns(`gen_cols') labels("`gen_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3458,7 +3458,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3472,11 +3472,11 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_20_single_poli
-> cy_ict_generation.tex) label(final_ict_generations_education_appendix_singlep
-> olicy) ///
->                         title("ICT deeper cuts: generations and education sin
-> gle-policy interactions, 2+ states and more than 10 state-years") ///
+.                 write_table, table(singlepolicy) file(3_3_tabA17_single_polic
+> y_ict_generation.tex) label(final_ict_generations_education_appendix_singlepo
+> licy) ///
+>                         title("ICT FDI by diaspora generation and education: 
+> single-policy interactions, 2+ states and more than 10 state-years") ///
 >                         columns(`gen_cols') labels("`gen_labs'") singlepolicy
 (243 observations deleted)
 (645 missing values generated)
@@ -3506,7 +3506,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3521,12 +3521,12 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.21-7.23: ICT cuts, ICT workers vs everyone
+.         **Tables A18, 13, A19: ICT cuts, ICT workers vs everyone
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_21_any_dep_ict_wo
-> rker.tex) label(final_ict_worker_table2_h1) ///
->                         title("ICT deeper cuts: ICT worker comparison, Table 
-> 2") ///
+.                 write_table, table(table2_h1) file(3_3_tabA18_any_dep_ict_wor
+> ker.tex) label(final_ict_worker_table2_h1) ///
+>                         title("ICT FDI, ICT-worker diaspora: any DEP adoption
+>  x diaspora") ///
 >                         columns(`wrk_cols') labels("`wrk_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3549,7 +3549,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3560,10 +3560,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_22_dep_category_i
-> ct_worker.tex) label(final_ict_worker_table4_h3) ///
->                         title("ICT deeper cuts: ICT worker comparison, Table 
-> 4") ///
+.                 write_table, table(table4_h3) file(3_3_tab13_dep_category_ict
+> _worker.tex) label(final_ict_worker_table4_h3) ///
+>                         title("ICT FDI, ICT-worker diaspora: category-level p
+> olicy interactions") ///
 >                         columns(`wrk_cols') labels("`wrk_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3587,7 +3587,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3601,10 +3601,10 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_23_single_poli
-> cy_ict_worker.tex) label(final_ict_worker_appendix_singlepolicy) ///
->                         title("ICT deeper cuts: ICT worker single-policy inte
-> ractions, 2+ states and more than 10 state-years") ///
+.                 write_table, table(singlepolicy) file(3_3_tabA19_single_polic
+> y_ict_worker.tex) label(final_ict_worker_appendix_singlepolicy) ///
+>                         title("ICT FDI, ICT-worker diaspora: single-policy in
+> teractions, 2+ states and more than 10 state-years") ///
 >                         columns(`wrk_cols') labels("`wrk_labs'") singlepolicy
 (243 observations deleted)
 (645 missing values generated)
@@ -3634,7 +3634,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3649,12 +3649,12 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.24-7.26: ICT cuts by company size
+.         **Tables A20-A22: ICT cuts by company size
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_24_any_dep_ict_co
-> mpany_size.tex) label(final_ict_company_size_table2_h1) ///
->                         title("ICT deeper cuts: company size comparison, Tabl
-> e 2") ///
+.                 write_table, table(table2_h1) file(3_3_tabA20_any_dep_ict_com
+> pany_size.tex) label(final_ict_company_size_table2_h1) ///
+>                         title("ICT FDI by company size: any DEP adoption x di
+> aspora") ///
 >                         columns(`ictsize_cols') labels("`ictsize_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3678,7 +3678,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3689,10 +3689,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_25_dep_category_i
-> ct_company_size.tex) label(final_ict_company_size_table4_h3) ///
->                         title("ICT deeper cuts: company size comparison, Tabl
-> e 4") ///
+.                 write_table, table(table4_h3) file(3_3_tabA21_dep_category_ic
+> t_company_size.tex) label(final_ict_company_size_table4_h3) ///
+>                         title("ICT FDI by company size: category-level policy
+>  interactions") ///
 >                         columns(`ictsize_cols') labels("`ictsize_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3716,7 +3716,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3730,11 +3730,11 @@ variable singletons was str4 now str9
 variable separated was str2 now str5
 (7 real changes made)
 
-.                 write_table, table(singlepolicy) file(3_3_tab7_26_single_poli
-> cy_ict_company_size.tex) label(final_ict_company_size_appendix_singlepolicy) 
-> ///
->                         title("ICT deeper cuts: company size single-policy in
-> teractions, 2+ states and more than 10 state-years") ///
+.                 write_table, table(singlepolicy) file(3_3_tabA22_single_polic
+> y_ict_company_size.tex) label(final_ict_company_size_appendix_singlepolicy) /
+> //
+>                         title("ICT FDI by company size: single-policy interac
+> tions, 2+ states and more than 10 state-years") ///
 >                         columns(`ictsize_cols') labels("`ictsize_labs'") sing
 > lepolicy
 (243 observations deleted)
@@ -3765,7 +3765,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3780,12 +3780,12 @@ variable separated was str2 now str5
 (9 real changes made)
 
 . 
-.         **Tables 7.27-7.28: ICT cuts in tech-hub metros only
+.         **Tables A23-A24: ICT cuts in tech-hub metros only
 . 
-.                 write_table, table(table2_h1) file(3_3_tab7_27_any_dep_tech_h
-> ubs.tex) label(final_ict_company_size_techhubs_table2_h1) ///
->                         title("ICT deeper cuts: company size from tech hubs, 
-> Table 2") ///
+.                 write_table, table(table2_h1) file(3_3_tabA23_any_dep_tech_hu
+> bs.tex) label(final_ict_company_size_techhubs_table2_h1) ///
+>                         title("ICT FDI from tech-hub metros: any DEP adoption
+>  x diaspora") ///
 >                         columns(`hub_cols') labels("`hub_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -3809,7 +3809,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3820,10 +3820,10 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (0 real changes made)
 (0 real changes made)
 
-.                 write_table, table(table4_h3) file(3_3_tab7_28_dep_category_t
-> ech_hubs.tex) label(final_ict_company_size_techhubs_table4_h3) ///
->                         title("ICT deeper cuts: company size from tech hubs, 
-> Table 4") ///
+.                 write_table, table(table4_h3) file(3_3_tabA24_dep_category_te
+> ch_hubs.tex) label(final_ict_company_size_techhubs_table4_h3) ///
+>                         title("ICT FDI from tech-hub metros: category-level p
+> olicy interactions") ///
 >                         columns(`hub_cols') labels("`hub_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -3847,7 +3847,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3864,7 +3864,7 @@ variable separated was str2 now str5
 . 
 . ********
 . *
-. *       6. Table 7.29: State-specific policy interactions
+. *       6. Table 14: State-specific policy interactions
 . *
 . ********
 . 
@@ -4033,8 +4033,8 @@ variable separated was str2 now str5
 .         local fullwidth "@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidt
 > h-2\tabcolsep\relax}@{}"
 
-.         file open tab using "${tables}/3_3_tab7_29_state_specific_policies.te
-> x", write replace text
+.         file open tab using "${tables}/3_3_tab14_state_specific_policies.tex"
+> , write replace text
 
 .         file write tab "\begin{table}[!htbp]" _n
 
@@ -4113,14 +4113,14 @@ variable separated was str2 now str5
 . 
 . ********
 . *
-. *       7. Appendix Table B.1: One-at-a-time policy interactions by support
+. *       7. Table A25: One-at-a-time policy interactions by support
 . *
 . ********
 . 
 .         // Every policy we could estimate, for the four main samples (S1-S4 a
 > re
-.         // Samples 1-4 in Table 5.2), split into three panels by how many sta
-> tes
+.         // Samples 1-4 in Table 1), split into three panels by how many state
+> s
 .         // and state-years have the policy
 . 
 .         **Coefficients side by side
@@ -4235,7 +4235,7 @@ xij variables:
 >  S3 & S4 \\"
 
 . 
-.                 file open tab using "${tables}/3_3_tabB_1_single_policy_by_su
+.                 file open tab using "${tables}/3_3_tabA25_single_policy_by_su
 > pport.tex", write replace text
 
 .                 file write tab "\begin{longtable}{@{}>{\raggedright\arrayback
@@ -4379,8 +4379,7 @@ xij variables:
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/3_3_tab_ppml.lo
-> g
+       log:  /Users/calvin/wp_replication_package/Log_Files/3_3_tab_ppml.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:18
+ closed on:  12 Oct 2026, 05:42:36
 -------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 *********************************************************************************
 /*	TITLE:		0_master
 *	PURPOSE:	Runs the whole replication package in order, from the raw
-*				IPUMS extract through every table and figure in the thesis.
+*				IPUMS extract through every table and figure in the paper and online appendix.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_1012
 *	UPDATED:	2026_1012
@@ -62,8 +62,8 @@
 		// Set to 0 to skip package installs once they're on your machine.
 		global install_packages 1
 
-		// The thesis PPML tables accidentally left out one DEP (origin ID for
-		// non-citizens), see 3_3_tab_ppml.do. 0 reproduces the thesis, 1 adds it.
+		// The PPML tables (as in the thesis) leave out one DEP (origin ID for
+		// non-citizens) by accident, see 3_3_tab_ppml.do. 0 reproduces the paper, 1 adds it.
 		global include_origin_id 0
 
 ********

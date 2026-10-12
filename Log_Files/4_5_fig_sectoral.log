@@ -1,14 +1,14 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_5_fig_sectora
-> l.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_5_fig_sectoral.lo
+> g
   log type:  text
- opened on:  12 Oct 2026, 05:10:35
+ opened on:  12 Oct 2026, 05:42:47
 
 . 
 . ********
 . *
-. *       1. Figure 6.4: All companies by sector
+. *       1. Figure A25: All companies by sector
 . *
 . ********
 . 
@@ -25,10 +25,10 @@
 >                 blabel(bar, size(vsmall) format(%9.0fc)) ///
 >                 graphregion(color(white))
 
-.         graph export "${figures}/4_5_fig6_4_projects_by_cluster.png", replace
+.         graph export "${figures}/4_5_figA25_projects_by_cluster.png", replace
 >  width(3600) height(2400)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_5_fi
-> g6_4_projects_by_cluster.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_5_figA25
+> _projects_by_cluster.png written in PNG format
 
 . 
 . ********
@@ -39,8 +39,8 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_5_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_5_fig_sectora
-> l.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_5_fig_sectoral.lo
+> g
   log type:  text
- closed on:  12 Oct 2026, 05:10:38
+ closed on:  12 Oct 2026, 05:42:48
 -------------------------------------------------------------------------------

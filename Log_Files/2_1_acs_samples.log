@@ -1,9 +1,8 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_1_acs_samples
-> .log
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_1_acs_samples.log
   log type:  text
- opened on:  12 Oct 2026, 05:04:10
+ opened on:  12 Oct 2026, 05:37:13
 
 . 
 . ********
@@ -15,8 +14,8 @@
 .         // keepif:      who counts as diaspora in this sample
 .         // natif:       who counts toward the "national Indian diaspora" in e
 > ach metro
-.         //                      (only used by the H0 tables, Tables 7.1 and 7
-> .12)
+.         //                      (only used by the H0 tables, Tables 3 and A13
+> )
 .         // Andhra Pradesh (Telugu) is dropped for 2014-2017 everywhere becaus
 > e the
 .         // state split in two in 2014.
@@ -79,15 +78,14 @@
 > .
 .         // "lang_first" = all 8 state languages, "lang_all" = drops Bengali.
 . 
-.         **Samples 1-4 (all ages), used in Table 5.2 and the H0/baseline table
-> s
+.         **Samples 1-4 (all ages), used in Table 1 and the H0/baseline tables
 . 
 .                 build_sample, name("s1_firstgen_highed") ///
 >                         keepif("firstgen_india & lang_first & higher_ed == 1"
 > ) ///
 >                         natif("firstgen_india & higher_ed == 1")
 (131,541 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (205,355 observations deleted)
 (label YEAR already defined)
@@ -98,7 +96,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,285  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -113,15 +111,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (82,850 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s1_firstg
-    > en_highed.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s1_firstgen_h
+    > ighed.dta saved
 
 . 
 .                 build_sample, name("s3_firstgen_all") ///
 >                         keepif("firstgen_india & lang_first") ///
 >                         natif("firstgen_india")
 (67,412 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (170,449 observations deleted)
 (label YEAR already defined)
@@ -132,7 +130,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,899  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -147,15 +145,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (88,990 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s3_firstg
-    > en_all.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s3_firstgen_a
+    > ll.dta saved
 
 . 
 .                 build_sample, name("s4_allgen_all") ///
 >                         keepif("lang_all") ///
 >                         natif("lang_all & !ap_split")
 (141,378 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (141,378 observations deleted)
 (label YEAR already defined)
@@ -166,7 +164,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,650  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -181,8 +179,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (86,500 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s4_allgen
-    > _all.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s4_allgen_all
+    > .dta saved
 
 . 
 .         **Same samples, age 25 and up (the headline specs in Chapter 7)
@@ -192,7 +190,7 @@ file
 > & age >= 25") ///
 >                         natif("firstgen_india & higher_ed == 1 & age >= 25")
 (136,865 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (207,734 observations deleted)
 (label YEAR already defined)
@@ -203,7 +201,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,163  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -218,15 +216,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (81,630 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s1_firstg
-    > en_highed_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s1_firstgen_h
+    > ighed_25plus.dta saved
 
 . 
 .                 build_sample, name("s3_firstgen_all_25plus") ///
 >                         keepif("firstgen_india & lang_first & age >= 25") ///
 >                         natif("firstgen_india & age >= 25")
 (93,965 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (181,592 observations deleted)
 (label YEAR already defined)
@@ -237,7 +235,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,660  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -252,15 +250,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (86,600 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s3_firstg
-    > en_all_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s3_firstgen_a
+    > ll_25plus.dta saved
 
 . 
 .                 build_sample, name("s4_allgen_all_25plus") ///
 >                         keepif("lang_all & age >= 25") ///
 >                         natif("lang_all & age >= 25 & !ap_split")
 (172,155 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (172,155 observations deleted)
 (label YEAR already defined)
@@ -271,7 +269,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             8,249  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -286,18 +284,18 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (82,490 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s4_allgen
-    > _all_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s4_allgen_all
+    > _25plus.dta saved
 
 . 
-.         **ICT deeper cuts (Tables 7.18-7.28)
+.         **ICT deeper cuts (Tables 12-13, A16-A24)
 . 
 .                 build_sample, name("s24_allgen_highed_25plus") ///
 >                         keepif("lang_all & higher_ed == 1 & age >= 25") ///
 >                         natif("lang_all & higher_ed == 1 & age >= 25 & !ap_sp
 > lit")
 (203,281 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (203,281 observations deleted)
 (label YEAR already defined)
@@ -308,7 +306,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             7,755  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -323,8 +321,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now long
   (77,550 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s24_allge
-    > n_highed_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s24_allgen_hi
+    > ghed_25plus.dta saved
 
 . 
 .                 build_sample, name("s25_firstgen_all_ict_25plus") ///
@@ -333,7 +331,7 @@ file
 >                         natif("firstgen_india & lang_first & ict_worker & age
 >  >= 25 & !ap_split")
 (259,524 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (259,524 observations deleted)
 (label YEAR already defined)
@@ -344,7 +342,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             4,503  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -359,8 +357,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now int
   (63,042 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s25_first
-    > gen_all_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s25_firstgen_
+    > all_ict_25plus.dta saved
 
 . 
 .                 build_sample, name("s27_firstgen_highed_ict_25plus") ///
@@ -369,7 +367,7 @@ file
 >                         natif("firstgen_india & lang_first & higher_ed == 1 &
 >  ict_worker & age >= 25 & !ap_split")
 (259,954 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (259,954 observations deleted)
 (label YEAR already defined)
@@ -380,7 +378,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             4,435  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -395,8 +393,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now int
   (62,090 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s27_first
-    > gen_highed_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s27_firstgen_
+    > highed_ict_25plus.dta saved
 
 . 
 .                 build_sample, name("s28_allgen_highed_ict_25plus") ///
@@ -405,7 +403,7 @@ file
 >                         natif("lang_all & higher_ed == 1 & ict_worker & age >
 > = 25 & !ap_split")
 (259,979 observations deleted)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (259,979 observations deleted)
 (label YEAR already defined)
@@ -416,7 +414,7 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
     Not matched                             0
     Matched                             4,166  
     -----------------------------------------
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000004 saved
     as .dta format
 (label MET2013 already defined)
 (label LANGUAGED already defined)
@@ -431,8 +429,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000004 saved
   variable total_indian_diaspora_pop was double now int
   (58,324 bytes saved)
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_s28_allge
-    > n_highed_ict_25plus.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_s28_allgen_hi
+    > ghed_ict_25plus.dta saved
 
 . 
 . ********
@@ -460,8 +458,8 @@ Duplicates in terms of all variables
 
 .         save "${gendata}/2_1_top50_metros.dta", replace
 file
-    /Users/calvin/thesis_replication_package/Generated_Datasets/2_1_top50_met
-    > ros.dta saved
+    /Users/calvin/wp_replication_package/Generated_Datasets/2_1_top50_metros.
+    > dta saved
 
 . 
 . ********
@@ -472,8 +470,7 @@ file
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_1_acs_samples
-> .log
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_1_acs_samples.log
   log type:  text
- closed on:  12 Oct 2026, 05:04:12
+ closed on:  12 Oct 2026, 05:37:14
 -------------------------------------------------------------------------------

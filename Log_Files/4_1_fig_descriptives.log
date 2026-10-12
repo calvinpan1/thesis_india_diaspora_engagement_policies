@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_1_fig_descrip
-> tives.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_1_fig_descriptive
+> s.log
   log type:  text
- opened on:  12 Oct 2026, 05:10:18
+ opened on:  12 Oct 2026, 05:42:36
 
 . 
 .         // Matches the thesis font. Falls back to Stata's default if not inst
@@ -20,12 +20,12 @@
 .         // Expects data with indian_state ("Andhra Pradesh", ...), year, and 
 > the
 .         // variable to plot. Three styles:
-.         //      allstates:      adds an "All states" total line (Fig 5.7)
+.         //      allstates:      adds an "All states" total line (Fig A12)
 .         //      allindia:       adds an all-India total, split at 2014 when A
 > ndhra Pradesh
 .         //                              drops out so the line doesn't fake a 
-> drop (Figs 5.2, 5.6)
-.         //      statesonly:     just the 8 states (Figs 5.3-5.5, 5.9-5.11)
+> drop (Figs 3, A11)
+.         //      statesonly:     just the 8 states (Figs 4, A8-A10, A14-A15)
 . 
 .         capture program drop plot_by_state
 
@@ -34,8 +34,7 @@
 > g) STYLE(string) ///
 >                         [AUTOXLABEL]
   2. 
-.                 // Default ticks every other year, or let Stata pick (Fig 5.1
-> 1)
+.                 // Default ticks every other year, or let Stata pick (Fig 4)
 .                 local xlabel "2005(2)2017"
   3.                 if "`autoxlabel'" != "" local xlabel ""
   4.                 local states `""Andhra Pradesh" "Gujarat" "Karnataka" "Ker
@@ -107,7 +106,7 @@
 . 
 . ********
 . *
-. *       2. Figures 5.2-5.7: FDI by state, top-50 diaspora metros only
+. *       2. Figures 3, A8-A12: FDI by state, top-50 diaspora metros only
 . *
 . ********
 . 
@@ -117,38 +116,38 @@
 (7 vars, 104 obs)
 
 . 
-.         **Figures 5.4, 5.5, 5.7 (Andhra Pradesh shown as 0 after 2013)
+.         **Figures A9, A10, A12 (Andhra Pradesh shown as 0 after 2013)
 . 
 .                 // Value and jobs are states only: a total line would dwarf e
 > very state
 .                 plot_by_state, var(capital_real_all) style(statesonly) ///
 >                         title("FDI project value over time (top 50 metros onl
 > y)") ytitle("Real capital investment") ///
->                         file(4_1_fig5_4_fdi_value_by_state.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_4_fdi_value_by_state.png written in PNG format
+>                         file(4_1_figA9_fdi_value_by_state.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA9_
+> fdi_value_by_state.png written in PNG format
 
 .                 plot_by_state, var(jobs_all) style(statesonly) ///
 >                         title("All FDI jobs created over time (top 50 metros 
 > only)") ytitle("All FDI jobs created") ///
->                         file(4_1_fig5_5_fdi_jobs_by_state.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_5_fdi_jobs_by_state.png written in PNG format
+>                         file(4_1_figA10_fdi_jobs_by_state.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA10
+> _fdi_jobs_by_state.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_consgoods) style(allstates) /
 > //
 >                         title("Consumer goods FDI projects over time (top 50 
 > metros only)") ytitle("Consumer goods FDI projects") ///
->                         file(4_1_fig5_7_fdi_consumer_goods_by_state.png)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+>                         file(4_1_figA12_fdi_consumer_goods_by_state.png)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (variable fdi_projects_consgoods was byte, now double to accommodate using
        data's values)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_7_fdi_consumer_goods_by_state.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA12
+> _fdi_consumer_goods_by_state.png written in PNG format
 
 . 
-.         **Figures 5.2 (= 6.1), 5.3, 5.6 (Andhra Pradesh line stops in 2013)
+.         **Figures 3, A8, A11 (Andhra Pradesh line stops in 2013)
 . 
 .                 replace fdi_projects_all = . if indian_state == "Andhra Prade
 > sh" & year >= 2014
@@ -162,48 +161,48 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 .                 plot_by_state, var(fdi_projects_all) style(allindia) ///
 >                         title("FDI projects over time (top 50 metros only)") 
 > ytitle("FDI projects") ///
->                         file(4_1_fig5_2_fdi_projects_by_state.png)
+>                         file(4_1_fig3_fdi_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000003 saved
     as .dta format
 (variable fdi_projects_all was byte, now double to accommodate using data's
        values)
 (variable indian_state was str14, now str37 to accommodate using data's
        values)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_2_fdi_projects_by_state.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_fig3_f
+> di_projects_by_state.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_all) style(statesonly) ///
 >                         title("FDI projects over time (top 50 metros only)") 
 > ytitle("FDI projects") ///
->                         file(4_1_fig5_3_fdi_projects_by_state_no_total.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_3_fdi_projects_by_state_no_total.png written in PNG format
+>                         file(4_1_figA8_fdi_projects_by_state_no_total.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA8_
+> fdi_projects_by_state_no_total.png written in PNG format
 
 .                 plot_by_state, var(fdi_projects_ict) style(allindia) ///
 >                         title("ICT FDI projects over time (top 50 metros only
 > )") ytitle("ICT FDI projects") ///
->                         file(4_1_fig5_6_fdi_ict_projects_by_state.png)
+>                         file(4_1_figA11_fdi_ict_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 (10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000003 saved
     as .dta format
 (variable fdi_projects_ict was byte, now double to accommodate using data's
        values)
 (variable indian_state was str14, now str37 to accommodate using data's
        values)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_6_fdi_ict_projects_by_state.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA11
+> _fdi_ict_projects_by_state.png written in PNG format
 
 . 
 . ********
 . *
-. *       3. Figure 5.8: Gujarati diaspora in its 10 biggest metros
+. *       3. Figure A13: Gujarati diaspora in its 10 biggest metros
 . *
 . ********
 . 
@@ -231,7 +230,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 .                         tempfile top10
 
 .                         save `top10'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 
 .                 restore
@@ -276,15 +275,15 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
 > ze(8pt) region(lstyle(none))) ///
 >                         graphregion(color(white))
 
-.                 graph export "${figures}/4_1_fig5_8_gujarati_top10_metros.png
+.                 graph export "${figures}/4_1_figA13_gujarati_top10_metros.png
 > ", replace
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_8_gujarati_top10_metros.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA13
+> _gujarati_top10_metros.png written in PNG format
 
 . 
 . ********
 . *
-. *       4. Figures 5.9-5.10: diaspora population by state, top-50 metros
+. *       4. Figures A14-A15: diaspora population by state, top-50 metros
 . *
 . ********
 . 
@@ -333,7 +332,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
  20.                 end
 
 . 
-.         **Figure 5.9: first-gen (born in India), all 8 languages
+.         **Figure A14: first-gen (born in India), all 8 languages
 . 
 .                 diaspora_by_state, keepif(firstgen_india & lang_first)
 (label MET2013 already defined)
@@ -364,17 +363,17 @@ variable indian_state was str11 now str14
 .                 plot_by_state, var(n_people) style(statesonly) ///
 >                         title("First-gen all people (18+) over time (top 50 m
 > etros only)") ytitle("Estimated population") ///
->                         file(4_1_fig5_9_firstgen_diaspora_by_state.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_9_firstgen_diaspora_by_state.png written in PNG format
+>                         file(4_1_figA14_firstgen_diaspora_by_state.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA14
+> _firstgen_diaspora_by_state.png written in PNG format
 
 . 
-.         **Figure 5.10: all generations, all 8 languages
+.         **Figure A15: all generations, all 8 languages
 . 
 .                 // Includes Bengali speakers of any birthplace, as in the the
 > sis figure.
-.                 // (The all-gen regression sample drops Bengali, see Table 5.
-> 2.)
+.                 // (The all-gen regression sample drops Bengali, see Table 1.
+> )
 .                 diaspora_by_state, keepif(lang_first)
 (label MET2013 already defined)
 
@@ -404,14 +403,14 @@ variable indian_state was str11 now str14
 .                 plot_by_state, var(n_people) style(statesonly) ///
 >                         title("Migrant stock over time (top 50 metros only)")
 >  ytitle("Estimated migrant stock") ///
->                         file(4_1_fig5_10_allgen_diaspora_by_state.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_10_allgen_diaspora_by_state.png written in PNG format
+>                         file(4_1_figA15_allgen_diaspora_by_state.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA15
+> _allgen_diaspora_by_state.png written in PNG format
 
 . 
 . ********
 . *
-. *       5. Figures 5.11-5.14 and 8.2: DEPs
+. *       5. Figures 4, A18-A20, A23: DEPs
 . *
 . ********
 . 
@@ -421,7 +420,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 (196 real changes made)
 
 . 
-.         **Figure 5.11 (= 6.2): total DEPs by state
+.         **Figure 4: total DEPs by state
 . 
 .                 preserve
 
@@ -432,14 +431,14 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 > xlabel ///
 >                                 title("Total DEPs over time by state") ytitle
 > ("Total DEPs") ///
->                                 file(4_1_fig5_11_total_deps_by_state.png)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_11_total_deps_by_state.png written in PNG format
+>                                 file(4_1_fig4_total_deps_by_state.png)
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_fig4_t
+> otal_deps_by_state.png written in PNG format
 
 .                 restore
 
 . 
-.         **Figure 5.12: economic vs non-economic DEPs, all states stacked
+.         **Figure A18: economic vs non-economic DEPs, all states stacked
 . 
 .                 preserve
 
@@ -468,10 +467,10 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 >  region(lstyle(none))) ///
 >                                 graphregion(color(white))
 
-.                         graph export "${figures}/4_1_fig5_12_econ_vs_nonecon_
-> deps.png", replace
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_12_econ_vs_nonecon_deps.png written in PNG format
+.                         graph export "${figures}/4_1_figA18_econ_vs_nonecon_d
+> eps.png", replace
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA18
+> _econ_vs_nonecon_deps.png written in PNG format
 
 .                 restore
 
@@ -490,7 +489,7 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
   3.                 }
 
 . 
-.         **Figure 8.2: economic DEP types over time, all states
+.         **Figure A23: economic DEP types over time, all states
 . 
 .                 preserve
 
@@ -523,15 +522,15 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 > ls(3) size(9pt) region(lstyle(none))) ///
 >                                 graphregion(color(white))
 
-.                         graph export "${figures}/4_1_fig8_2_econ_dep_types.pn
+.                         graph export "${figures}/4_1_figA23_econ_dep_types.pn
 > g", replace
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g8_2_econ_dep_types.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA23
+> _econ_dep_types.png written in PNG format
 
 .                 restore
 
 . 
-.         **Figures 5.13 and 5.14 (= 8.1): DEP categories by state in 2017
+.         **Figures A19 and A20: DEP categories by state in 2017
 . 
 .                 keep if year == 2017
 (189 observations deleted)
@@ -549,9 +548,9 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 >  Economic DEPs by State (2017)", ///
 >                                 "Breakdown of Non-Economic DEPs by State (201
 > 7)")
- 10.                         local file = cond("`group'" == "econ", "4_1_fig5_1
-> 4_econ_deps_by_state_2017.png", ///
->                                 "4_1_fig5_13_nonecon_deps_by_state_2017.png")
+ 10.                         local file = cond("`group'" == "econ", "4_1_figA20
+> _econ_deps_by_state_2017.png", ///
+>                                 "4_1_figA19_nonecon_deps_by_state_2017.png")
  11. 
 .                         graph hbar (asis) ``group'', ///
 >                                 over(indian_state, sort(sort_total) descendin
@@ -566,10 +565,10 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
  12.                         graph export "${figures}/`file'", replace
  13.                         drop sort_total
  14.                 }
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_13_nonecon_deps_by_state_2017.png written in PNG format
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
-> g5_14_econ_deps_by_state_2017.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA19
+> _nonecon_deps_by_state_2017.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA20
+> _econ_deps_by_state_2017.png written in PNG format
 
 . 
 . ********
@@ -580,8 +579,8 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_1_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_1_fig_descrip
-> tives.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_1_fig_descriptive
+> s.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:26
+ closed on:  12 Oct 2026, 05:42:42
 -------------------------------------------------------------------------------

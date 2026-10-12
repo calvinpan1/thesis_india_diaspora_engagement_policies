@@ -1,6 +1,6 @@
 *********************************************************************************
 /*	TITLE:		3_1_tab_descriptives
-*	PURPOSE:	Table 5.2: number of US metro x Indian state x year observations
+*	PURPOSE:	Table 1: number of US metro x Indian state x year observations
 *				in each of the four main samples.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
@@ -9,10 +9,10 @@
 *				"${gendata}/2_4_s3_firstgen_all.dta"
 *				"${gendata}/2_4_s4_allgen_all.dta"
 *	PRODUCES:	Figures:	No
-*				Tables:		"${tables}/3_1_tab5_2_samples_by_n.tex"
+*				Tables:		"${tables}/3_1_tab1_samples_by_n.tex"
 *				Datasets:	No
 *	CONTENTS:	0: Start log file
-*				1: Table 5.2, samples by number of observations
+*				1: Table 1, samples by number of observations
 *				2: Close log file
 */
 *********************************************************************************
@@ -22,7 +22,7 @@
 
 ********
 *
-*	1. Table 5.2: Samples by number of observations
+*	1. Table 1: Samples by number of observations
 *
 ********
 
@@ -37,7 +37,7 @@
 
 	**Write the table
 
-		file open tab using "${tables}/3_1_tab5_2_samples_by_n.tex", write replace text
+		file open tab using "${tables}/3_1_tab1_samples_by_n.tex", write replace text
 		file write tab "\begin{table}[htbp]" _n
 		file write tab "\centering" _n
 		file write tab "\caption{Samples by number of observations}" _n

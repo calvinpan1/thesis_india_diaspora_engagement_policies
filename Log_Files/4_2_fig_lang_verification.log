@@ -1,9 +1,9 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_2_fig_lang_ve
-> rification.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_2_fig_lang_verifi
+> cation.log
   log type:  text
- opened on:  12 Oct 2026, 05:10:26
+ opened on:  12 Oct 2026, 05:42:42
 
 . 
 .         capture graph set window fontface "CMU Serif"
@@ -25,7 +25,7 @@
 .         tempfile speakers
 
 .         save `speakers'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 
 . 
@@ -37,9 +37,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 . 
 .         // language code, name, birthplace code of the other country, its nam
 > e, figure
-.         local figs `" "3113 Punjabi 52140 Pakistan 4_4" "4005 Tamil 52150 Sri
-> _Lanka 4_5" "3112 Bengali 52110 Bangladesh 4_6" "4011 Nepali 52400 Nepal 4_7"
->  "'
+.         local figs `" "3113 Punjabi 52140 Pakistan A4" "4005 Tamil 52150 Sri_
+> Lanka A5" "3112 Bengali 52110 Bangladesh A6" "4011 Nepali 52400 Nepal A7" "'
 
 . 
 .         foreach f of local figs {
@@ -85,26 +84,26 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
 (13 real changes made)
 (13 real changes made)
 (365 real changes made)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
-> g4_4_punjabi_birthplace.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_2_figA4_
+> punjabi_birthplace.png written in PNG format
 (5,550 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (391 real changes made)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
-> g4_5_tamil_birthplace.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_2_figA5_
+> tamil_birthplace.png written in PNG format
 (5,477 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (392 real changes made)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
-> g4_6_bengali_birthplace.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_2_figA6_
+> bengali_birthplace.png written in PNG format
 (5,894 observations deleted)
 (13 real changes made)
 (13 real changes made)
 (191 real changes made)
-file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
-> g4_7_nepali_birthplace.png written in PNG format
+file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_2_figA7_
+> nepali_birthplace.png written in PNG format
 
 . 
 . ********
@@ -115,8 +114,8 @@ file /Users/calvin/thesis_replication_package/Tables_and_Figures/figures/4_2_fi
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/4_2_fig_lang_ve
-> rification.log
+       log:  /Users/calvin/wp_replication_package/Log_Files/4_2_fig_lang_verifi
+> cation.log
   log type:  text
- closed on:  12 Oct 2026, 05:10:27
+ closed on:  12 Oct 2026, 05:42:43
 -------------------------------------------------------------------------------

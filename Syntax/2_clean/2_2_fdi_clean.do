@@ -133,7 +133,7 @@
 		drop if missing(languaged)
 		drop if languaged == 4003 & inrange(year, 2014, 2017)	// AP split in 2014
 
-	**Company size (Tables 7.12-7.17, 7.24-7.28)
+	**Company size (Tables 9-11, A13-A15, A20-A24)
 
 		// A company is "large" if it's ever public or any of its projects is at
 		// or above the 75th percentile of jobs or capital. "Small" is everyone
@@ -208,7 +208,7 @@
 *
 ********
 
-	// Feeds Figures 5.2-5.7: projects, capital and jobs by Indian state-year,
+	// Feeds Figures 3 and A8-A12: projects, capital and jobs by Indian state-year,
 	// counting only projects from the top-50 diaspora metros
 	use `projects', clear
 	merge m:1 met2013 using "${gendata}/2_1_top50_metros.dta", keep(match) nogen
@@ -244,7 +244,7 @@
 *
 ********
 
-	// Feeds Figure 6.4. All projects in the sectoral file, every year.
+	// Feeds Figure A25. All projects in the sectoral file, every year.
 	import delimited using "${fdiraw}/0428.fdi.sectoral.csv", clear varnames(1) stringcols(_all)
 	destring id, replace ignore("$, ") force
 	replace cluster = "Missing/Not specified" if trim(cluster) == ""
@@ -258,7 +258,7 @@
 *
 ********
 
-	// Feeds Figure 5.1. The "Indian name?" column was hand-coded from each
+	// Feeds Figure 2. The "Indian name?" column was hand-coded from each
 	// project's first listed contact, using a name-origin classifier
 	// (Dhingra 2023) and checked in Excel.
 	import delimited using "${fdiraw}/investor_name_results.csv", ///

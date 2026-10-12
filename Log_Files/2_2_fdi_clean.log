@@ -1,9 +1,8 @@
 -------------------------------------------------------------------------------
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_2_fdi_clean.l
-> og
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_2_fdi_clean.log
   log type:  text
- opened on:  12 Oct 2026, 05:04:12
+ opened on:  12 Oct 2026, 05:37:14
 
 . 
 .         global fdiraw "${rawdata}/fdi_private"
@@ -74,7 +73,7 @@ Duplicates in terms of id
 .                 tempfile public_flags
 
 .                 save `public_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
     as .dta format
 
 . 
@@ -116,7 +115,7 @@ Duplicates in terms of id
 .                 tempfile activity_flags
 
 .                 save `activity_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
     as .dta format
 
 . 
@@ -229,7 +228,7 @@ jobscreated: all characters numeric; replaced as int
 (130 observations deleted)
 
 . 
-.         **Company size (Tables 7.12-7.17, 7.24-7.28)
+.         **Company size (Tables 9-11, A13-A15, A20-A24)
 . 
 .                 // A company is "large" if it's ever public or any of its pro
 > jects is at
@@ -352,7 +351,7 @@ jobscreated: all characters numeric; replaced as int
 .                 tempfile projects
 
 .                 save `projects'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000003 saved
     as .dta format
 
 . 
@@ -374,8 +373,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000003 saved
 
 .         export delimited using "${fdiout}/2_2_fdi_counts_metro_language_year.
 > csv", replace
-file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_cou
-> nts_metro_language_year.csv saved
+file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_counts_
+> metro_language_year.csv saved
 
 . 
 . ********
@@ -384,8 +383,8 @@ file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_cou
 . *
 . ********
 . 
-.         // Feeds Figures 5.2-5.7: projects, capital and jobs by Indian state-
-> year,
+.         // Feeds Figures 3 and A8-A12: projects, capital and jobs by Indian s
+> tate-year,
 .         // counting only projects from the top-50 diaspora metros
 .         use `projects', clear
 
@@ -462,8 +461,8 @@ variable indian_state was str11 now str14
 
 .         export delimited using "${fdiout}/2_2_fdi_state_year_top50.csv", data
 > fmt replace
-file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_sta
-> te_year_top50.csv saved
+file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_state_y
+> ear_top50.csv saved
 
 . 
 . ********
@@ -472,7 +471,7 @@ file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_sta
 . *
 . ********
 . 
-.         // Feeds Figure 6.4. All projects in the sectoral file, every year.
+.         // Feeds Figure A25. All projects in the sectoral file, every year.
 .         import delimited using "${fdiraw}/0428.fdi.sectoral.csv", clear varna
 > mes(1) stringcols(_all)
 (encoding automatically selected: ISO-8859-1)
@@ -490,8 +489,8 @@ id: all characters numeric; replaced as int
 
 .         export delimited using "${fdiout}/2_2_fdi_projects_by_cluster.csv", r
 > eplace
-file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_pro
-> jects_by_cluster.csv saved
+file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_project
+> s_by_cluster.csv saved
 
 . 
 . ********
@@ -500,8 +499,7 @@ file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_fdi_pro
 . *
 . ********
 . 
-.         // Feeds Figure 5.1. The "Indian name?" column was hand-coded from ea
-> ch
+.         // Feeds Figure 2. The "Indian name?" column was hand-coded from each
 .         // project's first listed contact, using a name-origin classifier
 .         // (Dhingra 2023) and checked in Excel.
 .         import delimited using "${fdiraw}/investor_name_results.csv", ///
@@ -570,7 +568,7 @@ capital: all characters numeric; replaced as double
 .                         tempfile project_shares
 
 .                         save `project_shares'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000005 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000005 saved
     as .dta format
 
 .                 restore
@@ -639,8 +637,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St88312.000005 saved
 
 .         export delimited using "${fdiout}/2_2_investor_name_shares.csv", data
 > fmt replace
-file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_investo
-> r_name_shares.csv saved
+file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_investor_na
+> me_shares.csv saved
 
 .         list
 
@@ -660,8 +658,7 @@ file /Users/calvin/thesis_replication_package/Raw_Data/fdi_extracts/2_2_investo
 . 
 .         log close stage
       name:  stage
-       log:  /Users/calvin/thesis_replication_package/Log_Files/2_2_fdi_clean.l
-> og
+       log:  /Users/calvin/wp_replication_package/Log_Files/2_2_fdi_clean.log
   log type:  text
- closed on:  12 Oct 2026, 05:04:19
+ closed on:  12 Oct 2026, 05:37:15
 -------------------------------------------------------------------------------

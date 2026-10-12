@@ -1,7 +1,7 @@
 *********************************************************************************
 /*	TITLE:		1_1_acs_clean
 *	PURPOSE:	Reads the raw IPUMS ACS extract once and keeps only the people
-*				the thesis ever uses: anyone born in India, plus anyone who
+*				the paper ever uses: anyone born in India, plus anyone who
 *				speaks one of the Indian state languages (or Nepali, for the
 *				birthplace check in Chapter 4). Everything downstream starts
 *				from this much smaller file.

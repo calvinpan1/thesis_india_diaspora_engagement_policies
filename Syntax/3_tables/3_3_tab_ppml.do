@@ -1,6 +1,7 @@
 *********************************************************************************
 /*	TITLE:		3_3_tab_ppml
-*	PURPOSE:	All the PPML gravity results: Tables 7.1-7.29 and Appendix B.1.
+*	PURPOSE:	All the PPML gravity results: Tables 3-14 in the paper and
+*				Tables A8-A25 in the online appendix.
 *				Each model regresses FDI projects from a US metro to an Indian
 *				state on the size of that state's diaspora in the metro, alone
 *				(H0, Table 1) or interacted with the state's DEPs (Tables 2-4
@@ -11,8 +12,7 @@
 *	CALLS UPON:	"${gendata}/2_4_s*.dta"
 *				"${gendata}/2_3_dep_turnons_long.dta"
 *	PRODUCES:	Figures:	No
-*				Tables:		"${tables}/3_3_tab7_*.tex" (29 tables)
-*							"${tables}/3_3_tabB_1_single_policy_by_support.tex"
+*				Tables:		"${tables}/3_3_tab*.tex" (12 paper tables, 18 appendix tables)
 *				Datasets:	"${gendata}/3_3_ppml_results.dta"
 *							"${gendata}/3_3_ppml_accounting.dta"
 *							"${gendata}/3_3_policy_support.dta"
@@ -21,9 +21,9 @@
 *				2: Programs that prep data and run each kind of model
 *				3: Run every model
 *				4: Programs that write the LaTeX tables
-*				5: Tables 7.1-7.28
-*				6: Table 7.29, state-specific policy interactions
-*				7: Appendix Table B.1, single-policy results by support
+*				5: Tables 3-13 and A8-A24
+*				6: Table 14, state-specific policy interactions
+*				7: Table A25, single-policy results by support
 *				8: Close log file
 */
 *********************************************************************************
@@ -58,7 +58,7 @@
 		// The thesis tables were run without this policy: the original code
 		// renamed it in one place but not another, so it silently dropped out
 		// of the DEP counts, the State Bureaucracy category, and the
-		// single-policy tables. Left out here so the tables match the thesis.
+		// single-policy tables. Left out here so the tables match the thesis and paper.
 		// Set include_origin_id to 1 in 0_master.do to put it back.
 		if "${include_origin_id}" != "1" drop if item == "origin_id_non_citizens"
 
@@ -106,8 +106,8 @@
 
 			use "${gendata}/2_4_`file'.dta", clear
 
-			// Tech-hub check (Tables 7.27-7.28): metros where big tech firms are
-			// headquartered, see Appendix Table C.1
+			// Tech-hub check (Tables A23-A24): metros where big tech firms are
+			// headquartered, see Online Appendix Table A26
 			if "`techhubs'" != "" {
 				keep if inlist(met2013, 42660, 41940, 41860, 38900, 14260, 38060, 41740) ///
 					| inlist(met2013, 12420, 39340, 41620, 31540, 22220, 39580, 20500)
@@ -170,7 +170,7 @@
 				("`policy'") (r(estimate)) (r(se)) (r(p))
 		end
 
-	**H0 (Tables 7.1, 7.12): local vs national diaspora, metro FE + state-year FE
+	**H0 (Tables 3, A13): local vs national diaspora, metro FE + state-year FE
 
 		capture program drop run_h0
 		program define run_h0
@@ -190,7 +190,7 @@
 			}
 		end
 
-	**Table 1 (Table 7.13): diaspora only, two sets of fixed effects
+	**Diaspora-only models (Table A14), two sets of fixed effects
 
 		capture program drop run_table1
 		program define run_table1
@@ -295,7 +295,7 @@
 	// reuse the same model under a different column label, those get copied
 	// at the end of this section instead of being re-estimated.
 
-	**Baseline samples (Tables 7.1-7.5)
+	**Baseline samples (Tables 3-7)
 
 		run_model, sampleid(15) file(s3_firstgen_all)			outcome(fdi_projects_ict) h0 table2 table3 table4 singlepolicy
 		run_model, sampleid(11) file(s1_firstgen_highed_25plus)	outcome(fdi_projects_all) h0 table2 table3 table4 singlepolicy
@@ -303,7 +303,7 @@
 		run_model, sampleid(13) file(s4_allgen_all_25plus)		outcome(fdi_projects_all) h0 table2 table3 table4 singlepolicy
 		run_model, sampleid(14) file(s4_allgen_all)				outcome(fdi_projects_all) h0 table2 table3 table4 singlepolicy
 
-	**Sector (cluster) and activity cuts (Tables 7.6-7.11), first-gen 25+ high-ed
+	**Sector (cluster) and activity cuts (Tables 8, A8-A12), first-gen 25+ high-ed
 
 		run_model, sampleid(22) file(s1_firstgen_highed_25plus) outcome(fdi_projects_ict)				table2 table4 singlepolicy
 		run_model, sampleid(23) file(s1_firstgen_highed_25plus) outcome(fdi_projects_profsvc)			table2 table4 singlepolicy
@@ -318,14 +318,14 @@
 		run_model, sampleid(34) file(s1_firstgen_highed_25plus) outcome(fdi_projects_all_mfg)			table2 table4 singlepolicy
 		run_model, sampleid(35) file(s1_firstgen_highed_25plus) outcome(fdi_projects_business_services)	table2 table4 singlepolicy
 
-	**Company-size samples (Tables 7.12-7.17)
+	**Company-size samples (Tables 9-11, A13-A15)
 
 		run_model, sampleid(41) file(s1_firstgen_highed_25plus) outcome(fdi_projects_all_small75) h0 table1 table2 table3 table4 singlepolicy
 		run_model, sampleid(42) file(s1_firstgen_highed_25plus) outcome(fdi_projects_ict_small75) h0 table1 table2 table3 table4 singlepolicy
 		run_model, sampleid(43) file(s1_firstgen_highed_25plus) outcome(fdi_projects_all_large75) h0 table1 table2 table3 table4 singlepolicy
 		run_model, sampleid(44) file(s1_firstgen_highed_25plus) outcome(fdi_projects_ict_large75) h0 table1 table2 table3 table4 singlepolicy
 
-	**ICT deeper cuts (Tables 7.18-7.28), all with ICT FDI as the outcome
+	**ICT deeper cuts (Tables 12-13, A16-A24), all with ICT FDI as the outcome
 
 		run_model, sampleid(51) file(s3_firstgen_all_25plus)			outcome(fdi_projects_ict)			table2 table4 singlepolicy
 		run_model, sampleid(52) file(s4_allgen_all_25plus)				outcome(fdi_projects_ict)			table2 table4 singlepolicy
@@ -339,7 +339,7 @@
 		run_model, sampleid(83) file(s3_firstgen_all_25plus)			outcome(fdi_projects_ict_small75)	table2 table4 techhubs
 		run_model, sampleid(84) file(s25_firstgen_all_ict_25plus)		outcome(fdi_projects_ict_small75)	table2 table4 techhubs
 
-	**Appendix Table B.1: the four main samples from Table 5.2, all policies
+	**Table A25: the four main samples from Table 1, all policies
 
 		run_model, sampleid(1) file(s1_firstgen_highed)	outcome(fdi_projects_ict) singlepolicy
 		run_model, sampleid(2) file(s1_firstgen_highed)	outcome(fdi_projects_all) singlepolicy
@@ -368,7 +368,7 @@
 *
 ********
 
-	**Write a results table in the thesis format
+	**Write a results table in the paper format
 
 		// columns() holds one sample ID per column, labels() the matching
 		// column headers separated by "|". singlepolicy adds the # States and
@@ -525,7 +525,7 @@
 
 ********
 *
-*	5. Tables 7.1-7.28
+*	5. Tables 3-13 and A8-A24
 *
 ********
 
@@ -555,117 +555,117 @@
 		local hub_cols "81 82 83 84"
 		local hub_labs "First-gen 25+ all diaspora, ICT FDI, all companies, tech hubs | First-gen 25+ all diaspora, ICT FDI, all companies, ICT worker, tech hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, tech hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, ICT worker, tech hubs"
 
-	**Tables 7.1-7.5: baseline all-FDI samples
+	**Tables 3-7: baseline all-FDI samples
 
-		write_table, table(h0) file(3_3_tab7_1_h0_baseline.tex) label(final_baseline_h0) ///
+		write_table, table(h0) file(3_3_tab3_h0_baseline.tex) label(final_baseline_h0) ///
 			title("H0: location-specific diaspora versus national Indian diaspora stock: baseline all-FDI samples") ///
 			columns(`base_cols') labels("`base_labs'")
-		write_table, table(table2_h1) file(3_3_tab7_2_any_dep_baseline.tex) label(final_baseline_table2_h1) ///
-			title("Table 2: any DEP adoption x diaspora: baseline all-FDI samples") ///
+		write_table, table(table2_h1) file(3_3_tab4_any_dep_baseline.tex) label(final_baseline_table2_h1) ///
+			title("Any DEP adoption x diaspora: baseline all-FDI samples") ///
 			columns(`base_cols') labels("`base_labs'")
-		write_table, table(table3_h2) file(3_3_tab7_3_dep_count_baseline.tex) label(final_baseline_table3_h2) ///
-			title("Table 3: DEP-count intensity x diaspora: baseline all-FDI samples") ///
+		write_table, table(table3_h2) file(3_3_tab5_dep_count_baseline.tex) label(final_baseline_table3_h2) ///
+			title("DEP-count intensity x diaspora: baseline all-FDI samples") ///
 			columns(`base_cols') labels("`base_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_4_dep_category_baseline.tex) label(final_baseline_table4_h3) ///
-			title("Table 4: category-level policy interactions: baseline all-FDI samples") ///
+		write_table, table(table4_h3) file(3_3_tab6_dep_category_baseline.tex) label(final_baseline_table4_h3) ///
+			title("Category-level policy interactions: baseline all-FDI samples") ///
 			columns(`base_cols') labels("`base_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_5_single_policy_baseline.tex) label(final_baseline_appendix_singlepolicy) ///
+		write_table, table(singlepolicy) file(3_3_tab7_single_policy_baseline.tex) label(final_baseline_appendix_singlepolicy) ///
 			title("Baseline all-FDI samples: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`base_cols') labels("`base_labs'") singlepolicy
 
-	**Tables 7.6-7.8: sector (cluster) cuts
+	**Tables 8, A8, A9: sector (cluster) cuts
 
-		write_table, table(table2_h1) file(3_3_tab7_6_any_dep_cluster.tex) label(final_cluster_table2_h1) ///
-			title("Sector cuts: Table 2 any DEP adoption") ///
+		write_table, table(table2_h1) file(3_3_tab8_any_dep_cluster.tex) label(final_cluster_table2_h1) ///
+			title("Sector cuts: any DEP adoption x diaspora") ///
 			columns(`clus_cols') labels("`clus_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_7_dep_category_cluster.tex) label(final_cluster_table4_h3) ///
-			title("Cluster cuts: Table 4 DEP type interactions") ///
+		write_table, table(table4_h3) file(3_3_tabA8_dep_category_cluster.tex) label(final_cluster_table4_h3) ///
+			title("Sector cuts: category-level policy interactions") ///
 			columns(`clus_cols') labels("`clus_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_8_single_policy_cluster.tex) label(final_cluster_appendix_singlepolicy) ///
-			title("Cluster cuts: single-policy interactions, 2+ states and more than 10 state-years") ///
+		write_table, table(singlepolicy) file(3_3_tabA9_single_policy_cluster.tex) label(final_cluster_appendix_singlepolicy) ///
+			title("Sector cuts: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`clus_cols') labels("`clus_labs'") singlepolicy
 
-	**Tables 7.9-7.11: activity cuts
+	**Tables A10-A12: activity cuts
 
-		write_table, table(table2_h1) file(3_3_tab7_9_any_dep_activity.tex) label(final_activity_table2_h1) ///
-			title("Activity cuts: Table 2 any DEP adoption") ///
+		write_table, table(table2_h1) file(3_3_tabA10_any_dep_activity.tex) label(final_activity_table2_h1) ///
+			title("Activity cuts: any DEP adoption x diaspora") ///
 			columns(`act_cols') labels("`act_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_10_dep_category_activity.tex) label(final_activity_table4_h3) ///
-			title("Activity cuts: Table 4 DEP type interactions") ///
+		write_table, table(table4_h3) file(3_3_tabA11_dep_category_activity.tex) label(final_activity_table4_h3) ///
+			title("Activity cuts: category-level policy interactions") ///
 			columns(`act_cols') labels("`act_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_11_single_policy_activity.tex) label(final_activity_appendix_singlepolicy) ///
+		write_table, table(singlepolicy) file(3_3_tabA12_single_policy_activity.tex) label(final_activity_appendix_singlepolicy) ///
 			title("Activity cuts: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`act_cols') labels("`act_labs'") singlepolicy
 
-	**Tables 7.12-7.17: company-size samples
+	**Tables A13, A14, 9, A15, 10, 11: company-size samples
 
-		write_table, table(h0) file(3_3_tab7_12_h0_company_size.tex) label(final_company_size_h0) ///
+		write_table, table(h0) file(3_3_tabA13_h0_company_size.tex) label(final_company_size_h0) ///
 			title("H0: location-specific diaspora versus national Indian diaspora stock: company-size FDI samples") ///
 			columns(`size_cols') labels("`size_labs'")
-		write_table, table(table1_baseline) file(3_3_tab7_13_diaspora_only_company_size.tex) label(final_company_size_table1_baseline) ///
-			title("Table 1: baseline diaspora-only PPML: company-size FDI samples") ///
+		write_table, table(table1_baseline) file(3_3_tabA14_diaspora_only_company_size.tex) label(final_company_size_table1_baseline) ///
+			title("Diaspora-only PPML: company-size FDI samples") ///
 			columns(`size_cols') labels("`size_labs'")
-		write_table, table(table2_h1) file(3_3_tab7_14_any_dep_company_size.tex) label(final_company_size_table2_h1) ///
-			title("Table 2: any DEP adoption x diaspora: company-size FDI samples") ///
+		write_table, table(table2_h1) file(3_3_tab9_any_dep_company_size.tex) label(final_company_size_table2_h1) ///
+			title("Any DEP adoption x diaspora: company-size FDI samples") ///
 			columns(`size_cols') labels("`size_labs'")
-		write_table, table(table3_h2) file(3_3_tab7_15_dep_count_company_size.tex) label(final_company_size_table3_h2) ///
-			title("Table 3: DEP-count intensity x diaspora: company-size FDI samples") ///
+		write_table, table(table3_h2) file(3_3_tabA15_dep_count_company_size.tex) label(final_company_size_table3_h2) ///
+			title("DEP-count intensity x diaspora: company-size FDI samples") ///
 			columns(`size_cols') labels("`size_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_16_dep_category_company_size.tex) label(final_company_size_table4_h3) ///
-			title("Table 4: category-level policy interactions: company-size FDI samples") ///
+		write_table, table(table4_h3) file(3_3_tab10_dep_category_company_size.tex) label(final_company_size_table4_h3) ///
+			title("Category-level policy interactions: company-size FDI samples") ///
 			columns(`size_cols') labels("`size_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_17_single_policy_company_size.tex) label(final_company_size_appendix_singlepolicy) ///
+		write_table, table(singlepolicy) file(3_3_tab11_single_policy_company_size.tex) label(final_company_size_appendix_singlepolicy) ///
 			title("Company-size FDI samples: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`size_cols') labels("`size_labs'") singlepolicy
 
-	**Tables 7.18-7.20: ICT cuts by generation and education
+	**Tables 12, A16, A17: ICT cuts by generation and education
 
-		write_table, table(table2_h1) file(3_3_tab7_18_any_dep_ict_generation.tex) label(final_ict_generations_education_table2_h1) ///
-			title("ICT deeper cuts: generations and education, Table 2") ///
+		write_table, table(table2_h1) file(3_3_tab12_any_dep_ict_generation.tex) label(final_ict_generations_education_table2_h1) ///
+			title("ICT FDI by diaspora generation and education: any DEP adoption x diaspora") ///
 			columns(`gen_cols') labels("`gen_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_19_dep_category_ict_generation.tex) label(final_ict_generations_education_table4_h3) ///
-			title("ICT deeper cuts: generations and education, Table 4") ///
+		write_table, table(table4_h3) file(3_3_tabA16_dep_category_ict_generation.tex) label(final_ict_generations_education_table4_h3) ///
+			title("ICT FDI by diaspora generation and education: category-level policy interactions") ///
 			columns(`gen_cols') labels("`gen_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_20_single_policy_ict_generation.tex) label(final_ict_generations_education_appendix_singlepolicy) ///
-			title("ICT deeper cuts: generations and education single-policy interactions, 2+ states and more than 10 state-years") ///
+		write_table, table(singlepolicy) file(3_3_tabA17_single_policy_ict_generation.tex) label(final_ict_generations_education_appendix_singlepolicy) ///
+			title("ICT FDI by diaspora generation and education: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`gen_cols') labels("`gen_labs'") singlepolicy
 
-	**Tables 7.21-7.23: ICT cuts, ICT workers vs everyone
+	**Tables A18, 13, A19: ICT cuts, ICT workers vs everyone
 
-		write_table, table(table2_h1) file(3_3_tab7_21_any_dep_ict_worker.tex) label(final_ict_worker_table2_h1) ///
-			title("ICT deeper cuts: ICT worker comparison, Table 2") ///
+		write_table, table(table2_h1) file(3_3_tabA18_any_dep_ict_worker.tex) label(final_ict_worker_table2_h1) ///
+			title("ICT FDI, ICT-worker diaspora: any DEP adoption x diaspora") ///
 			columns(`wrk_cols') labels("`wrk_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_22_dep_category_ict_worker.tex) label(final_ict_worker_table4_h3) ///
-			title("ICT deeper cuts: ICT worker comparison, Table 4") ///
+		write_table, table(table4_h3) file(3_3_tab13_dep_category_ict_worker.tex) label(final_ict_worker_table4_h3) ///
+			title("ICT FDI, ICT-worker diaspora: category-level policy interactions") ///
 			columns(`wrk_cols') labels("`wrk_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_23_single_policy_ict_worker.tex) label(final_ict_worker_appendix_singlepolicy) ///
-			title("ICT deeper cuts: ICT worker single-policy interactions, 2+ states and more than 10 state-years") ///
+		write_table, table(singlepolicy) file(3_3_tabA19_single_policy_ict_worker.tex) label(final_ict_worker_appendix_singlepolicy) ///
+			title("ICT FDI, ICT-worker diaspora: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`wrk_cols') labels("`wrk_labs'") singlepolicy
 
-	**Tables 7.24-7.26: ICT cuts by company size
+	**Tables A20-A22: ICT cuts by company size
 
-		write_table, table(table2_h1) file(3_3_tab7_24_any_dep_ict_company_size.tex) label(final_ict_company_size_table2_h1) ///
-			title("ICT deeper cuts: company size comparison, Table 2") ///
+		write_table, table(table2_h1) file(3_3_tabA20_any_dep_ict_company_size.tex) label(final_ict_company_size_table2_h1) ///
+			title("ICT FDI by company size: any DEP adoption x diaspora") ///
 			columns(`ictsize_cols') labels("`ictsize_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_25_dep_category_ict_company_size.tex) label(final_ict_company_size_table4_h3) ///
-			title("ICT deeper cuts: company size comparison, Table 4") ///
+		write_table, table(table4_h3) file(3_3_tabA21_dep_category_ict_company_size.tex) label(final_ict_company_size_table4_h3) ///
+			title("ICT FDI by company size: category-level policy interactions") ///
 			columns(`ictsize_cols') labels("`ictsize_labs'")
-		write_table, table(singlepolicy) file(3_3_tab7_26_single_policy_ict_company_size.tex) label(final_ict_company_size_appendix_singlepolicy) ///
-			title("ICT deeper cuts: company size single-policy interactions, 2+ states and more than 10 state-years") ///
+		write_table, table(singlepolicy) file(3_3_tabA22_single_policy_ict_company_size.tex) label(final_ict_company_size_appendix_singlepolicy) ///
+			title("ICT FDI by company size: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`ictsize_cols') labels("`ictsize_labs'") singlepolicy
 
-	**Tables 7.27-7.28: ICT cuts in tech-hub metros only
+	**Tables A23-A24: ICT cuts in tech-hub metros only
 
-		write_table, table(table2_h1) file(3_3_tab7_27_any_dep_tech_hubs.tex) label(final_ict_company_size_techhubs_table2_h1) ///
-			title("ICT deeper cuts: company size from tech hubs, Table 2") ///
+		write_table, table(table2_h1) file(3_3_tabA23_any_dep_tech_hubs.tex) label(final_ict_company_size_techhubs_table2_h1) ///
+			title("ICT FDI from tech-hub metros: any DEP adoption x diaspora") ///
 			columns(`hub_cols') labels("`hub_labs'")
-		write_table, table(table4_h3) file(3_3_tab7_28_dep_category_tech_hubs.tex) label(final_ict_company_size_techhubs_table4_h3) ///
-			title("ICT deeper cuts: company size from tech hubs, Table 4") ///
+		write_table, table(table4_h3) file(3_3_tabA24_dep_category_tech_hubs.tex) label(final_ict_company_size_techhubs_table4_h3) ///
+			title("ICT FDI from tech-hub metros: category-level policy interactions") ///
 			columns(`hub_cols') labels("`hub_labs'")
 
 ********
 *
-*	6. Table 7.29: State-specific policy interactions
+*	6. Table 14: State-specific policy interactions
 *
 ********
 
@@ -706,7 +706,7 @@
 	gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
 
 	local fullwidth "@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}"
-	file open tab using "${tables}/3_3_tab7_29_state_specific_policies.tex", write replace text
+	file open tab using "${tables}/3_3_tab14_state_specific_policies.tex", write replace text
 	file write tab "\begin{table}[!htbp]" _n
 	file write tab "\centering" _n
 	file write tab "\footnotesize" _n
@@ -750,12 +750,12 @@
 
 ********
 *
-*	7. Appendix Table B.1: One-at-a-time policy interactions by support
+*	7. Table A25: One-at-a-time policy interactions by support
 *
 ********
 
 	// Every policy we could estimate, for the four main samples (S1-S4 are
-	// Samples 1-4 in Table 5.2), split into three panels by how many states
+	// Samples 1-4 in Table 1), split into three panels by how many states
 	// and state-years have the policy
 
 	**Coefficients side by side
@@ -803,7 +803,7 @@
 		local fullrow "\multicolumn{7}{@{}p{\dimexpr`width'\relax}@{}}"
 		local header "Policy & \# States & \# State-years & S1 & S2 & S3 & S4 \\"
 
-		file open tab using "${tables}/3_3_tabB_1_single_policy_by_support.tex", write replace text
+		file open tab using "${tables}/3_3_tabA25_single_policy_by_support.tex", write replace text
 		file write tab "\begin{longtable}{@{}>{\raggedright\arraybackslash}p{4.1cm}" _n
 		file write tab ">{\centering\arraybackslash}p{1.2cm}" _n
 		file write tab ">{\centering\arraybackslash}p{1.7cm}" _n

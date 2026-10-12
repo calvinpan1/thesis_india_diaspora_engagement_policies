@@ -1,16 +1,16 @@
 *********************************************************************************
 /*	TITLE:		4_6_fig_investor_names
-*	PURPOSE:	Figure 5.1: share of projects, unique investors, and capital
+*	PURPOSE:	Figure 2: share of projects, unique investors, and capital
 *				that come from investors with possibly Indian names.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
 *	UPDATED:	2026_1012
 *	CALLS UPON:	"${rawdata}/fdi_extracts/2_2_investor_name_shares.csv"
-*	PRODUCES:	Figures:	"${figures}/4_6_fig5_1_indian_name_shares.png"
+*	PRODUCES:	Figures:	"${figures}/4_6_fig2_indian_name_shares.png"
 *				Tables:		No
 *				Datasets:	No
 *	CONTENTS:	0: Start log file
-*				1: Figure 5.1
+*				1: Figure 2
 *				2: Close log file
 */
 *********************************************************************************
@@ -20,7 +20,7 @@
 
 ********
 *
-*	1. Figure 5.1: Diaspora vs non-diaspora shares
+*	1. Figure 2: Diaspora vs non-diaspora shares
 *
 ********
 
@@ -36,7 +36,7 @@
 		legend(order(1 "Projects" 2 "Unique investors" 3 "Capital") rows(1)) ///
 		blabel(bar, format(%4.1f) position(outside)) ///
 		graphregion(color(white))
-	graph export "${figures}/4_6_fig5_1_indian_name_shares.png", replace width(2400)
+	graph export "${figures}/4_6_fig2_indian_name_shares.png", replace width(2400)
 
 ********
 *
