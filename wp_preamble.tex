@@ -27,7 +27,12 @@
 \setcounter{biburlucpenalty}{8000}
 \setcounter{biburlnumpenalty}{9000}
 
-\usepackage[hidelinks]{hyperref}
+% Web links are blue and clickable; internal references and citations stay
+% black but are still clickable. URLs use the same font as the text.
+\usepackage[colorlinks=true, urlcolor=blue, filecolor=blue, linkcolor=black, citecolor=black]{hyperref}
+\urlstyle{same}
+\newcommand{\appendixurl}{https://github.com/calvinpan1/thesis_india_diaspora_engagement_policies/blob/main/online_appendix.pdf}
+\newcommand{\repourl}{https://github.com/calvinpan1/thesis_india_diaspora_engagement_policies}
 
 % Column types and helpers used by the generated tables
 \newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
