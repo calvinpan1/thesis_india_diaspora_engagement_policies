@@ -21,6 +21,8 @@
 \usepackage[backend=biber, style=authoryear, natbib=true, maxcitenames=2,
   uniquename=false, uniquelist=false, giveninits=true, dashed=false]{biblatex}
 \addbibresource{articles.bib}
+% Undated web sources show "n.d." instead of the year they were accessed
+\DeclareLabeldate{\field{date}\field{year}\field{eventdate}\field{origdate}\literal{nodate}}
 % Let long URLs in the references break across lines
 \usepackage{xurl}
 \setcounter{biburllcpenalty}{7000}

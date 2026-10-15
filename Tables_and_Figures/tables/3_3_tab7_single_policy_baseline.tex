@@ -3,7 +3,7 @@
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \renewcommand{\arraystretch}{1.08}
-\caption{Baseline all-FDI samples: single-policy interactions, 2+ states and more than 10 state-years}
+\caption{Baseline samples: single-policy interactions, 2+ states and more than 10 state-years}
 \label{tab:final_baseline_appendix_singlepolicy}
 \begin{tabularx}{\textwidth}{@{}>{\RaggedRight\arraybackslash}X *{7}{>{\Centering\arraybackslash}X}@{}}
 \hline
@@ -19,7 +19,7 @@ Remains Repatriation & 3 & 34 & 0.051 & 0.020 & 0.027 & 0.041 & 0.026 \\
 Manpower Companies & 3 & 33 & 0.105 & -0.021 & -0.023 & -0.022 & -0.032 \\
  &  &  & (0.080) & (0.036) & (0.032) & (0.032) & (0.025) \\
 \multicolumn{8}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\textit{Policies with 2+ states and more than 10 state-years}}\\
-Tax Regulatory Guidance & 2 & 14 & 0.356*** & -0.071*** & -0.055** & -0.042** & -0.061*** \\
+Tax \& Regulatory Guidance & 2 & 14 & 0.356*** & -0.071*** & -0.055** & -0.042** & -0.061*** \\
  &  &  & (0.085) & (0.020) & (0.023) & (0.019) & (0.024) \\
 Investment Promotion Roadshows & 2 & 13 & 0.348*** & -0.048** & -0.035** & -0.024 & -0.036** \\
  &  &  & (0.058) & (0.019) & (0.017) & (0.018) & (0.016) \\
@@ -32,7 +32,7 @@ e(N) &  &  & 916 & 1937 & 1945 & 1773 & 1781 \\
 Dropped singletons &  &  & 4142 & 2960 & 3080 & 2766 & 2797 \\
 Dropped separated obs &  &  & 0 & 0 & 0 & 7 & 6 \\
 \hline
-\fulltablenote{8}{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly underneath.}
+\fulltablenote{8}{Cells are coefficients on ln\_dias x policy, with SEs clustered by Indian state directly underneath. All models include metro-state, metro-year, and state-year fixed effects. --- marks an interaction ppmlhdfe omits because it is not identified once singletons and separated observations are dropped.}
 \fulltablenote{8}{* p<0.10, ** p<0.05, *** p<0.01.}
 \end{tabularx}
 \end{table}

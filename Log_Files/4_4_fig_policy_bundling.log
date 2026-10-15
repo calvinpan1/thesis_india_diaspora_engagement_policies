@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
 > ling.log
   log type:  text
- opened on:  12 Oct 2026, 14:52:44
+ opened on:  15 Oct 2026, 17:38:19
 
 . 
 . ********
@@ -144,7 +144,7 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA18
 .                 tempfile first_years
 
 .                 save `first_years'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000001 saved
     as .dta format
 
 . 
@@ -162,7 +162,7 @@ Duplicates in terms of all variables
 .                 tempfile states
 
 .                 save `states'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
 
 . 
@@ -375,5 +375,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_4_figA21
        log:  /Users/calvin/wp_replication_package/Log_Files/4_4_fig_policy_bund
 > ling.log
   log type:  text
- closed on:  12 Oct 2026, 14:52:48
+ closed on:  15 Oct 2026, 17:38:23
 -------------------------------------------------------------------------------

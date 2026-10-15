@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/3_2_tab_policy_bund
 > ling.log
   log type:  text
- opened on:  12 Oct 2026, 05:37:15
+ opened on:  15 Oct 2026, 17:32:17
 
 . 
 . ********
@@ -26,7 +26,7 @@
 .         tempfile turnons
 
 .         save `turnons'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000001 saved
     as .dta format
 
 . 
@@ -282,5 +282,5 @@ xij variables:
        log:  /Users/calvin/wp_replication_package/Log_Files/3_2_tab_policy_bund
 > ling.log
   log type:  text
- closed on:  12 Oct 2026, 05:37:15
+ closed on:  15 Oct 2026, 17:32:17
 -------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/4_3_fig_budgets.log
   log type:  text
- opened on:  12 Oct 2026, 14:52:43
+ opened on:  15 Oct 2026, 17:38:19
 
 . 
 .         capture graph set window fontface "CMU Serif"
@@ -86,10 +86,10 @@
 >                 xlabel(2005(5)2020, labsize(8pt)) ///
 >                 ylabel(0(100)500, axis(1) labsize(8pt) angle(horizontal) form
 > at(%9.0f) grid glcolor(gs14)) ///
->                 ylabel(, axis(2) labsize(8pt) angle(horizontal) format(%9.1f)
-> ) ///
+>                 ylabel(0(10)50, axis(2) labsize(8pt) angle(horizontal) format
+> (%9.0f)) ///
 >                 yscale(range(0 500) axis(1)) ///
->                 yscale(axis(2) alt) ///
+>                 yscale(range(0 `=500*`usd_m_per_crore'') axis(2)) ///
 >                 legend(order(1 "Andhra Pradesh" 2 "Kerala" 3 "Punjab" 4 "Tami
 > l Nadu") ///
 >                         rows(1) size(8pt) position(6) ring(1) region(lstyle(n
@@ -112,5 +112,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_3_fig4_d
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/4_3_fig_budgets.log
   log type:  text
- closed on:  12 Oct 2026, 14:52:44
+ closed on:  15 Oct 2026, 17:38:19
 -------------------------------------------------------------------------------

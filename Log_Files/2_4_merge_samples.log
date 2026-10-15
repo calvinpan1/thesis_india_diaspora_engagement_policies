@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/2_4_merge_samples.l
 > og
   log type:  text
- opened on:  12 Oct 2026, 05:37:15
+ opened on:  15 Oct 2026, 17:32:17
 
 . 
 . ********
@@ -21,7 +21,7 @@
 .         tempfile fdi
 
 .         save `fdi'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000001 saved
     as .dta format
 
 . 
@@ -623,5 +623,5 @@ s28_allgen_highed_ict_25plus: 3217 metro x state x year rows
        log:  /Users/calvin/wp_replication_package/Log_Files/2_4_merge_samples.l
 > og
   log type:  text
- closed on:  12 Oct 2026, 05:37:15
+ closed on:  15 Oct 2026, 17:32:17
 -------------------------------------------------------------------------------

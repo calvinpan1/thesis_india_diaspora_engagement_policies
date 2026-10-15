@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_2_fig_lang_verifi
 > cation.log
   log type:  text
- opened on:  12 Oct 2026, 14:52:42
+ opened on:  15 Oct 2026, 17:38:18
 
 . 
 .         capture graph set window fontface "CMU Serif"
@@ -25,7 +25,7 @@
 .         tempfile speakers
 
 .         save `speakers'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000001 saved
     as .dta format
 
 . 
@@ -117,5 +117,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_2_figA6_
        log:  /Users/calvin/wp_replication_package/Log_Files/4_2_fig_lang_verifi
 > cation.log
   log type:  text
- closed on:  12 Oct 2026, 14:52:43
+ closed on:  15 Oct 2026, 17:38:19
 -------------------------------------------------------------------------------

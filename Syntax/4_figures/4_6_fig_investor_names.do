@@ -4,7 +4,7 @@
 *				that come from investors with possibly Indian names.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
-*	UPDATED:	2026_1012
+*	UPDATED:	2026_1015
 *	CALLS UPON:	"${rawdata}/fdi_extracts/2_2_investor_name_shares.csv"
 *	PRODUCES:	Figures:	"${figures}/4_6_fig5_indian_name_shares.png"
 *				Tables:		No
@@ -28,12 +28,13 @@
 
 	// "diaspora" sits on top
 	gen status_order = cond(diaspora_status == "diaspora", 1, 2)
+	replace diaspora_status = cond(status_order == 1, "Diaspora", "Non-diaspora")
 
 	graph hbar project_share investor_share capital_share, ///
 		over(diaspora_status, sort(status_order) descending label(labsize(medsmall))) ///
 		title("Diaspora vs non-diaspora shares") ///
 		ytitle("Percent") ///
-		legend(order(1 "Projects" 2 "Unique investors" 3 "Capital") rows(1)) ///
+		legend(order(1 "Projects" 2 "Unique investors" 3 "Capital") rows(1) position(6)) ///
 		blabel(bar, format(%4.1f) position(outside)) ///
 		graphregion(color(white))
 	graph export "${figures}/4_6_fig5_indian_name_shares.png", replace width(2400)

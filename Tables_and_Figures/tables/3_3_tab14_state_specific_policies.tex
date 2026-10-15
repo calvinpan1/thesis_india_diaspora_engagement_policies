@@ -10,30 +10,32 @@
 Policy & First-gen 25+ high-ed, all FDI & First-gen 25+ high-ed, ICT FDI \\
 \hline
 \multicolumn{3}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\textit{Punjab}}\\
-Diaspora Admin Unit & 0.199*** & 0.000 \\
- & (0.062) & (0.000) \\
-Diaspora Conferences & 0.311** & 0.000 \\
- & (0.145) & (0.000) \\
+Diaspora Admin Unit & 0.199*** & --- \\
+ & (0.062) &  \\
+Diaspora Conferences & 0.311** & --- \\
+ & (0.145) &  \\
 \multicolumn{3}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\textit{Tamil Nadu}}\\
 Diaspora Admin Unit & 0.011 & 0.119 \\
  & (0.024) & (0.109) \\
 \multicolumn{3}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\textit{Kerala}}\\
 Diaspora Admin Unit & -0.004 & -0.252 \\
  & (0.058) & (0.220) \\
-Tax Regulatory Guidance & -0.170*** & 0.318 \\
+Tax \& Regulatory Guidance & -0.170*** & 0.318 \\
  & (0.041) & (0.470) \\
 Diaspora Conferences & 0.428*** & 1.250*** \\
  & (0.092) & (0.373) \\
 \multicolumn{3}{@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}}{\textit{Gujarat}}\\
 Diaspora Admin Unit & 0.030* & -0.031 \\
  & (0.015) & (0.033) \\
-Tax Regulatory Guidance & -0.054*** & 0.295*** \\
+Tax \& Regulatory Guidance & -0.054*** & 0.295*** \\
  & (0.017) & (0.054) \\
 \hline
+Raw sample N & 4897 & 4897 \\
 Projects, 2005--2017 & 2130 & 791 \\
 Total diaspora pop., 2005--2017 & 7021199 & 7021199 \\
+e(N), range across cells & 1937--1937 & 899--913 \\
 \hline
-\fulltablenote{3}{Each cell is from a PPML model interacting ln\_dias with the named policy limited to the section state.}
+\fulltablenote{3}{Each cell is from a separate PPML model on the full sample interacting ln\_dias with the named policy, coded 1 only in the section state and 0 elsewhere. SEs clustered by Indian state; metro-state, metro-year, and state-year fixed effects. --- marks an interaction ppmlhdfe omits because it is not identified once singletons and separated observations are dropped.}
 \fulltablenote{3}{* p<0.10, ** p<0.05, *** p<0.01.}
 \end{tabularx}
 \end{table}

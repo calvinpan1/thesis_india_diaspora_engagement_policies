@@ -4,7 +4,7 @@
 *				an approximate US dollar axis on the right.
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0405
-*	UPDATED:	2026_1012
+*	UPDATED:	2026_1015
 *	CALLS UPON:	"${gendata}/2_3_dep_budgets_state_year.dta"
 *	PRODUCES:	Figures:	"${figures}/4_3_fig4_dep_budgets_by_state.png"
 *				Tables:		No
@@ -67,9 +67,9 @@
 		ytitle("Approx. budget (USD millions, 2026 proxy)", size(11pt) axis(2)) ///
 		xlabel(2005(5)2020, labsize(8pt)) ///
 		ylabel(0(100)500, axis(1) labsize(8pt) angle(horizontal) format(%9.0f) grid glcolor(gs14)) ///
-		ylabel(, axis(2) labsize(8pt) angle(horizontal) format(%9.1f)) ///
+		ylabel(0(10)50, axis(2) labsize(8pt) angle(horizontal) format(%9.0f)) ///
 		yscale(range(0 500) axis(1)) ///
-		yscale(axis(2) alt) ///
+		yscale(range(0 `=500*`usd_m_per_crore'') axis(2)) ///
 		legend(order(1 "Andhra Pradesh" 2 "Kerala" 3 "Punjab" 4 "Tamil Nadu") ///
 			rows(1) size(8pt) position(6) ring(1) region(lstyle(none))) ///
 		graphregion(color(white)) ///

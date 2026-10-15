@@ -2,7 +2,7 @@
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/3_3_tab_ppml.log
   log type:  text
- opened on:  12 Oct 2026, 05:37:15
+ opened on:  15 Oct 2026, 17:39:26
 
 . 
 . ********
@@ -47,7 +47,7 @@
 > opped out
 .                 // of the DEP counts, the State Bureaucracy category, and the
 .                 // single-policy tables. Left out here so the tables match th
-> e thesis.
+> e thesis and paper.
 .                 // Set include_origin_id to 1 in 0_master.do to put it back.
 .                 if "${include_origin_id}" != "1" drop if item == "origin_id_n
 > on_citizens"
@@ -313,6 +313,27 @@ file
   8.                 end
 
 . 
+.         **Readable policy and category labels ("tax_regulatory_guidance" -> "
+> Tax & Regulatory Guidance")
+. 
+.                 capture program drop make_label
+
+.                 program define make_label, rclass
+  1.                         args name
+  2.                         local lab = proper(subinstr(subinstr("`name'", "to
+> tal_", "", 1), "_", " ", .))
+  3.                         local lab = subinstr("`lab'", "Tax Regulatory", "T
+> ax & Regulatory", 1)
+  4.                         local lab = subinstr("`lab'", "Bonds Financial", "
+> Bonds & Financial", 1)
+  5.                         local lab = subinstr("`lab'", "Religious Cultural"
+> , "Religious & Cultural", 1)
+  6.                         local lab = subinstr(subinstr("`lab'", "Nri ", "NR
+> I ", .), " For ", " for ", .)
+  7.                         return local label "`lab'"
+  8.                 end
+
+. 
 .         **Run whichever tables a sample needs
 . 
 .                 capture program drop run_model
@@ -347,27 +368,27 @@ file
  13.                                 local spec = 0
  14.                                 foreach c of global H4_CATEGORIES {
  15.                                         local ++spec
- 16.                                         local lab = proper(subinstr(subins
-> tr("`c'", "total_", "", 1), "_", " ", .))
- 17.                                         run_interaction, outcome(`outcome'
+ 16.                                         make_label `c'
+ 17.                                         local lab "`r(label)'"
+ 18.                                         run_interaction, outcome(`outcome'
 > ) policy(sc_`c') table(table4_h3) ///
 >                                                 spec(`spec') speclabel("`lab'
 > ") sampleid(`sampleid')
- 18.                                 }
- 19.                         }
- 20.                         if "`singlepolicy'" != "" {
- 21.                                 local spec = 0
- 22.                                 foreach p of global ALL_POLICIES {
- 23.                                         local ++spec
- 24.                                         local lab = proper(subinstr("`p'",
->  "_", " ", .))
- 25.                                         run_interaction, outcome(`outcome'
+ 19.                                 }
+ 20.                         }
+ 21.                         if "`singlepolicy'" != "" {
+ 22.                                 local spec = 0
+ 23.                                 foreach p of global ALL_POLICIES {
+ 24.                                         local ++spec
+ 25.                                         make_label `p'
+ 26.                                         local lab "`r(label)'"
+ 27.                                         run_interaction, outcome(`outcome'
 > ) policy(`p') table(singlepolicy) ///
 >                                                 spec(`spec') speclabel("`lab'
 > ") sampleid(`sampleid')
- 26.                                 }
- 27.                         }
- 28.                 end
+ 28.                                 }
+ 29.                         }
+ 30.                 end
 
 . 
 . ********
@@ -2374,7 +2395,7 @@ file
 . *
 . ********
 . 
-.         **Write a results table in the thesis format
+.         **Write a results table in the paper format
 . 
 .                 // columns() holds one sample ID per column, labels() the mat
 > ching
@@ -2414,48 +2435,54 @@ file
 > .3f") + stars
  16.                                 gen se = "(" + string(round(coef_se, .001)
 > , "%9.3f") + ")"
- 17. 
+ 17.                                 // ppmlhdfe omits a term it can't identify
+> ; show it as a dash, not 0.000
+.                                 replace coef = "---" if coef_se < 1e-5 | miss
+> ing(coef_se)
+ 18.                                 replace se = "" if coef_se < 1e-5 | missin
+> g(coef_se)
+ 19. 
 .                                 // Single-policy tables only show policies in
 >  2+ states and more
 .                                 // than 10 state-years, split into two panels
 >  by support
 .                                 gen byte panel = 1
- 18.                                 if "`singlepolicy'" != "" {
- 19.                                         merge m:1 policy using "${gendata}
+ 20.                                 if "`singlepolicy'" != "" {
+ 21.                                         merge m:1 policy using "${gendata}
 > /3_3_policy_support.dta", ///
 >                                                 keepusing(support_states supp
 > ort_obs) keep(match) nogen
- 20.                                         keep if support_states >= 2 & supp
+ 22.                                         keep if support_states >= 2 & supp
 > ort_obs > 10
- 21.                                         replace panel = cond(support_state
+ 23.                                         replace panel = cond(support_state
 > s >= 3 & support_obs >= 20, 1, 2)
- 22.                                 }
- 23.                                 else {
- 24.                                         gen support_states = .
- 25.                                         gen support_obs = .
- 26.                                 }
- 27. 
+ 24.                                 }
+ 25.                                 else {
+ 26.                                         gen support_states = .
+ 27.                                         gen support_obs = .
+ 28.                                 }
+ 29. 
 .                                 keep spec_order spec_label panel support_stat
 > es support_obs col coef se
- 28.                                 reshape wide coef se, i(spec_order) j(col)
- 29.                                 forvalues j = 1/`ncols' {
- 30.                                         capture gen coef`j' = ""
- 31.                                         capture gen se`j' = ""
- 32.                                 }
- 33.                                 sort panel spec_order
- 34.                                 replace spec_label = subinstr(subinstr(spe
+ 30.                                 reshape wide coef se, i(spec_order) j(col)
+ 31.                                 forvalues j = 1/`ncols' {
+ 32.                                         capture gen coef`j' = ""
+ 33.                                         capture gen se`j' = ""
+ 34.                                 }
+ 35.                                 sort panel spec_order
+ 36.                                 replace spec_label = subinstr(subinstr(spe
 > c_label, "_", "\_", .), "&", "\&", .)
- 35. 
-.                                 tempfile rows
- 36.                                 save `rows'
  37. 
+.                                 tempfile rows
+ 38.                                 save `rows'
+ 39. 
 .                         **Sample-size footer (shows a range when it varies ac
 > ross specs)
 . 
 .                                 use "${gendata}/3_3_ppml_accounting.dta", cle
 > ar
- 38.                                 keep if table_id == "`table'"
- 39.                                 collapse (min) raw_N_lo = raw_N projects_l
+ 40.                                 keep if table_id == "`table'"
+ 41.                                 collapse (min) raw_N_lo = raw_N projects_l
 > o = projects pop_lo = pop ///
 >                                                 N_full_lo = N_full N_used_lo 
 > = N_used singletons_lo = singletons separated_lo = separated ///
@@ -2464,131 +2491,143 @@ file
 >                                                 N_full_hi = N_full N_used_hi 
 > = N_used singletons_hi = singletons separated_hi = separated, ///
 >                                         by(sample_id)
- 40.                                 foreach m in raw_N projects pop N_full N_u
+ 42.                                 foreach m in raw_N projects pop N_full N_u
 > sed singletons separated {
- 41.                                         gen `m' = string(`m'_lo, "%9.0f") 
+ 43.                                         gen `m' = string(`m'_lo, "%9.0f") 
 > if `m'_lo < .
- 42.                                         replace `m' = `m' + "-" + string(`
+ 44.                                         replace `m' = `m' + "-" + string(`
 > m'_hi, "%9.0f") if `m'_lo != `m'_hi & `m'_hi < .
- 43.                                 }
- 44.                                 local j = 0
- 45.                                 foreach s of local columns {
- 46.                                         local ++j
- 47.                                         foreach m in raw_N projects pop N_
+ 45.                                 }
+ 46.                                 local j = 0
+ 47.                                 foreach s of local columns {
+ 48.                                         local ++j
+ 49.                                         foreach m in raw_N projects pop N_
 > full N_used singletons separated {
- 48.                                                 quietly levelsof `m' if sa
+ 50.                                                 quietly levelsof `m' if sa
 > mple_id == `s', local(`m'`j') clean
- 49.                                         }
- 50.                                 }
- 51. 
+ 51.                                         }
+ 52.                                 }
+ 53. 
 .                         **Write the file
 . 
 .                                 use `rows', clear
- 52.                                 // Wide tables (8+ columns) get smaller te
+ 54.                                 // Wide tables (8+ columns) get smaller te
 > xt and tighter spacing
 .                                 local size = cond(`totalcols' >= 8, "\scripts
 > ize", "\footnotesize")
- 53.                                 local sep = cond(`totalcols' >= 8, "2pt", 
+ 55.                                 local sep = cond(`totalcols' >= 8, "2pt", 
 > "3pt")
- 54.                                 local fullwidth "@{}>{\RaggedRight\arrayba
+ 56.                                 local fullwidth "@{}>{\RaggedRight\arrayba
 > ckslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}"
- 55.                                 local blank = cond("`singlepolicy'" != "",
+ 57.                                 local blank = cond("`singlepolicy'" != "",
 >  " &  & ", "")
- 56. 
+ 58. 
 .                                 file open tab using "${tables}/`file'", write
 >  replace text
- 57.                                 file write tab "\begin{table}[!htbp]" _n
- 58.                                 file write tab "\centering" _n
- 59.                                 file write tab "`size'" _n
- 60.                                 file write tab "\setlength{\tabcolsep}{`se
+ 59.                                 file write tab "\begin{table}[!htbp]" _n
+ 60.                                 file write tab "\centering" _n
+ 61.                                 file write tab "`size'" _n
+ 62.                                 file write tab "\setlength{\tabcolsep}{`se
 > p'}" _n
- 61.                                 file write tab "\renewcommand{\arraystretc
+ 63.                                 file write tab "\renewcommand{\arraystretc
 > h}{1.08}" _n
- 62.                                 file write tab "\caption{`title'}" _n
- 63.                                 file write tab "\label{tab:`label'}" _n
- 64.                                 file write tab "\begin{tabularx}{\textwidt
+ 64.                                 file write tab "\caption{`title'}" _n
+ 65.                                 file write tab "\label{tab:`label'}" _n
+ 66.                                 file write tab "\begin{tabularx}{\textwidt
 > h}{@{}>{\RaggedRight\arraybackslash}X *{`=`totalcols'-1'}{>{\Centering\arrayb
 > ackslash}X}@{}}" _n
- 65.                                 file write tab "\hline" _n
- 66. 
+ 67.                                 file write tab "\hline" _n
+ 68. 
 .                                 // Header row
 .                                 file write tab "Specification"
- 67.                                 if "`singlepolicy'" != "" file write tab "
+ 69.                                 if "`singlepolicy'" != "" file write tab "
 >  & \# States & \# State-years"
- 68.                                 local rest `"`labels'"'
- 69.                                 forvalues j = 1/`ncols' {
- 70.                                         gettoken lab rest : rest, parse("|
+ 70.                                 local rest `"`labels'"'
+ 71.                                 forvalues j = 1/`ncols' {
+ 72.                                         gettoken lab rest : rest, parse("|
 > ")
- 71.                                         if "`lab'" == "|" gettoken lab res
+ 73.                                         if "`lab'" == "|" gettoken lab res
 > t : rest, parse("|")
- 72.                                         file write tab " & " (subinstr(tri
+ 74.                                         file write tab " & " (subinstr(tri
 > m("`lab'"), "&", "\&", .))
- 73.                                 }
- 74.                                 file write tab " \\" _n
- 75.                                 file write tab "\hline" _n
- 76. 
+ 75.                                 }
+ 76.                                 file write tab " \\" _n
+ 77.                                 file write tab "\hline" _n
+ 78. 
 .                                 // Coefficient rows, with standard errors und
 > erneath
 .                                 forvalues i = 1/`=_N' {
- 77.                                         if "`singlepolicy'" != "" & (`i' =
+ 79.                                         if "`singlepolicy'" != "" & (`i' =
 > = 1 | panel[`i'] != panel[max(`i'-1, 1)]) {
- 78.                                                 local heading = cond(panel
+ 80.                                                 local heading = cond(panel
 > [`i'] == 1, "Policies with 3+ states and 20+ state-years", ///
 >                                                         "Policies with 2+ sta
 > tes and more than 10 state-years")
- 79.                                                 file write tab "\multicolu
+ 81.                                                 file write tab "\multicolu
 > mn{`totalcols'}{`fullwidth'}{\textit{`heading'}}\\" _n
- 80.                                         }
- 81.                                         file write tab (spec_label[`i'])
- 82.                                         if "`singlepolicy'" != "" {
- 83.                                                 file write tab " & " (stri
+ 82.                                         }
+ 83.                                         file write tab (spec_label[`i'])
+ 84.                                         if "`singlepolicy'" != "" {
+ 85.                                                 file write tab " & " (stri
 > ng(support_states[`i'], "%9.0f")) " & " (string(support_obs[`i'], "%9.0f"))
- 84.                                         }
- 85.                                         forvalues j = 1/`ncols' {
- 86.                                                 file write tab " & " (coef
+ 86.                                         }
+ 87.                                         forvalues j = 1/`ncols' {
+ 88.                                                 file write tab " & " (coef
 > `j'[`i'])
- 87.                                         }
- 88.                                         file write tab " \\" _n
- 89.                                         file write tab "`blank'"
- 90.                                         forvalues j = 1/`ncols' {
- 91.                                                 file write tab " & " (se`j
+ 89.                                         }
+ 90.                                         file write tab " \\" _n
+ 91.                                         file write tab "`blank'"
+ 92.                                         forvalues j = 1/`ncols' {
+ 93.                                                 file write tab " & " (se`j
 > '[`i'])
- 92.                                         }
- 93.                                         file write tab " \\" _n
- 94.                                 }
- 95.                                 file write tab "\hline" _n
- 96. 
+ 94.                                         }
+ 95.                                         file write tab " \\" _n
+ 96.                                 }
+ 97.                                 file write tab "\hline" _n
+ 98. 
 .                                 // Footer
 .                                 local f_raw_N           "Raw sample N"
- 97.                                 local f_projects        "Projects, 2005--2
+ 99.                                 local f_projects        "Projects, 2005--2
 > 017"
- 98.                                 local f_pop                     "Total dia
+100.                                 local f_pop                     "Total dia
 > spora pop., 2005--2017"
- 99.                                 local f_N_full          "e(N\_full)"
-100.                                 local f_N_used          "e(N)"
-101.                                 local f_singletons      "Dropped singleton
+101.                                 local f_N_full          "e(N\_full)"
+102.                                 local f_N_used          "e(N)"
+103.                                 local f_singletons      "Dropped singleton
 > s"
-102.                                 local f_separated       "Dropped separated
+104.                                 local f_separated       "Dropped separated
 >  obs"
-103.                                 foreach m in raw_N projects pop N_full N_u
+105.                                 foreach m in raw_N projects pop N_full N_u
 > sed singletons separated {
-104.                                         file write tab "`f_`m''`blank'"
-105.                                         forvalues j = 1/`ncols' {
-106.                                                 file write tab " & ``m'`j'
+106.                                         file write tab "`f_`m''`blank'"
+107.                                         forvalues j = 1/`ncols' {
+108.                                                 file write tab " & ``m'`j'
 > '"
-107.                                         }
-108.                                         file write tab " \\" _n
-109.                                 }
-110.                                 file write tab "\hline" _n
-111.                                 file write tab "\fulltablenote{`totalcols'
-> }{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly 
-> underneath.}" _n
-112.                                 file write tab "\fulltablenote{`totalcols'
+109.                                         }
+110.                                         file write tab " \\" _n
+111.                                 }
+112.                                 file write tab "\hline" _n
+113.                                 if inlist("`table'", "h0", "table1_baselin
+> e") {
+114.                                         local note "Cells are coefficients
+>  on ln\_dias (or the national Indian diaspora), with SEs clustered by metro-s
+> tate pair directly underneath. Fixed effects as listed in each row."
+115.                                 }
+116.                                 else {
+117.                                         local note "Cells are coefficients
+>  on ln\_dias x policy, with SEs clustered by Indian state directly underneath
+> . All models include metro-state, metro-year, and state-year fixed effects. -
+> -- marks an interaction ppmlhdfe omits because it is not identified once sing
+> letons and separated observations are dropped."
+118.                                 }
+119.                                 file write tab "\fulltablenote{`totalcols'
+> }{`note'}" _n
+120.                                 file write tab "\fulltablenote{`totalcols'
 > }{* p<0.10, ** p<0.05, *** p<0.01.}" _n
-113.                                 file write tab "\end{tabularx}" _n
-114.                                 file write tab "\end{table}" _n
-115.                                 file close tab
-116.                 end
+121.                                 file write tab "\end{tabularx}" _n
+122.                                 file write tab "\end{table}" _n
+123.                                 file close tab
+124.                 end
 
 . 
 . ********
@@ -2662,12 +2701,12 @@ file
 > , tech hubs"
 
 . 
-.         **Tables 3-7: baseline all-FDI samples
+.         **Tables 3-7: baseline samples
 . 
 .                 write_table, table(h0) file(3_3_tab3_h0_baseline.tex) label(f
 > inal_baseline_h0) ///
 >                         title("H0: location-specific diaspora versus national
->  Indian diaspora stock: baseline all-FDI samples") ///
+>  Indian diaspora stock: baseline samples") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (862 observations deleted)
 (26 missing values generated)
@@ -2678,6 +2717,8 @@ file
 (2 real changes made)
 (16 observations deleted)
 (5 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (10 missing values generated)
 (10 missing values generated)
 (j = 1 2 3 4 5)
@@ -2692,7 +2733,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -2705,8 +2746,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 
 .                 write_table, table(table2_h1) file(3_3_tab4_any_dep_baseline.
 > tex) label(final_baseline_table2_h1) ///
->                         title("Any DEP adoption x diaspora: baseline all-FDI 
-> samples") ///
+>                         title("Any DEP adoption x diaspora: baseline samples"
+> ) ///
 >                         columns(`base_cols') labels("`base_labs'")
 (849 observations deleted)
 (39 missing values generated)
@@ -2717,6 +2758,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (1 real change made)
 (34 observations deleted)
 (4 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (5 missing values generated)
 (5 missing values generated)
 (j = 1 2 3 4 5)
@@ -2731,7 +2774,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2744,8 +2787,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 
 .                 write_table, table(table3_h2) file(3_3_tab5_dep_count_baselin
 > e.tex) label(final_baseline_table3_h2) ///
->                         title("DEP-count intensity x diaspora: baseline all-F
-> DI samples") ///
+>                         title("DEP-count intensity x diaspora: baseline sampl
+> es") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (875 observations deleted)
 (13 missing values generated)
@@ -2756,6 +2799,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (1 real change made)
 (8 observations deleted)
 (4 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (5 missing values generated)
 (5 missing values generated)
 (j = 1 2 3 4 5)
@@ -2770,7 +2815,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -2783,8 +2828,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 
 .                 write_table, table(table4_h3) file(3_3_tab6_dep_category_base
 > line.tex) label(final_baseline_table4_h3) ///
->                         title("Category-level policy interactions: baseline a
-> ll-FDI samples") ///
+>                         title("Category-level policy interactions: baseline s
+> amples") ///
 >                         columns(`base_cols') labels("`base_labs'")
 (733 observations deleted)
 (155 missing values generated)
@@ -2795,6 +2840,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (135 observations deleted)
 (12 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (20 missing values generated)
 (20 missing values generated)
 (j = 1 2 3 4 5)
@@ -2809,7 +2856,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -2825,8 +2872,8 @@ variable separated was str2 now str5
 
 .                 write_table, table(singlepolicy) file(3_3_tab7_single_policy_
 > baseline.tex) label(final_baseline_appendix_singlepolicy) ///
->                         title("Baseline all-FDI samples: single-policy intera
-> ctions, 2+ states and more than 10 state-years") ///
+>                         title("Baseline samples: single-policy interactions, 
+> 2+ states and more than 10 state-years") ///
 >                         columns(`base_cols') labels("`base_labs'") singlepoli
 > cy
 (243 observations deleted)
@@ -2838,6 +2885,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (560 observations deleted)
 (36 missing values generated)
+(4 real changes made)
+(4 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -2857,8 +2906,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef5
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -2891,6 +2940,8 @@ variable separated was str2 now str5
 (1 real change made)
 (31 observations deleted)
 (6 missing values generated)
+(4 real changes made)
+(4 real changes made)
 (8 missing values generated)
 (8 missing values generated)
 (j = 1 2 3 4 5 6 7 8)
@@ -2905,7 +2956,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -2933,6 +2984,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (124 observations deleted)
 (22 missing values generated)
+(12 real changes made)
+(12 real changes made)
 (31 missing values generated)
 (31 missing values generated)
 (j = 1 2 3 4 5 6 7 8)
@@ -2947,7 +3000,7 @@ xij variables:
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -2979,6 +3032,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (510 observations deleted)
 (108 missing values generated)
+(81 real changes made)
+(81 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -2998,8 +3053,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef8
                                      se   ->   se1 se2 ... se8
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3030,6 +3085,8 @@ variable separated was str2 now str5
 (1 real change made)
 (34 observations deleted)
 (5 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (5 missing values generated)
 (5 missing values generated)
 (j = 1 2 3 4 5)
@@ -3044,7 +3101,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3069,6 +3126,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (135 observations deleted)
 (14 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (20 missing values generated)
 (20 missing values generated)
 (j = 1 2 3 4 5)
@@ -3083,7 +3142,7 @@ xij variables:
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3111,6 +3170,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (560 observations deleted)
 (49 missing values generated)
+(8 real changes made)
+(8 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -3130,8 +3191,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef5
                                      se   ->   se1 se2 ... se5
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3161,6 +3222,8 @@ variable separated was str2 now str5
 (2 real changes made)
 (18 observations deleted)
 (6 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (8 missing values generated)
 (8 missing values generated)
 (j = 1 2 3 4)
@@ -3175,7 +3238,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (862 observations deleted)
 (0 real changes made)
@@ -3199,6 +3262,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (2 real changes made)
 (2 observations deleted)
 (6 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (8 missing values generated)
 (8 missing values generated)
 (j = 1 2 3 4)
@@ -3213,7 +3278,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (878 observations deleted)
 (0 real changes made)
@@ -3239,6 +3304,8 @@ variable singletons was str4 now str9
 (1 real change made)
 (35 observations deleted)
 (1 missing value generated)
+(0 real changes made)
+(0 real changes made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3253,7 +3320,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3277,6 +3344,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (1 real change made)
 (9 observations deleted)
 (3 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3291,7 +3360,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (875 observations deleted)
 (0 real changes made)
@@ -3315,6 +3384,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (139 observations deleted)
 (12 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (16 missing values generated)
 (16 missing values generated)
 (j = 1 2 3 4)
@@ -3329,7 +3400,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3357,6 +3428,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (577 observations deleted)
 (38 missing values generated)
+(10 real changes made)
+(10 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -3376,8 +3449,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef4
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3406,6 +3479,8 @@ variable separated was str2 now str5
 (1 real change made)
 (1 real change made)
 (35 observations deleted)
+(0 real changes made)
+(0 real changes made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3420,7 +3495,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3444,6 +3519,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (139 observations deleted)
 (4 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (16 missing values generated)
 (16 missing values generated)
 (j = 1 2 3 4)
@@ -3458,7 +3535,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3486,6 +3563,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (577 observations deleted)
 (40 missing values generated)
+(16 real changes made)
+(16 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -3505,8 +3584,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef4
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3535,6 +3614,8 @@ variable separated was str2 now str5
 (1 real change made)
 (1 real change made)
 (35 observations deleted)
+(0 real changes made)
+(0 real changes made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3549,7 +3630,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3573,6 +3654,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (139 observations deleted)
 (4 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (16 missing values generated)
 (16 missing values generated)
 (j = 1 2 3 4)
@@ -3587,7 +3670,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3614,6 +3697,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (577 observations deleted)
 (36 missing values generated)
+(16 real changes made)
+(16 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -3633,8 +3718,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef4
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3664,6 +3749,8 @@ variable separated was str2 now str5
 (1 real change made)
 (35 observations deleted)
 (1 missing value generated)
+(0 real changes made)
+(0 real changes made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3678,7 +3765,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3702,6 +3789,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (139 observations deleted)
 (7 missing values generated)
+(0 real changes made)
+(0 real changes made)
 (16 missing values generated)
 (16 missing values generated)
 (j = 1 2 3 4)
@@ -3716,7 +3805,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3745,6 +3834,8 @@ variable separated was str2 now str5
 (17 real changes made)
 (577 observations deleted)
 (41 missing values generated)
+(21 real changes made)
+(21 real changes made)
 
     Result                      Number of obs
     -----------------------------------------
@@ -3764,8 +3855,8 @@ xij variables:
                                    coef   ->   coef1 coef2 ... coef4
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
-(0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+(1 real change made)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (243 observations deleted)
 (0 real changes made)
@@ -3795,6 +3886,8 @@ variable separated was str2 now str5
 (1 real change made)
 (35 observations deleted)
 (4 missing values generated)
+(1 real change made)
+(1 real change made)
 (4 missing values generated)
 (4 missing values generated)
 (j = 1 2 3 4)
@@ -3809,7 +3902,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (849 observations deleted)
 (0 real changes made)
@@ -3833,6 +3926,8 @@ file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
 (4 real changes made)
 (139 observations deleted)
 (10 missing values generated)
+(4 real changes made)
+(4 real changes made)
 (16 missing values generated)
 (16 missing values generated)
 (j = 1 2 3 4)
@@ -3847,7 +3942,7 @@ xij variables:
                                      se   ->   se1 se2 ... se4
 -----------------------------------------------------------------------------
 (0 real changes made)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St96294.000001 saved
     as .dta format
 (733 observations deleted)
 (0 real changes made)
@@ -3875,7 +3970,7 @@ variable separated was str2 now str5
 .         tempfile state_results
 
 .         frame create statecut int col str40 policy str20 state double(coef_b 
-> coef_se coef_p)
+> coef_se coef_p N_used)
 
 .         local j = 0
 
@@ -3886,29 +3981,31 @@ variable separated was str2 now str5
   5.                 local projects`j' = string(r(sum), "%9.0f")
   6.                 quietly summarize n_people
   7.                 local pop`j' = string(r(sum), "%9.0f")
-  8. 
+  8.                 local rawN`j' = string(r(N), "%9.0f")
+  9. 
 .                 foreach p in diaspora_admin_unit tax_regulatory_guidance dias
 > pora_conferences {
-  9.                         foreach st in "punjab" "tamil nadu" "kerala" "guja
+ 10.                         foreach st in "punjab" "tamil nadu" "kerala" "guja
 > rat" {
- 10.                                 capture drop p_state
- 11.                                 gen double p_state = cond(indian_state == 
+ 11.                                 capture drop p_state
+ 12.                                 gen double p_state = cond(indian_state == 
 > "`st'", `p', 0)
- 12.                                 quietly summarize p_state
- 13.                                 if missing(r(sd)) | r(sd) <= 0 continue
- 14. 
+ 13.                                 quietly summarize p_state
+ 14.                                 if missing(r(sd)) | r(sd) <= 0 continue
+ 15. 
 .                                 capture quietly ppmlhdfe `outcome' c.ln_dias#
 > #c.p_state, ///
 >                                         absorb(od_id i.origin_id#i.year i.lan
 > guaged#i.year) vce(cluster languaged)
- 15.                                 if _rc continue
- 16.                                 capture quietly lincom c.ln_dias#c.p_state
- 17.                                 if _rc continue
- 18.                                 frame post statecut (`j') ("`p'") ("`st'")
->  (r(estimate)) (r(se)) (r(p))
- 19.                         }
- 20.                 }
- 21.         }
+ 16.                                 if _rc continue
+ 17.                                 local n_used = e(N)
+ 18.                                 capture quietly lincom c.ln_dias#c.p_state
+ 19.                                 if _rc continue
+ 20.                                 frame post statecut (`j') ("`p'") ("`st'")
+>  (r(estimate)) (r(se)) (r(p)) (`n_used')
+ 21.                         }
+ 22.                 }
+ 23.         }
 (0 real changes made)
 (0 real changes made)
 (0 real changes made)
@@ -4029,6 +4126,21 @@ variable separated was str2 now str5
 
 .         gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
 
+.         replace coef = "---" if coef_se < 1e-5 | missing(coef_se)
+(2 real changes made)
+
+.         replace se = "" if coef_se < 1e-5 | missing(coef_se)
+(2 real changes made)
+
+. 
+.         // e(N) varies by cell, so the footer shows its range in each column
+.         forvalues j = 1/2 {
+  2.                 quietly summarize N_used if col == `j' & coef_se >= 1e-5 &
+>  !missing(coef_se)
+  3.                 local nused`j' = string(r(min), "%9.0f") + "--" + string(r
+> (max), "%9.0f")
+  4.         }
+
 . 
 .         local fullwidth "@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidt
 > h-2\tabcolsep\relax}@{}"
@@ -4067,23 +4179,26 @@ variable separated was str2 now str5
 > iaspora_conferences {
   4.                         quietly count if state == "`st'" & policy == "`p'"
   5.                         if r(N) == 0 continue
-  6.                         local coefrow = proper(subinstr("`p'", "_", " ", .
-> ))
-  7.                         local serow ""
-  8.                         forvalues j = 1/2 {
-  9.                                 quietly levelsof coef if state == "`st'" &
+  6.                         make_label `p'
+  7.                         local coefrow = subinstr("`r(label)'", "&", "\&", 
+> .)
+  8.                         local serow ""
+  9.                         forvalues j = 1/2 {
+ 10.                                 quietly levelsof coef if state == "`st'" &
 >  policy == "`p'" & col == `j', local(c) clean
- 10.                                 quietly levelsof se if state == "`st'" & p
+ 11.                                 quietly levelsof se if state == "`st'" & p
 > olicy == "`p'" & col == `j', local(s) clean
- 11.                                 local coefrow "`coefrow' & `c'"
- 12.                                 local serow "`serow' & `s'"
- 13.                         }
- 14.                         file write tab "`coefrow' \\" _n
- 15.                         file write tab "`serow' \\" _n
- 16.                 }
- 17.         }
+ 12.                                 local coefrow "`coefrow' & `c'"
+ 13.                                 local serow "`serow' & `s'"
+ 14.                         }
+ 15.                         file write tab "`coefrow' \\" _n
+ 16.                         file write tab "`serow' \\" _n
+ 17.                 }
+ 18.         }
 
 .         file write tab "\hline" _n
+
+.         file write tab "Raw sample N & `rawN1' & `rawN2' \\" _n
 
 .         file write tab "Projects, 2005--2017 & `projects1' & `projects2' \\" 
 > _n
@@ -4091,10 +4206,16 @@ variable separated was str2 now str5
 .         file write tab "Total diaspora pop., 2005--2017 & `pop1' & `pop2' \\"
 >  _n
 
+.         file write tab "e(N), range across cells & `nused1' & `nused2' \\" _n
+
 .         file write tab "\hline" _n
 
-.         file write tab "\fulltablenote{3}{Each cell is from a PPML model inte
-> racting ln\_dias with the named policy limited to the section state.}" _n
+.         file write tab "\fulltablenote{3}{Each cell is from a separate PPML m
+> odel on the full sample interacting ln\_dias with the named policy, coded 1 o
+> nly in the section state and 0 elsewhere. SEs clustered by Indian state; metr
+> o-state, metro-year, and state-year fixed effects. --- marks an interaction p
+> pmlhdfe omits because it is not identified once singletons and separated obse
+> rvations are dropped.}" _n
 
 .         file write tab "\fulltablenote{3}{* p<0.10, ** p<0.05, *** p<0.01.}" 
 > _n
@@ -4151,6 +4272,12 @@ variable separated was str2 now str5
 
 .                 gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
 
+.                 replace coef = "---" if coef_se < 1e-5 | missing(coef_se)
+(4 real changes made)
+
+.                 replace se = "" if coef_se < 1e-5 | missing(coef_se)
+(4 real changes made)
+
 .                 keep policy item_order support_states support_obs sample_id c
 > oef se
 
@@ -4179,11 +4306,35 @@ xij variables:
 .                 sort panel item_order
 
 . 
-.                 gen rowlabel = proper(subinstr(policy, "_", " ", .))
+.                 gen rowlabel = ""
+(17 missing values generated)
 
-.                 replace rowlabel = subinstr(subinstr(rowlabel, "Nri ", "NRI "
-> , .), " For ", " for ", .)
-(3 real changes made)
+.                 forvalues i = 1/`=_N' {
+  2.                         make_label `=policy[`i']'
+  3.                         replace rowlabel = subinstr("`r(label)'", "&", "\&
+> ", .) in `i'
+  4.                 }
+variable rowlabel was str1 now str19
+(1 real change made)
+(1 real change made)
+variable rowlabel was str19 now str20
+(1 real change made)
+(1 real change made)
+(1 real change made)
+variable rowlabel was str20 now str26
+(1 real change made)
+variable rowlabel was str26 now str30
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
 
 . 
 .         **Sample-size footer
@@ -4381,5 +4532,5 @@ xij variables:
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/3_3_tab_ppml.log
   log type:  text
- closed on:  12 Oct 2026, 05:42:36
+ closed on:  15 Oct 2026, 17:45:04
 -------------------------------------------------------------------------------

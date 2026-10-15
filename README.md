@@ -88,7 +88,8 @@ master has set the folder globals (`$root`, `$rawdata`, ...) in your session.
 
 Not made from data, so they live in `static_figures/` or are typed into the
 LaTeX: Table 2 and Figures 1-3 in the paper, and Tables A1-A5, A26 and Figures A1-A2
-in the online appendix.
+in the online appendix. Figure 1 is drawn from `static_figures/dep_sources.tex`
+(compile with pdflatex, then `pdftoppm -png -r 200 -singlefile dep_sources.pdf dep_sources`).
 
 ### Software
 

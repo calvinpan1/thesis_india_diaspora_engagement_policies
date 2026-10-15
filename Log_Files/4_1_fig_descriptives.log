@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_1_fig_descriptive
 > s.log
   log type:  text
- opened on:  12 Oct 2026, 14:52:35
+ opened on:  15 Oct 2026, 17:38:12
 
 . 
 .         // Matches the paper font. Falls back to Stata's default if not insta
@@ -62,13 +62,13 @@
  21.                                         restore, preserve
  22.                                         collapse (sum) `var', by(year)
  23.                                         gen indian_state = "All India obse
-> rvations (2015-2017)"
- 24.                                         replace `var' = . if year < 2015
+> rvations (2014-2017)"
+ 24.                                         replace `var' = . if year < 2014
  25.                                         save `post'
  26.                                         restore, preserve
  27.                                         append using `pre' `post'
  28.                                         local extra `""All India observati
-> ons (through 2013)" "All India observations (2015-2017)""'
+> ons (through 2013)" "All India observations (2014-2017)""'
  29.                                 }
  30. 
 .                         **One line per group, legend in the same order
@@ -139,7 +139,7 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA9_
 >                         title("Consumer goods FDI projects over time (top 50 
 > metros only)") ytitle("Consumer goods FDI projects") ///
 >                         file(4_1_figA11_fdi_consumer_goods_by_state.png)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
 (variable fdi_projects_consgoods was byte, now double to accommodate using
        data's values)
@@ -163,10 +163,10 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA11
 > ytitle("FDI projects") ///
 >                         file(4_1_fig6_fdi_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
-(10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000003 saved
+(9 real changes made, 9 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000003 saved
     as .dta format
 (variable fdi_projects_all was byte, now double to accommodate using data's
        values)
@@ -187,10 +187,10 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA7_
 > )") ytitle("ICT FDI projects") ///
 >                         file(4_1_figA10_fdi_ict_projects_by_state.png)
 (4 real changes made, 4 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
-(10 real changes made, 10 to missing)
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000003 saved
+(9 real changes made, 9 to missing)
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000003 saved
     as .dta format
 (variable fdi_projects_ict was byte, now double to accommodate using data's
        values)
@@ -230,7 +230,7 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA10
 .                         tempfile top10
 
 .                         save `top10'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St07131.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
 
 .                 restore
@@ -582,5 +582,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_1_figA17
        log:  /Users/calvin/wp_replication_package/Log_Files/4_1_fig_descriptive
 > s.log
   log type:  text
- closed on:  12 Oct 2026, 14:52:42
+ closed on:  15 Oct 2026, 17:38:18
 -------------------------------------------------------------------------------

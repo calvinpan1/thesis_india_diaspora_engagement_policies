@@ -2,7 +2,7 @@
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/2_2_fdi_clean.log
   log type:  text
- opened on:  12 Oct 2026, 05:37:14
+ opened on:  15 Oct 2026, 17:32:16
 
 . 
 .         global fdiraw "${rawdata}/fdi_private"
@@ -73,7 +73,7 @@ Duplicates in terms of id
 .                 tempfile public_flags
 
 .                 save `public_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000001 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000001 saved
     as .dta format
 
 . 
@@ -115,7 +115,7 @@ Duplicates in terms of id
 .                 tempfile activity_flags
 
 .                 save `activity_flags'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000002 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000002 saved
     as .dta format
 
 . 
@@ -351,7 +351,7 @@ jobscreated: all characters numeric; replaced as int
 .                 tempfile projects
 
 .                 save `projects'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000003 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000003 saved
     as .dta format
 
 . 
@@ -383,7 +383,7 @@ file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_counts_
 . *
 . ********
 . 
-.         // Feeds Figures 3 and A8-A12: projects, capital and jobs by Indian s
+.         // Feeds Figures 6 and A7-A11: projects, capital and jobs by Indian s
 > tate-year,
 .         // counting only projects from the top-50 diaspora metros
 .         use `projects', clear
@@ -471,7 +471,7 @@ file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_state_y
 . *
 . ********
 . 
-.         // Feeds Figure A25. All projects in the sectoral file, every year.
+.         // Feeds Figure A22. All projects in the sectoral file, every year.
 .         import delimited using "${fdiraw}/0428.fdi.sectoral.csv", clear varna
 > mes(1) stringcols(_all)
 (encoding automatically selected: ISO-8859-1)
@@ -499,7 +499,7 @@ file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_fdi_project
 . *
 . ********
 . 
-.         // Feeds Figure 2. The "Indian name?" column was hand-coded from each
+.         // Feeds Figure 5. The "Indian name?" column was hand-coded from each
 .         // project's first listed contact, using a name-origin classifier
 .         // (Dhingra 2023) and checked in Excel.
 .         import delimited using "${fdiraw}/investor_name_results.csv", ///
@@ -568,7 +568,7 @@ capital: all characters numeric; replaced as double
 .                         tempfile project_shares
 
 .                         save `project_shares'
-file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St90883.000005 saved
+file /var/folders/_0/c6pysbl159gbzd5zt3xp1rnr0000gp/T//St95501.000005 saved
     as .dta format
 
 .                 restore
@@ -660,5 +660,5 @@ file /Users/calvin/wp_replication_package/Raw_Data/fdi_extracts/2_2_investor_na
       name:  stage
        log:  /Users/calvin/wp_replication_package/Log_Files/2_2_fdi_clean.log
   log type:  text
- closed on:  12 Oct 2026, 05:37:15
+ closed on:  15 Oct 2026, 17:32:17
 -------------------------------------------------------------------------------

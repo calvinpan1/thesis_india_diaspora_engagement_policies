@@ -3,7 +3,7 @@
        log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
 > mes.log
   log type:  text
- opened on:  12 Oct 2026, 14:52:49
+ opened on:  15 Oct 2026, 17:45:06
 
 . 
 . ********
@@ -21,6 +21,10 @@
 .         // "diaspora" sits on top
 .         gen status_order = cond(diaspora_status == "diaspora", 1, 2)
 
+.         replace diaspora_status = cond(status_order == 1, "Diaspora", "Non-di
+> aspora")
+(2 real changes made)
+
 . 
 .         graph hbar project_share investor_share capital_share, ///
 >                 over(diaspora_status, sort(status_order) descending label(lab
@@ -28,7 +32,7 @@
 >                 title("Diaspora vs non-diaspora shares") ///
 >                 ytitle("Percent") ///
 >                 legend(order(1 "Projects" 2 "Unique investors" 3 "Capital") r
-> ows(1)) ///
+> ows(1) position(6)) ///
 >                 blabel(bar, format(%4.1f) position(outside)) ///
 >                 graphregion(color(white))
 
@@ -49,5 +53,5 @@ file /Users/calvin/wp_replication_package/Tables_and_Figures/figures/4_6_fig5_i
        log:  /Users/calvin/wp_replication_package/Log_Files/4_6_fig_investor_na
 > mes.log
   log type:  text
- closed on:  12 Oct 2026, 14:52:50
+ closed on:  15 Oct 2026, 17:45:08
 -------------------------------------------------------------------------------

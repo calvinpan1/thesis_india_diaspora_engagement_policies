@@ -9,8 +9,8 @@
 \hline
 Specification & First-gen 25+ high-ed, all FDI & First-gen 25+ high-ed, ICT FDI & First-gen 25+ high-ed, Professional Services FDI & First-gen 25+ high-ed, Financial Services FDI & First-gen 25+ high-ed, Creative Industries FDI & First-gen 25+ high-ed, Life Sciences FDI & First-gen 25+ high-ed, Industrial FDI & First-gen 25+ high-ed, Transport Equipment FDI \\
 \hline
-Any DEP adoption & -0.020 & 0.242*** & 0.000 & 0.081 & 0.074*** & 0.000 & 0.000 & 0.000 \\
- & (0.034) & (0.045) & (0.000) & (0.108) & (0.012) & (0.000) & (0.000) & (0.000) \\
+Any DEP adoption & -0.020 & 0.242*** & --- & 0.081 & 0.074*** & --- & --- & --- \\
+ & (0.034) & (0.045) &  & (0.108) & (0.012) &  &  &  \\
 \hline
 Raw sample N & 4897 & 4897 & 4897 & 4897 & 4897 & 4897 & 4897 & 4897 \\
 Projects, 2005--2017 & 2130 & 791 & 187 & 255 & 158 & 109 & 145 & 113 \\
@@ -20,7 +20,7 @@ e(N) & 1937 & 913 & 168 & 207 & 116 & 49 & 60 & 36 \\
 Dropped singletons & 2960 & 3984 & 4594 & 4690 & 4730 & 4798 & 4760 & 4826 \\
 Dropped separated obs & 0 & 0 & 135 & 0 & 51 & 50 & 77 & 35 \\
 \hline
-\fulltablenote{9}{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly underneath.}
+\fulltablenote{9}{Cells are coefficients on ln\_dias x policy, with SEs clustered by Indian state directly underneath. All models include metro-state, metro-year, and state-year fixed effects. --- marks an interaction ppmlhdfe omits because it is not identified once singletons and separated observations are dropped.}
 \fulltablenote{9}{* p<0.10, ** p<0.05, *** p<0.01.}
 \end{tabularx}
 \end{table}

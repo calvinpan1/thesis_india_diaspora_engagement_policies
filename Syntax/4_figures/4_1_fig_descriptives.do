@@ -7,7 +7,7 @@
 *				Figures 7, A15-A17, A20: DEPs over time
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
-*	UPDATED:	2026_1012
+*	UPDATED:	2026_1015
 *	CALLS UPON:	"${rawdata}/fdi_extracts/2_2_fdi_state_year_top50.csv"
 *				"${gendata}/1_1_acs_india_microdata.dta"
 *				"${gendata}/2_1_top50_metros.dta"
@@ -75,12 +75,12 @@
 					save `pre'
 					restore, preserve
 					collapse (sum) `var', by(year)
-					gen indian_state = "All India observations (2015-2017)"
-					replace `var' = . if year < 2015
+					gen indian_state = "All India observations (2014-2017)"
+					replace `var' = . if year < 2014
 					save `post'
 					restore, preserve
 					append using `pre' `post'
-					local extra `""All India observations (through 2013)" "All India observations (2015-2017)""'
+					local extra `""All India observations (through 2013)" "All India observations (2014-2017)""'
 				}
 
 			**One line per group, legend in the same order

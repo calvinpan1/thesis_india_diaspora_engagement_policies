@@ -8,7 +8,7 @@
 *				and the single-policy tables).
 *	AUTHOR:		Calvin Pan
 *	CREATED:	2026_0402
-*	UPDATED:	2026_1012
+*	UPDATED:	2026_1015
 *	CALLS UPON:	"${gendata}/2_4_s*.dta"
 *				"${gendata}/2_3_dep_turnons_long.dta"
 *	PRODUCES:	Figures:	No
@@ -236,6 +236,19 @@
 				speclabel(`"`speclabel'"') sampleid(`sampleid') policy(`policy')
 		end
 
+	**Readable policy and category labels ("tax_regulatory_guidance" -> "Tax & Regulatory Guidance")
+
+		capture program drop make_label
+		program define make_label, rclass
+			args name
+			local lab = proper(subinstr(subinstr("`name'", "total_", "", 1), "_", " ", .))
+			local lab = subinstr("`lab'", "Tax Regulatory", "Tax & Regulatory", 1)
+			local lab = subinstr("`lab'", "Bonds Financial", "Bonds & Financial", 1)
+			local lab = subinstr("`lab'", "Religious Cultural", "Religious & Cultural", 1)
+			local lab = subinstr(subinstr("`lab'", "Nri ", "NRI ", .), " For ", " for ", .)
+			return local label "`lab'"
+		end
+
 	**Run whichever tables a sample needs
 
 		capture program drop run_model
@@ -261,7 +274,8 @@
 				local spec = 0
 				foreach c of global H4_CATEGORIES {
 					local ++spec
-					local lab = proper(subinstr(subinstr("`c'", "total_", "", 1), "_", " ", .))
+					make_label `c'
+					local lab "`r(label)'"
 					run_interaction, outcome(`outcome') policy(sc_`c') table(table4_h3) ///
 						spec(`spec') speclabel("`lab'") sampleid(`sampleid')
 				}
@@ -270,7 +284,8 @@
 				local spec = 0
 				foreach p of global ALL_POLICIES {
 					local ++spec
-					local lab = proper(subinstr("`p'", "_", " ", .))
+					make_label `p'
+					local lab "`r(label)'"
 					run_interaction, outcome(`outcome') policy(`p') table(singlepolicy) ///
 						spec(`spec') speclabel("`lab'") sampleid(`sampleid')
 				}
@@ -397,6 +412,9 @@
 				gen stars = cond(coef_p < .01, "***", cond(coef_p < .05, "**", cond(coef_p < .10, "*", "")))
 				gen coef = string(round(coef_b, .001), "%9.3f") + stars
 				gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
+				// ppmlhdfe omits a term it can't identify; show it as a dash, not 0.000
+				replace coef = "---" if coef_se < 1e-5 | missing(coef_se)
+				replace se = "" if coef_se < 1e-5 | missing(coef_se)
 
 				// Single-policy tables only show policies in 2+ states and more
 				// than 10 state-years, split into two panels by support
@@ -516,7 +534,13 @@
 					file write tab " \\" _n
 				}
 				file write tab "\hline" _n
-				file write tab "\fulltablenote{`totalcols'}{Cells are coefficients on ln\_dias or ln\_dias x policy, with SEs directly underneath.}" _n
+				if inlist("`table'", "h0", "table1_baseline") {
+					local note "Cells are coefficients on ln\_dias (or the national Indian diaspora), with SEs clustered by metro-state pair directly underneath. Fixed effects as listed in each row."
+				}
+				else {
+					local note "Cells are coefficients on ln\_dias x policy, with SEs clustered by Indian state directly underneath. All models include metro-state, metro-year, and state-year fixed effects. --- marks an interaction ppmlhdfe omits because it is not identified once singletons and separated observations are dropped."
+				}
+				file write tab "\fulltablenote{`totalcols'}{`note'}" _n
 				file write tab "\fulltablenote{`totalcols'}{* p<0.10, ** p<0.05, *** p<0.01.}" _n
 				file write tab "\end{tabularx}" _n
 				file write tab "\end{table}" _n
@@ -555,22 +579,22 @@
 		local hub_cols "81 82 83 84"
 		local hub_labs "First-gen 25+ all diaspora, ICT FDI, all companies, tech hubs | First-gen 25+ all diaspora, ICT FDI, all companies, ICT worker, tech hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, tech hubs | First-gen 25+ all diaspora, ICT FDI, small-75 companies, ICT worker, tech hubs"
 
-	**Tables 3-7: baseline all-FDI samples
+	**Tables 3-7: baseline samples
 
 		write_table, table(h0) file(3_3_tab3_h0_baseline.tex) label(final_baseline_h0) ///
-			title("H0: location-specific diaspora versus national Indian diaspora stock: baseline all-FDI samples") ///
+			title("H0: location-specific diaspora versus national Indian diaspora stock: baseline samples") ///
 			columns(`base_cols') labels("`base_labs'")
 		write_table, table(table2_h1) file(3_3_tab4_any_dep_baseline.tex) label(final_baseline_table2_h1) ///
-			title("Any DEP adoption x diaspora: baseline all-FDI samples") ///
+			title("Any DEP adoption x diaspora: baseline samples") ///
 			columns(`base_cols') labels("`base_labs'")
 		write_table, table(table3_h2) file(3_3_tab5_dep_count_baseline.tex) label(final_baseline_table3_h2) ///
-			title("DEP-count intensity x diaspora: baseline all-FDI samples") ///
+			title("DEP-count intensity x diaspora: baseline samples") ///
 			columns(`base_cols') labels("`base_labs'")
 		write_table, table(table4_h3) file(3_3_tab6_dep_category_baseline.tex) label(final_baseline_table4_h3) ///
-			title("Category-level policy interactions: baseline all-FDI samples") ///
+			title("Category-level policy interactions: baseline samples") ///
 			columns(`base_cols') labels("`base_labs'")
 		write_table, table(singlepolicy) file(3_3_tab7_single_policy_baseline.tex) label(final_baseline_appendix_singlepolicy) ///
-			title("Baseline all-FDI samples: single-policy interactions, 2+ states and more than 10 state-years") ///
+			title("Baseline samples: single-policy interactions, 2+ states and more than 10 state-years") ///
 			columns(`base_cols') labels("`base_labs'") singlepolicy
 
 	**Tables 8, A8, A9: sector (cluster) cuts
@@ -673,7 +697,7 @@
 	// time, to see whether a result is driven by a single state
 
 	tempfile state_results
-	frame create statecut int col str40 policy str20 state double(coef_b coef_se coef_p)
+	frame create statecut int col str40 policy str20 state double(coef_b coef_se coef_p N_used)
 	local j = 0
 	foreach outcome in fdi_projects_all fdi_projects_ict {
 		local ++j
@@ -682,6 +706,7 @@
 		local projects`j' = string(r(sum), "%9.0f")
 		quietly summarize n_people
 		local pop`j' = string(r(sum), "%9.0f")
+		local rawN`j' = string(r(N), "%9.0f")
 
 		foreach p in diaspora_admin_unit tax_regulatory_guidance diaspora_conferences {
 			foreach st in "punjab" "tamil nadu" "kerala" "gujarat" {
@@ -693,9 +718,10 @@
 				capture quietly ppmlhdfe `outcome' c.ln_dias##c.p_state, ///
 					absorb(od_id i.origin_id#i.year i.languaged#i.year) vce(cluster languaged)
 				if _rc continue
+				local n_used = e(N)
 				capture quietly lincom c.ln_dias#c.p_state
 				if _rc continue
-				frame post statecut (`j') ("`p'") ("`st'") (r(estimate)) (r(se)) (r(p))
+				frame post statecut (`j') ("`p'") ("`st'") (r(estimate)) (r(se)) (r(p)) (`n_used')
 			}
 		}
 	}
@@ -704,6 +730,14 @@
 	gen stars = cond(coef_p < .01, "***", cond(coef_p < .05, "**", cond(coef_p < .10, "*", "")))
 	gen coef = string(round(coef_b, .001), "%9.3f") + stars
 	gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
+	replace coef = "---" if coef_se < 1e-5 | missing(coef_se)
+	replace se = "" if coef_se < 1e-5 | missing(coef_se)
+
+	// e(N) varies by cell, so the footer shows its range in each column
+	forvalues j = 1/2 {
+		quietly summarize N_used if col == `j' & coef_se >= 1e-5 & !missing(coef_se)
+		local nused`j' = string(r(min), "%9.0f") + "--" + string(r(max), "%9.0f")
+	}
 
 	local fullwidth "@{}>{\RaggedRight\arraybackslash}p{\dimexpr\linewidth-2\tabcolsep\relax}@{}"
 	file open tab using "${tables}/3_3_tab14_state_specific_policies.tex", write replace text
@@ -723,7 +757,8 @@
 		foreach p in diaspora_admin_unit tax_regulatory_guidance diaspora_conferences {
 			quietly count if state == "`st'" & policy == "`p'"
 			if r(N) == 0 continue
-			local coefrow = proper(subinstr("`p'", "_", " ", .))
+			make_label `p'
+			local coefrow = subinstr("`r(label)'", "&", "\&", .)
 			local serow ""
 			forvalues j = 1/2 {
 				quietly levelsof coef if state == "`st'" & policy == "`p'" & col == `j', local(c) clean
@@ -736,10 +771,12 @@
 		}
 	}
 	file write tab "\hline" _n
+	file write tab "Raw sample N & `rawN1' & `rawN2' \\" _n
 	file write tab "Projects, 2005--2017 & `projects1' & `projects2' \\" _n
 	file write tab "Total diaspora pop., 2005--2017 & `pop1' & `pop2' \\" _n
+	file write tab "e(N), range across cells & `nused1' & `nused2' \\" _n
 	file write tab "\hline" _n
-	file write tab "\fulltablenote{3}{Each cell is from a PPML model interacting ln\_dias with the named policy limited to the section state.}" _n
+	file write tab "\fulltablenote{3}{Each cell is from a separate PPML model on the full sample interacting ln\_dias with the named policy, coded 1 only in the section state and 0 elsewhere. SEs clustered by Indian state; metro-state, metro-year, and state-year fixed effects. --- marks an interaction ppmlhdfe omits because it is not identified once singletons and separated observations are dropped.}" _n
 	file write tab "\fulltablenote{3}{* p<0.10, ** p<0.05, *** p<0.01.}" _n
 	file write tab "\end{tabularx}" _n
 	file write tab "\end{table}" _n
@@ -768,6 +805,8 @@
 		gen stars = cond(coef_p < .01, "***", cond(coef_p < .05, "**", cond(coef_p < .10, "*", "")))
 		gen coef = string(round(coef_b, .001), "%9.3f") + stars
 		gen se = "(" + string(round(coef_se, .001), "%9.3f") + ")"
+		replace coef = "---" if coef_se < 1e-5 | missing(coef_se)
+		replace se = "" if coef_se < 1e-5 | missing(coef_se)
 		keep policy item_order support_states support_obs sample_id coef se
 		reshape wide coef se, i(policy) j(sample_id)
 
@@ -776,8 +815,11 @@
 		replace panel = 1 if support_states >= 3 & support_obs >= 20
 		sort panel item_order
 
-		gen rowlabel = proper(subinstr(policy, "_", " ", .))
-		replace rowlabel = subinstr(subinstr(rowlabel, "Nri ", "NRI ", .), " For ", " for ", .)
+		gen rowlabel = ""
+		forvalues i = 1/`=_N' {
+			make_label `=policy[`i']'
+			replace rowlabel = subinstr("`r(label)'", "&", "\&", .) in `i'
+		}
 
 	**Sample-size footer
 
